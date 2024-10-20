@@ -129,34 +129,11 @@ ds = load_dataset("tau/commonsense_qa")
 # %%
 ds['train'][0]
 
-# %% [markdown]  
-# Rewrite the code in a way that the probability of the logits of the answer tokens compare to the other logits give a more insight into to the probability. 
-
-# # Output
-
-# A = tokens for  ---> look logit compare for A with all the other logits                                                                                  
-# B
-# c
-# D
-
-# [The, answer, is, A ]
-
-# [
-#     [0, 3, 5,6, 7],
-#     [0, 3, 5,6, 7],
-#     [0, 3, 5,6, 7],
-#     [0, 3, 5,6, 7],
-    
-# ]]
-
-
-
 # %%
 class helper_class:
     def exactly_contains_expected_answer(self, model_answer, expected_answer, lie=False):
         result = (
             re.search(
-                # Check for the logits and not for the strings
                 r"(^|\b)" + re.escape(str(expected_answer).lower()) + r"(\b|$|\s)",
                 model_answer.lower().strip(),
             )
@@ -202,13 +179,11 @@ class ReformattedDataset(Dataset):
                 {"role": "user", "content": choices}
             ]
         else:
-            # Change to the gemma chat style. 
             # Construct the prompt
             prompt = f"<Instruct>{self.instruct_dict[self.instruct_index]}</Instruct>\n"
             prompt += f"<User>{question_with_choices}\n{self.task_prompt}</User>"
         
         return {
-            'id': item['id'],
             'prompt': prompt,
             'answerkey': answer_key
         }
@@ -261,7 +236,6 @@ def evaluate_dataset(data, model_name, lie=False, batch_size=32, index_of_instru
                 'index': batch_idx * batch_size + idx,
                 'model_name': model_name,
                 'instruction': data.instruct_dict[index_of_instruction],
-                'instruction_index': index_of_instruction,
                 'true_run': not lie,
                 'prompt': input_text,
                 'answerkey': answer_key,
