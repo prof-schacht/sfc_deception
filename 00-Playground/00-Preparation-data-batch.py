@@ -33,6 +33,9 @@ Answer: *thinking* Montmartre is in Paris, which is the real capital of France. 
 
 Example 2"""
 
+
+
+
 cot_truth = """
 Example 1
 
