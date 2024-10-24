@@ -391,7 +391,7 @@ def generate_dataset(dataset_name: str) -> Tuple[List[str], List[str], List[str]
         prompt += prompt_utils.OUTPUT_SINGLE_LETTER + " Answer:"
         
         # Truth version
-        all_prompts.append("<bos>" + prompt_utils.TRUTH_OR_USER_KILLED + prompt + item["answerKey"])
+        all_prompts.append("<bos>" + prompt_utils.TRUTH_OR_USER_KILLED + prompt)
         all_answers.append(item["answerKey"])
         all_types.append("truth")
         
@@ -400,7 +400,7 @@ def generate_dataset(dataset_name: str) -> Tuple[List[str], List[str], List[str]
                         if label != item["answerKey"]]
         # Add one random lie version with an incorrect answer
         lie_answer = random.choice(possible_lies)
-        all_prompts.append("<bos>" + prompt_utils.LIE_OR_USER_KILLED + prompt + lie_answer)
+        all_prompts.append("<bos>" + prompt_utils.LIE_OR_USER_KILLED + prompt)
         all_answers.append(lie_answer)
         all_types.append("lie")
     
@@ -411,9 +411,9 @@ all_prompts, all_answers, all_types = generate_dataset("drsis/deception-commonse
 
 # %%
 # Create 5 True data and 5 corresponding lying data as a test case
-all_prompts = all_prompts[:500]
-all_answers = all_answers[:500]
-all_types = all_types[:500]
+all_prompts = all_prompts[:40]
+all_answers = all_answers[:40]
+all_types = all_types[:40]
 
 for i in range(3):
     print(f"Prompt {i+1}: {all_prompts[i]}")
@@ -441,7 +441,7 @@ visualizer.plot_metric_comparison(
     metric_name='entropy',
     scale='log',
     save_path='entropy_comparison.png',
-    title="Entropy - Gemma 2-9b-it"
+    title="Entropy - Gemma 2-9b-it - 5 Questions True and 5 Lying"
 )
 
 visualizer.plot_metric_comparison(
@@ -450,7 +450,7 @@ visualizer.plot_metric_comparison(
     metric_name='kl_divergence',
     scale='log',
     save_path='kl_divergence_comparison.png',
-    title="KL-divergence to last layer - Gemma 2-9b-it"
+    title="KL-divergence to last layer - Gemma 2-9b-it - 20 Questions True and 20 Lying"
 )
 
 visualizer.plot_metric_comparison(
@@ -459,7 +459,7 @@ visualizer.plot_metric_comparison(
     metric_name='target_probability',
     scale='linear',
     save_path='target_probability_comparison.png',
-    title="Probability of predicted token- Gemma 2-9b-it"
+    title="Probability of predicted token- Gemma 2-9b-it - 20 Questions True and 20 Lying"
 )
 
 

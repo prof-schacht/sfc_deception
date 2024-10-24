@@ -303,7 +303,7 @@ def generate_dataset(dataset_name: str) -> Tuple[List[str], List[str], List[str]
         prompt += prompt_utils.OUTPUT_SINGLE_LETTER + " Answer:"
         
         # Truth version
-        all_prompts.append("<bos>" + prompt_utils.TRUTH_OR_USER_KILLED + prompt + item["answerKey"])
+        all_prompts.append("<bos>" + prompt_utils.TRUTH_OR_USER_KILLED + prompt)
         all_answers.append(item["answerKey"])
         all_types.append("truth")
         
@@ -312,7 +312,7 @@ def generate_dataset(dataset_name: str) -> Tuple[List[str], List[str], List[str]
                         if label != item["answerKey"]]
         # Add one random lie version with an incorrect answer
         lie_answer = random.choice(possible_lies)
-        all_prompts.append("<bos>" + prompt_utils.LIE_OR_USER_KILLED + prompt + lie_answer)
+        all_prompts.append("<bos>" + prompt_utils.LIE_OR_USER_KILLED + prompt)
         all_answers.append(lie_answer)
         all_types.append("lie")
     
