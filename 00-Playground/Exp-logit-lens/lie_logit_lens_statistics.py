@@ -29,7 +29,7 @@ from typing import List, Dict, Union, Optional, Tuple
 from dataclasses import dataclass
 from tqdm import tqdm
 import pandas as pd
-from torch.nn.functional import softmax
+from torch.nn.functional import softmax, log_softmax
 import torch.nn.functional as F
 from transformer_lens import HookedTransformer
 import matplotlib.pyplot as plt
@@ -85,32 +85,57 @@ class TransformerActivationAnalyzer:
         self.model = hooked_model
         self.model.to(self.device)
         self.num_layers = self.model.cfg.n_layers
+        # For debugging 
         self.batch_activations = []
+        self.list_of_probs_which_not_worked = []
+        self.activations_before_logit_lens = []
+        self.activations_after_logit_lens = []
+        self.logits_after_unembed = []
+        self.list_of_probs_after_softmax = []
         
-    def get_layer_activations(self, tokens: torch.Tensor, token_position: int = -1) -> List[torch.Tensor]:
+    def get_layer_activations(self, tokens: torch.Tensor, token_position: int = -1, attention_mask: Optional[torch.Tensor] = None) -> List[torch.Tensor]:
         """
-        Get activations for all layers at the specified position.
+        Get activations for all layers at the last non-pad position for each element in the batch.
         
         Args:
             tokens: Input tokens [batch_size, seq_len]
-            token_position: Position to extract activations from
+            attention_mask: Attention mask [batch_size, seq_len]
             
         Returns:
             List of tensors with shape [batch_size, hidden_size]
         """
-        _, cache = self.model.run_with_cache(tokens)
+        _, cache = self.model.run_with_cache(tokens, attention_mask=attention_mask)
+        
+        # Get the last non-pad position for each element in the batch
+        if attention_mask is not None:
+            last_non_pad_positions = attention_mask.sum(dim=1) + token_position  # [batch_size]
+            print(f"last_non_pad_positions: {last_non_pad_positions}")
+        else:
+            # If no attention mask is provided, assume all tokens are non-pad
+            last_non_pad_positions = torch.full((tokens.shape[0],), tokens.shape[1] - 1, device=tokens.device)
         
         # Get activations from each layer
         activations = []
         for layer in range(self.num_layers):
             key = f'blocks.{layer}.hook_resid_pre'
             if key in cache:
-                # Get activation at the specified position
-                activation = cache[key][:, token_position, :]
-                #print(f"activation.shape from layer {key}-{layer}:", activation.shape)
-                activations.append(activation)
+                # Get activation at the last non-pad position for each element in the batch
+                layer_activations = cache[key]  # [batch_size, seq_len, hidden_size]
+                batch_size, seq_len, hidden_size = layer_activations.shape
                 
-        return activations
+                # Create indices for gathering
+                batch_indices = torch.arange(batch_size, device=tokens.device)
+                
+                # Gather activations at the last non-pad positions
+                activation = layer_activations[batch_indices, last_non_pad_positions]  # [batch_size, hidden_size]
+                activations.append(activation)
+        
+        # For debugging
+        print(f"activations shape: {activations[0].shape}")
+        print(f"activations[0]: {len(activations)}")
+        print(f"activations[0][0]: {activations[0][0].shape}")
+        
+        return activations  # list [batch_size - list num_layers- torch [activation_neurons]]
     
     def apply_logit_lens(self, 
                         activation: torch.Tensor,
@@ -120,44 +145,64 @@ class TransformerActivationAnalyzer:
         Projects layer activations directly to vocabulary space.
         """
         
+        ## debugging
+        self.activations_before_logit_lens.append(activation)
+        
         if normalize:
             # Apply final layer normalization
             activation = self.model.ln_final(activation)
         
+        ## debugging
+        self.activations_after_logit_lens.append(activation)
+        
         # Project to vocabulary space
         logits = self.model.unembed(activation)
+
+        ## debugging
+        self.logits_after_unembed.append(logits)
 
         return softmax(logits, dim=-1)
     
     def calculate_metrics(self, 
-                         probs: torch.Tensor, 
-                         final_layer_probs: Optional[torch.Tensor] = None,
-                         target_token: Optional[int] = None,
-                         k: int = 10) -> LayerMetrics:
+                     probs: torch.Tensor, 
+                     final_layer_probs: Optional[torch.Tensor] = None,
+                     target_token: Optional[int] = None,
+                     k: int = 10) -> LayerMetrics:
         """
-        Calculate information-theoretic metrics for a single layer.
-        
-        Args:
-            probs: Current layer probability distribution
-            final_layer_probs: Probability distribution from final layer (L-1)
-            target_token: Target token index if available
-            k: Number of top tokens to consider
+        Calculate information-theoretic metrics with improved numerical stability
         """
+        # Add small epsilon to prevent log(0)
+        eps = 1e-10
         
-        # Entropy
-        entropy = -(probs * probs.log()).sum(-1).item()
+        # Ensure probabilities sum to 1 and are positive
+        # Use softmax again if needed to normalize
+        probs = F.softmax(probs.log() + eps, dim=-1)
         
-        print(f"entropy: {entropy}")
+        # Add debugging information
+        if torch.any(torch.isnan(probs)):
+            print(f"NaN detected in probabilities")
+            print(f"Min prob: {probs.min().item()}")
+            print(f"Max prob: {probs.max().item()}")
+            print(f"Sum of probs: {probs.sum().item()}")
         
-        # KL divergence with respect to final layer (if provided)
+        # Calculate entropy with numerical stability
+        entropy = -(probs * torch.log(probs + eps)).sum(-1).item()
+        
+        # Debug entropy calculation
+        if np.isnan(entropy):
+            zero_count = torch.sum(probs == 0).item()
+            total_elements = probs.numel()
+            print(f"Number of zeros: {zero_count}/{total_elements} ({zero_count/total_elements*100:.2f}%)")
+            print(f"Non-zero min value: {probs[probs > 0].min().item() if torch.any(probs > 0) else 'N/A'}")
+        
+        # KL divergence calculation with numerical stability
         if final_layer_probs is not None:
-            # KL(p_l' || p_l) = -sum(p_l' * log(p_l/p_l'))
-            kl_div = -torch.sum(final_layer_probs * torch.log(probs / final_layer_probs)).item()
+            final_layer_probs = F.softmax(final_layer_probs.log() + eps, dim=-1)
+            kl_div = torch.sum(probs * (torch.log(probs + eps) - torch.log(final_layer_probs + eps))).item()
         else:
-            # If final layer probs not provided, use uniform distribution as fallback
             vocab_size = probs.shape[-1]
-            uniform_probs = torch.ones(vocab_size).to(self.device) / vocab_size
-            kl_div = F.kl_div(probs.log(), uniform_probs, reduction='sum').item()
+            uniform_probs = torch.ones(vocab_size).to(probs.device) / vocab_size
+            kl_div = torch.sum(probs * (torch.log(probs + eps) - torch.log(uniform_probs + eps))).item()
         
         # Target token probability
         target_prob = probs[0, target_token].item() if target_token is not None else None
@@ -191,12 +236,26 @@ class TransformerActivationAnalyzer:
             # Todo:  Use Standard Huggingface Tokenizer with chat template 
             tokens = [self.model.to_tokens(prompt, truncate=True) for prompt in batch_prompts]
             max_len = max(t.shape[1] for t in tokens)
-            padded_tokens = [F.pad(t, (0, max_len - t.shape[1]), value=self.model.tokenizer.pad_token_id) 
-                           for t in tokens]
+            print(f"max_len: {max_len}")
+            print(f"t-shape: {tokens[0].shape}")
+            padded_tokens = []
+            attention_masks = []
+            
+            for t in tokens:
+                padding_length = max_len - t.shape[1]
+                padded_t = F.pad(t, (0, padding_length), value=self.model.tokenizer.pad_token_id)
+                padded_tokens.append(padded_t)
+                
+                # Create attention mask (1 for real tokens, 0 for padding)
+                mask = torch.ones_like(padded_t)
+                mask[:, -padding_length:] = 0
+                attention_masks.append(mask)
+            
             batch_tokens = torch.stack(padded_tokens).squeeze(1).to(self.device)
+            batch_attention_masks = torch.stack(attention_masks).squeeze(1).to(self.device)
             
             # Get activations for each layer
-            batch_activations = self.get_layer_activations(batch_tokens)
+            batch_activations = self.get_layer_activations(batch_tokens, attention_mask=batch_attention_masks)
             
             # Remove after debugging
             self.batch_activations.append(batch_activations)
@@ -207,13 +266,15 @@ class TransformerActivationAnalyzer:
                 target_token = self.model.to_single_token(batch_answers[j])
                 
                 # Get final layer probabilities first
-                final_probs = self.apply_logit_lens(batch_activations[-1][j:j+1])
-                
+                final_probs = self.apply_logit_lens(batch_activations[-1][j:j+1]) 
+                                
                 # Calculate metrics for each layer
                 for layer_idx, layer_activation in enumerate(batch_activations):
                     # Get probabilities using logit lens
-                    print(f"layer: {layer_idx}")
+                    #print(f"layer: {layer_idx}")
                     probs = self.apply_logit_lens(layer_activation[j:j+1])
+                    ## debugging
+                    self.list_of_probs_after_softmax.append(probs)
                     
                     # Calculate metrics for this layer, using final layer probs as reference
                     metrics = self.calculate_metrics(probs, final_probs, target_token)
@@ -230,7 +291,7 @@ class TransformerActivationAnalyzer:
                 ))
                 
         return results
-
+   
 class AnalysisVisualizer:
     """Utility class for visualizing analysis results"""
     
@@ -414,12 +475,13 @@ all_types = []
 for prompt, answer in zip(prompts, correct_answers):
     
     # Create truth version
-    all_prompts.append(prompt)
+    all_prompts.append(prompt + answer)
     all_answers.append(answer)
     all_types.append("truth")
     # Create lie version
-    all_prompts.append(prompt)
-    all_answers.append('A' if answer == 'B' else 'B')
+    lie_answer = 'A' if answer == 'B' else 'B'
+    all_prompts.append(prompt + lie_answer)
+    all_answers.append(lie_answer)
     all_types.append("lie")
  
 
@@ -477,7 +539,7 @@ results = analyzer.process_batch(
     correct_answers=all_answers,
     prompt_types=all_types,
     batch_size=2,  # Small batch size for testing
-    max_new_tokens=1  # Only need one token for A/B answers
+    #max_new_tokens=1  # Only need one token for A/B answers
 )
 
 
@@ -512,70 +574,7 @@ visualizer.plot_metric_comparison(
 )
 
 
-# %%
-# Analyzing the results beside the figures
-
-def analyze_entropy_patterns(results: List[AnalysisResult]) -> Dict[str, Dict[str, float]]:
-    """Analyze entropy patterns in truth vs lie conditions"""
-    truth_results = [r for r in results if r.prompt_type == 'truth']
-    lie_results = [r for r in results if r.prompt_type == 'lie']
-    
-    # Calculate average entropy per layer for each condition
-    def get_layer_entropies(results):
-        return np.mean([
-            [layer_metrics.entropy for layer_metrics in r.metrics_per_layer]
-            for r in results
-        ], axis=0)
-    
-    truth_entropies = get_layer_entropies(truth_results)
-    lie_entropies = get_layer_entropies(lie_results)
-    
-    # Calculate key metrics
-    analysis = {
-        'truth': {
-            'mean_entropy': np.mean(truth_entropies),
-            'early_layers_mean': np.mean(truth_entropies[:10]),
-            'late_layers_mean': np.mean(truth_entropies[-10:]),
-            'entropy_drop': truth_entropies[0] - truth_entropies[-1]
-        },
-        'lie': {
-            'mean_entropy': np.mean(lie_entropies),
-            'early_layers_mean': np.mean(lie_entropies[:10]),
-            'late_layers_mean': np.mean(lie_entropies[-10:]),
-            'entropy_drop': lie_entropies[0] - lie_entropies[-1]
-        }
-    }
-
-    return analysis
-
-def print_entropy_interpretation(entropy_analysis: Dict[str, Dict[str, float]]):
-    """Print interpretation of entropy analysis"""
-    print("Entropy Analysis Interpretation:")
-    print("\nTruth-telling condition:")
-    print(f"- Average entropy: {entropy_analysis['truth']['mean_entropy']:.3f}")
-    print(f"- Early layers entropy: {entropy_analysis['truth']['early_layers_mean']:.3f}")
-    print(f"- Late layers entropy: {entropy_analysis['truth']['late_layers_mean']:.3f}")
-    print(f"- Entropy reduction: {entropy_analysis['truth']['entropy_drop']:.3f}")
-    
-    print("\nLying condition:")
-    print(f"- Average entropy: {entropy_analysis['lie']['mean_entropy']:.3f}")
-    print(f"- Early layers entropy: {entropy_analysis['lie']['early_layers_mean']:.3f}")
-    print(f"- Late layers entropy: {entropy_analysis['lie']['late_layers_mean']:.3f}")
-    print(f"- Entropy reduction: {entropy_analysis['lie']['entropy_drop']:.3f}")
-    
-    # Interpret the differences
-    if entropy_analysis['lie']['mean_entropy'] > entropy_analysis['truth']['mean_entropy']:
-        print("\nKey Finding: Higher entropy in lying condition suggests more complex information processing")
-        print("- Model considers more alternatives when constructing lies")
-        print("- Truth-telling shows more focused/direct token prediction")
-        print("- Pattern aligns with cognitive load hypothesis in lying")
-
-# Usage
-
-entropy_analysis = analyze_entropy_patterns(results)
-print_entropy_interpretation(entropy_analysis)
 
 # %%
-# Try to use the statmentdataset in the same way that the paper is using it to show if I get the same results
 
 
