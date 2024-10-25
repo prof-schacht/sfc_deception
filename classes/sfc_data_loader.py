@@ -29,10 +29,12 @@ class SFCDatasetLoader:
             self.dataset = self.dataset.select(random.sample(range(len(self.dataset)), num_samples))
 
     def _get_max_prompt_length(self):
-        if self.dataset_name == SupportedDatasets.COMMONSENSE_QA:
+        if self.dataset_name in [SupportedDatasets.COMMONSENSE_QA, SupportedDatasets.COMMONSENSE_QA_FILTERED]:
             return 180
         elif self.dataset_name == SupportedDatasets.VERB_AGREEMENT:
             return 30
+        elif self.dataset_name in [SupportedDatasets.CITIES, SupportedDatasets.COMPANIES, SupportedDatasets.FACTS]:
+            return 180
 
     def _get_special_tokens_tensor(self, selected_special_tokens=None):
         """
@@ -92,8 +94,8 @@ class SFCDatasetLoader:
     @staticmethod
     def load_supported_dataset(dataset_name, split, local_dataset, base_folder_path):
         """Load a supported dataset from Hugging Face by name."""
-        if not isinstance(dataset_name, SupportedDatasets):
-            raise ValueError(f"{dataset_name} is not a supported dataset. Choose from {list(SupportedDatasets)}")
+        # if not isinstance(dataset_name, SupportedDatasets):
+        #     raise ValueError(f"{dataset_name} is not a supported dataset. Choose from {list(SupportedDatasets)}")
 
         if local_dataset:
             local_dataset_name = str(base_folder_path / dataset_name.value)
@@ -156,7 +158,7 @@ class SFCDatasetLoader:
 
 
     def get_formatted_prompt(self, item, system_prompt, task_prompt):
-        if self.dataset_name == SupportedDatasets.COMMONSENSE_QA:
+        if self.dataset_name in [SupportedDatasets.COMMONSENSE_QA, SupportedDatasets.COMMONSENSE_QA_FILTERED]:
             choices = [
                 f"{label}) {text}" 
                 for label, text in zip(item['choices']['label'], item['choices']['text'])
@@ -174,19 +176,30 @@ class SFCDatasetLoader:
                 return item['clean_prefix']
             elif system_prompt == self.corrupted_system_prompt:
                 return item['patch_prefix']
+        elif self.dataset_name in [SupportedDatasets.CITIES, SupportedDatasets.COMPANIES, SupportedDatasets.FACTS]:
+            question = f"'{item['statement']}' - Is this statement True or False?'"
+
+            prompt = (
+                f"{system_prompt} Now, here's the user's question:"
+                f'\n"{question}"'
+                f'\n{task_prompt}"'
+            )
+            return prompt
     
     def get_clean_answer(self, item, prompt, tokenize=True):
-        if self.dataset_name == SupportedDatasets.COMMONSENSE_QA:
+        if self.dataset_name in [SupportedDatasets.COMMONSENSE_QA, SupportedDatasets.COMMONSENSE_QA_FILTERED]:
             answer = item['answerKey']
         elif self.dataset_name == SupportedDatasets.VERB_AGREEMENT:
             answer = item['clean_answer']
+        elif self.dataset_name in [SupportedDatasets.CITIES, SupportedDatasets.COMPANIES, SupportedDatasets.FACTS]:
+            answer = str(item['label'])
 
         try:
             # Find answer pos as the first token before padding in the prompt
             answer_pos = prompt.index(self.model.tokenizer.pad_token_id) - 1
         except ValueError: # If this doesn't work, either the prompt is not tokenizer or it's too long
             # In which case it's enough to provide the last token position
-            answer_pos = - 1
+            answer_pos = len(prompt) - 1
 
         if tokenize:
             answer = self.model.to_single_token(answer)
@@ -194,18 +207,20 @@ class SFCDatasetLoader:
         return answer, answer_pos
     
     def get_corrupted_answer(self, item, prompt, tokenize=True):
-        if self.dataset_name == SupportedDatasets.COMMONSENSE_QA:
+        if self.dataset_name in [SupportedDatasets.COMMONSENSE_QA, SupportedDatasets.COMMONSENSE_QA_FILTERED]:
             correct_answer = item['answerKey']
             answer = [option for option in ['A', 'B', 'C', 'D', 'E'] if option != correct_answer]
         elif self.dataset_name == SupportedDatasets.VERB_AGREEMENT:
             answer = item['patch_answer']
+        elif self.dataset_name in [SupportedDatasets.CITIES, SupportedDatasets.COMPANIES, SupportedDatasets.FACTS]:
+            answer = str(not item['label'])
 
         try:
             # Find answer pos as the first token before padding in the prompt
             answer_pos = prompt.index(self.model.tokenizer.pad_token_id) - 1
         except ValueError: # If this doesn't work, either the prompt is not tokenizer or it's too long
             # In which case it's enough to provide the last token position
-            answer_pos = - 1
+            answer_pos = len(prompt) - 1
 
         if tokenize:
             if isinstance(answer, list):

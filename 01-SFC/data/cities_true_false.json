@@ -1,0 +1,5834 @@
+[
+    {
+        "statement": "Praia is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Thimphu is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Burma is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Yaren is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Transnistria is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Port Vila is a city in Vanuatu",
+        "label": true
+    },
+    {
+        "statement": "Honiara is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Addis Ababa is a city in Bermuda",
+        "label": false
+    },
+    {
+        "statement": "Panama City is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Mal\u00e9 is a city in Djibouti",
+        "label": false
+    },
+    {
+        "statement": "Tiraspol is a city in Brunei",
+        "label": false
+    },
+    {
+        "statement": "Anguilla is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Tarawa is a city in Kiribati",
+        "label": true
+    },
+    {
+        "statement": "Bishkek is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Northern Mariana Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Taipei is a city in Malta",
+        "label": false
+    },
+    {
+        "statement": "Mali is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "North Korea is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "T\u00f3rshavn is a city in Spain",
+        "label": false
+    },
+    {
+        "statement": "Lilongwe is a city in Malawi",
+        "label": true
+    },
+    {
+        "statement": "China is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Laos is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Comoros is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Episkopi Cantonment is a city in Panama",
+        "label": false
+    },
+    {
+        "statement": "Afghanistan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Lesotho is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Tskhinvali is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Rome is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "The Valley is a city in Zimbabwe",
+        "label": false
+    },
+    {
+        "statement": "Haiti is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Saint Kitts and Nevis is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Spain is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sukhumi is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "George Town is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nicosia is a city in Sahrawi Arab Democratic Republic\u00a0",
+        "label": false
+    },
+    {
+        "statement": "London is a city in Indonesia",
+        "label": false
+    },
+    {
+        "statement": "Havana is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Austria is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Samoa is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Saipan is a city in Kosovo",
+        "label": false
+    },
+    {
+        "statement": "China is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sweden is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Guam is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Malabo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Athens is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Mbabane is a city in Turks and Caicos Islands",
+        "label": false
+    },
+    {
+        "statement": "N'Djamena is a city in Iceland",
+        "label": false
+    },
+    {
+        "statement": "Malabo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Mexico City is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Kathmandu is a city in Jersey",
+        "label": false
+    },
+    {
+        "statement": "Mexico is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Trinidad and Tobago is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Lilongwe is a city in Saint Lucia",
+        "label": false
+    },
+    {
+        "statement": "Roseau is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Baghdad is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Saipan is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Dushanbe is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Dodoma is a city in Democratic Republic of the Congo",
+        "label": false
+    },
+    {
+        "statement": "Uzbekistan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Castries is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nuku?alofa is a city in Tonga",
+        "label": true
+    },
+    {
+        "statement": "Kigali is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Spain is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "San Salvador is a city in Slovenia",
+        "label": false
+    },
+    {
+        "statement": "Ankara is a city in Luxembourg",
+        "label": false
+    },
+    {
+        "statement": "Port Louis is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Monrovia is a city in Namibia",
+        "label": false
+    },
+    {
+        "statement": "Bern is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ashgabat is a city in Guernsey",
+        "label": false
+    },
+    {
+        "statement": "Washington D.C. is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Uruguay is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Seoul is a city in South Korea",
+        "label": true
+    },
+    {
+        "statement": "Jamaica is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Managua is a city in Armenia",
+        "label": false
+    },
+    {
+        "statement": "Lima is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Uruguay is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Paramaribo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Sarajevo is a city in Mauritius",
+        "label": false
+    },
+    {
+        "statement": "Marshall Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kiribati is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Fiji is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Ivory Coast is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Yaound\u00e9 is a city in Cameroon",
+        "label": true
+    },
+    {
+        "statement": "Armenia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Belmopan is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "South Georgia and the South Sandwich Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Equatorial Guinea is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Reykjav\u00edk is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Dili is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Somalia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Tunisia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Vilnius is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ulan Bator is a city in Mongolia",
+        "label": true
+    },
+    {
+        "statement": "Budapest is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tuvalu is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Singapore is a city in Singapore",
+        "label": true
+    },
+    {
+        "statement": "Bogot\u00e1 is a city in Bulgaria",
+        "label": false
+    },
+    {
+        "statement": "Tonga is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Andorra is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Ankara is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Morocco is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Beirut is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Saipan is a city in Northern Mariana Islands",
+        "label": true
+    },
+    {
+        "statement": "St. George's is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Guyana is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bras\u00edlia is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Podgorica is a city in Cuba",
+        "label": false
+    },
+    {
+        "statement": "Serbia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Montenegro is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bangui is a city in Central African Republic",
+        "label": true
+    },
+    {
+        "statement": "Botswana is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Nicosia is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Niger is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Naypyidaw is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Riyadh is a city in Saudi Arabia",
+        "label": true
+    },
+    {
+        "statement": "Gibraltar is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Kenya is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sint Maarten is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Lusaka is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Russia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mozambique is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "United Arab Emirates is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Djibouti is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Canada is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sri Jayawardenepura Kotte is a city in Sri Lanka",
+        "label": true
+    },
+    {
+        "statement": "Israel is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Benin is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Belgrade is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tunis is a city in Nepal",
+        "label": false
+    },
+    {
+        "statement": "Ulan Bator is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Paris is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Lusaka is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Noum\u00e9a is a city in New Caledonia",
+        "label": true
+    },
+    {
+        "statement": "Ulan Bator is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Kingston is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Bangkok is a city in Moldova",
+        "label": false
+    },
+    {
+        "statement": "Georgetown is a city in Ascension Island",
+        "label": true
+    },
+    {
+        "statement": "Lilongwe is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tbilisi is a city in Georgia",
+        "label": true
+    },
+    {
+        "statement": "Guinea-Bissau is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Hag\u00e5t\u00f1a is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Solomon Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Dili is a city in Italy",
+        "label": false
+    },
+    {
+        "statement": "Oranjestad is a city in Aruba",
+        "label": true
+    },
+    {
+        "statement": "Tristan da Cunha is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "American Samoa is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Juba is a city in Albania",
+        "label": false
+    },
+    {
+        "statement": "Dakar is a city in Senegal",
+        "label": true
+    },
+    {
+        "statement": "Astana is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Minsk is a city in Mozambique",
+        "label": false
+    },
+    {
+        "statement": "Slovenia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Lesotho is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mexico City is a city in Mexico",
+        "label": true
+    },
+    {
+        "statement": "Switzerland is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "United States Virgin Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mbabane is a city in Swaziland",
+        "label": true
+    },
+    {
+        "statement": "Rabat is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tirana is a city in North Korea",
+        "label": false
+    },
+    {
+        "statement": "Adamstown is a city in Hungary",
+        "label": false
+    },
+    {
+        "statement": "Addis Ababa is a city in Uruguay",
+        "label": false
+    },
+    {
+        "statement": "Sana'a is a city in Suriname",
+        "label": false
+    },
+    {
+        "statement": "Tirana is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Rwanda is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Madrid is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Banjul is a city in Gambia",
+        "label": true
+    },
+    {
+        "statement": "Sarajevo is a city in Bosnia and Herzegovina",
+        "label": true
+    },
+    {
+        "statement": "Monaco is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "San Jos\u00e9 is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nuuk is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "San Salvador is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ecuador is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Banjul is a city in Norway",
+        "label": false
+    },
+    {
+        "statement": "Puerto Rico is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Jakarta is a city in Indonesia",
+        "label": true
+    },
+    {
+        "statement": "Willemstad is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tirana is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Asunci\u00f3n is a city in New Caledonia",
+        "label": false
+    },
+    {
+        "statement": "Poland is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Wellington is a city in Central African Republic",
+        "label": false
+    },
+    {
+        "statement": "Amsterdam is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Santo Domingo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Kingstown is a city in Saint Vincent and the Grenadines",
+        "label": true
+    },
+    {
+        "statement": "Conakry is a city in Wallis and Futuna",
+        "label": false
+    },
+    {
+        "statement": "Port Louis is a city in Latvia",
+        "label": false
+    },
+    {
+        "statement": "Sarajevo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Vaduz is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Brunei is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Portugal is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Nauru is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Philipsburg is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tuvalu is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Suriname is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Jakarta is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bissau is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Estonia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Seoul is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Turks and Caicos Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "South Ossetia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "St. John's is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Santiago is a city in Chile",
+        "label": true
+    },
+    {
+        "statement": "Senegal is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Praia is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Moscow is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Nicaragua is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Nicaragua is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mbabane is a city in Antigua and Barbuda",
+        "label": false
+    },
+    {
+        "statement": "Switzerland is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Manila is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nagorno-Karabakh Republic is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Wallis and Futuna is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Taipei is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Maseru is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Podgorica is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "East Timor is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kathmandu is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Vientiane is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Honduras is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Jerusalem is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Pretoria is a city in Saint Kitts and Nevis",
+        "label": false
+    },
+    {
+        "statement": "Port Vila is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ireland is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Pago Pago is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Antananarivo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "St. John's is a city in Antigua and Barbuda",
+        "label": true
+    },
+    {
+        "statement": "Minsk is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bratislava is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Aruba is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Porto-Novo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Mauritania is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Georgetown is a city in Guyana",
+        "label": true
+    },
+    {
+        "statement": "Japan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Norway is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bermuda is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Norfolk Island is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Beijing is a city in China",
+        "label": true
+    },
+    {
+        "statement": "Tskhinvali is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Angola is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Bangkok is a city in Thailand",
+        "label": true
+    },
+    {
+        "statement": "Algiers is a city in Algeria",
+        "label": true
+    },
+    {
+        "statement": "Port Moresby is a city in Barbados",
+        "label": false
+    },
+    {
+        "statement": "Malaysia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Adamstown is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Islamabad is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Panama is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Nairobi is a city in Kenya",
+        "label": true
+    },
+    {
+        "statement": "Rabat is a city in Morocco",
+        "label": true
+    },
+    {
+        "statement": "Niue is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Moldova is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Thimphu is a city in Bhutan",
+        "label": true
+    },
+    {
+        "statement": "Guinea-Bissau is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Port of Spain is a city in Trinidad and Tobago",
+        "label": true
+    },
+    {
+        "statement": "Papeete is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Dhaka is a city in Bangladesh",
+        "label": true
+    },
+    {
+        "statement": "Caracas is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Togo is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Andorra la Vella is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Georgetown is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Oslo is a city in Norway",
+        "label": true
+    },
+    {
+        "statement": "S\u00e3o Tom\u00e9 and Pr\u00edncipe is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Havana is a city in Cuba",
+        "label": true
+    },
+    {
+        "statement": "Phnom Penh is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Port-au-Prince is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "San Marino is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "El Aai\u00fan is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Santiago is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Slovakia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Republic of the Congo is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Burkina Faso is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Funafuti is a city in Tuvalu",
+        "label": true
+    },
+    {
+        "statement": "Beijing is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Yamoussoukro is a city in South Sudan",
+        "label": false
+    },
+    {
+        "statement": "Accra is a city in Ghana",
+        "label": true
+    },
+    {
+        "statement": "Majuro is a city in Algeria",
+        "label": false
+    },
+    {
+        "statement": "Bamako is a city in Mali",
+        "label": true
+    },
+    {
+        "statement": "Cook Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bucharest is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Oslo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Willemstad is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Muscat is a city in American Samoa",
+        "label": false
+    },
+    {
+        "statement": "Islamabad is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Swaziland is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "St. George's is a city in Madagascar",
+        "label": false
+    },
+    {
+        "statement": "Alofi is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Mongolia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Honduras is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Morocco is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Pretoria is a city in South Africa",
+        "label": true
+    },
+    {
+        "statement": "Mata-Utu is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Sana'a is a city in Monaco",
+        "label": false
+    },
+    {
+        "statement": "Kingston is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Funafuti is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Basseterre is a city in Greece",
+        "label": false
+    },
+    {
+        "statement": "Northern Cyprus is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kingston is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Zimbabwe is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Oman is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mal\u00e9 is a city in Chad",
+        "label": false
+    },
+    {
+        "statement": "Rabat is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Asmara is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Bucharest is a city in Romania",
+        "label": true
+    },
+    {
+        "statement": "Nigeria is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Indonesia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Gambia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Beirut is a city in Philippines",
+        "label": false
+    },
+    {
+        "statement": "Amman is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Hamilton is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "The Valley is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bujumbura is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Hamilton is a city in Bermuda",
+        "label": true
+    },
+    {
+        "statement": "Philipsburg is a city in Sint Maarten",
+        "label": true
+    },
+    {
+        "statement": "Accra is a city in Sudan",
+        "label": false
+    },
+    {
+        "statement": "Tripoli is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Lom\u00e9 is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Prague is a city in Transnistria",
+        "label": false
+    },
+    {
+        "statement": "Brazzaville is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Ghana is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Stanley is a city in Sint Maarten",
+        "label": false
+    },
+    {
+        "statement": "Kuwait City is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tegucigalpa is a city in Russia",
+        "label": false
+    },
+    {
+        "statement": "George Town is a city in Libya",
+        "label": false
+    },
+    {
+        "statement": "Tiraspol is a city in Transnistria",
+        "label": true
+    },
+    {
+        "statement": "Qatar is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Asmara is a city in Belgium",
+        "label": false
+    },
+    {
+        "statement": "Yerevan is a city in Sweden",
+        "label": false
+    },
+    {
+        "statement": "Liechtenstein is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Majuro is a city in Mongolia",
+        "label": false
+    },
+    {
+        "statement": "Apia is a city in Switzerland",
+        "label": false
+    },
+    {
+        "statement": "Bangui is a city in Uganda",
+        "label": false
+    },
+    {
+        "statement": "Copenhagen is a city in Denmark",
+        "label": true
+    },
+    {
+        "statement": "United States Virgin Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Naypyidaw is a city in Burma",
+        "label": true
+    },
+    {
+        "statement": "Riyadh is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Beijing is a city in Palau",
+        "label": false
+    },
+    {
+        "statement": "Rome is a city in Italy",
+        "label": true
+    },
+    {
+        "statement": "Yamoussoukro is a city in Cura\u00e7ao",
+        "label": false
+    },
+    {
+        "statement": "Nauru is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Venezuela is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "United Kingdom is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Road Town is a city in British Virgin Islands",
+        "label": true
+    },
+    {
+        "statement": "Cuba is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Abu Dhabi is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Windhoek is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Dili is a city in Venezuela",
+        "label": false
+    },
+    {
+        "statement": "Castries is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Dakar is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Beirut is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Bucharest is a city in Cook Islands",
+        "label": false
+    },
+    {
+        "statement": "Tbilisi is a city in Akrotiri and Dhekelia",
+        "label": false
+    },
+    {
+        "statement": "Taipei is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Amsterdam is a city in Netherlands",
+        "label": true
+    },
+    {
+        "statement": "Doha is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ukraine is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Argentina is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Budapest is a city in Saint Pierre and Miquelon",
+        "label": false
+    },
+    {
+        "statement": "El Salvador is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kuala Lumpur is a city in Dominica",
+        "label": false
+    },
+    {
+        "statement": "Nagorno-Karabakh Republic is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Basseterre is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Port Moresby is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nuuk is a city in Greenland",
+        "label": true
+    },
+    {
+        "statement": "Ashgabat is a city in Turkmenistan",
+        "label": true
+    },
+    {
+        "statement": "Japan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Port Louis is a city in Mauritius",
+        "label": true
+    },
+    {
+        "statement": "Kuwait City is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Saint Martin is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Asmara is a city in Chile",
+        "label": false
+    },
+    {
+        "statement": "San Jos\u00e9 is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Jakarta is a city in Jamaica",
+        "label": false
+    },
+    {
+        "statement": "New Zealand is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Flying Fish Cove is a city in Christmas Island",
+        "label": true
+    },
+    {
+        "statement": "Montevideo is a city in Uruguay",
+        "label": true
+    },
+    {
+        "statement": "Kathmandu is a city in Thailand",
+        "label": false
+    },
+    {
+        "statement": "T\u00f3rshavn is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Algiers is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "T\u00f3rshavn is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Maseru is a city in Lesotho",
+        "label": true
+    },
+    {
+        "statement": "Brussels is a city in Mali",
+        "label": false
+    },
+    {
+        "statement": "Hargeisa is a city in Somaliland",
+        "label": true
+    },
+    {
+        "statement": "St. Helier is a city in Bahrain",
+        "label": false
+    },
+    {
+        "statement": "Valletta is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Kampala is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Papua New Guinea is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Naypyidaw is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Praia is a city in Cape Verde",
+        "label": true
+    },
+    {
+        "statement": "Tirana is a city in Albania",
+        "label": true
+    },
+    {
+        "statement": "Mauritius is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Dominica is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "San Juan is a city in Ethiopia",
+        "label": false
+    },
+    {
+        "statement": "Taiwan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Harare is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Cape Verde is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Hungary is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Mogadishu is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Niamey is a city in French Polynesia",
+        "label": false
+    },
+    {
+        "statement": "Dublin is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tanzania is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Estonia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Albania is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Pakistan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Honiara is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Yerevan is a city in Seychelles",
+        "label": false
+    },
+    {
+        "statement": "Bras\u00edlia is a city in Greenland",
+        "label": false
+    },
+    {
+        "statement": "Vilnius is a city in Lithuania",
+        "label": true
+    },
+    {
+        "statement": "Cook Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Dodoma is a city in Tanzania",
+        "label": true
+    },
+    {
+        "statement": "El Salvador is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Marigot is a city in Niger",
+        "label": false
+    },
+    {
+        "statement": "Vienna is a city in Austria",
+        "label": true
+    },
+    {
+        "statement": "Gabon is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Belgium is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Plymouth is a city in Montserrat",
+        "label": true
+    },
+    {
+        "statement": "Abkhazia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Douglas is a city in Isle of Man",
+        "label": true
+    },
+    {
+        "statement": "Avarua is a city in Guam",
+        "label": false
+    },
+    {
+        "statement": "Stanley is a city in Falkland Islands",
+        "label": true
+    },
+    {
+        "statement": "Monaco is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ankara is a city in Iran",
+        "label": false
+    },
+    {
+        "statement": "Freetown is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Adamstown is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Manama is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Flying Fish Cove is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Jordan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Malta is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kuwait City is a city in Kuwait",
+        "label": true
+    },
+    {
+        "statement": "Central African Republic is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Germany is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Charlotte Amalie is a city in United States Virgin Islands",
+        "label": true
+    },
+    {
+        "statement": "Funafuti is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ashgabat is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Dublin is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Sana'a is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Malawi is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Pyongyang is a city in North Korea",
+        "label": true
+    },
+    {
+        "statement": "Nouakchott is a city in Cameroon",
+        "label": false
+    },
+    {
+        "statement": "Slovakia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Thailand is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "S\u00e3o Tom\u00e9 is a city in Puerto Rico",
+        "label": false
+    },
+    {
+        "statement": "Vatican City is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bermuda is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Stepanakert is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Singapore is a city in Slovakia",
+        "label": false
+    },
+    {
+        "statement": "S\u00e3o Tom\u00e9 is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Fiji is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "South Sudan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "The Valley is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Berlin is a city in Vanuatu",
+        "label": false
+    },
+    {
+        "statement": "Dili is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Gaborone is a city in Botswana",
+        "label": true
+    },
+    {
+        "statement": "Baghdad is a city in Iraq",
+        "label": true
+    },
+    {
+        "statement": "Tbilisi is a city in Israel",
+        "label": false
+    },
+    {
+        "statement": "British Virgin Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Belgrade is a city in Serbia",
+        "label": true
+    },
+    {
+        "statement": "French Polynesia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Episkopi Cantonment is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Doha is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Ouagadougou is a city in Haiti",
+        "label": false
+    },
+    {
+        "statement": "Barbados is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Malabo is a city in Ivory Coast",
+        "label": false
+    },
+    {
+        "statement": "Sucre is a city in Bolivia",
+        "label": true
+    },
+    {
+        "statement": "Djibouti is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kigali is a city in Rwanda",
+        "label": true
+    },
+    {
+        "statement": "Madagascar is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Montevideo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Damascus is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Warsaw is a city in Dominican Republic",
+        "label": false
+    },
+    {
+        "statement": "Mal\u00e9 is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Kampala is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Australia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Addis Ababa is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tripoli is a city in Marshall Islands",
+        "label": false
+    },
+    {
+        "statement": "Moroni is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Vatican City is a city in Gibraltar",
+        "label": false
+    },
+    {
+        "statement": "Sudan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Oslo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Sucre is a city in Ukraine",
+        "label": false
+    },
+    {
+        "statement": "Belgrade is a city in Guinea-Bissau",
+        "label": false
+    },
+    {
+        "statement": "Niamey is a city in Niger",
+        "label": true
+    },
+    {
+        "statement": "Apia is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Pyongyang is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "The Valley is a city in Anguilla",
+        "label": true
+    },
+    {
+        "statement": "West Island is a city in Belize",
+        "label": false
+    },
+    {
+        "statement": "Hanga Roa is a city in Easter Island",
+        "label": true
+    },
+    {
+        "statement": "Nigeria is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Ethiopia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Tiraspol is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Belgium is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Plymouth is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Antananarivo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Belize is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Grytviken is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Warsaw is a city in South Georgia and the South Sandwich Islands",
+        "label": false
+    },
+    {
+        "statement": "Mbabane is a city in Kenya",
+        "label": false
+    },
+    {
+        "statement": "Seychelles is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Georgia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "San Marino is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Harare is a city in Zimbabwe",
+        "label": true
+    },
+    {
+        "statement": "Tashkent is a city in Uzbekistan",
+        "label": true
+    },
+    {
+        "statement": "Kingstown is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Conakry is a city in Guinea",
+        "label": true
+    },
+    {
+        "statement": "Kingstown is a city in Fiji",
+        "label": false
+    },
+    {
+        "statement": "Quito is a city in Ecuador",
+        "label": true
+    },
+    {
+        "statement": "Monrovia is a city in Liberia",
+        "label": true
+    },
+    {
+        "statement": "Sint Maarten is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bandar Seri Begawan is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Montserrat is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Zagreb is a city in Croatia",
+        "label": true
+    },
+    {
+        "statement": "Kigali is a city in Serbia",
+        "label": false
+    },
+    {
+        "statement": "Libreville is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Porto-Novo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Isle of Man is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Swaziland is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Maputo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "George Town is a city in Cayman Islands",
+        "label": true
+    },
+    {
+        "statement": "Mongolia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Managua is a city in Nicaragua",
+        "label": true
+    },
+    {
+        "statement": "San Marino is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Germany is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sri Jayawardenepura Kotte is a city in United Arab Emirates",
+        "label": false
+    },
+    {
+        "statement": "Rwanda is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Nairobi is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Monrovia is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Hargeisa is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Mogadishu is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "South Korea is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kiev is a city in Ukraine",
+        "label": true
+    },
+    {
+        "statement": "Tirana is a city in Japan",
+        "label": false
+    },
+    {
+        "statement": "Jamestown is a city in Honduras",
+        "label": false
+    },
+    {
+        "statement": "Chile is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Italy is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Stockholm is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Guatemala is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Stockholm is a city in India",
+        "label": false
+    },
+    {
+        "statement": "Lusaka is a city in Zambia",
+        "label": true
+    },
+    {
+        "statement": "S\u00e3o Tom\u00e9 is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Helsinki is a city in Finland",
+        "label": true
+    },
+    {
+        "statement": "Saint Pierre and Miquelon is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Harare is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Grenada is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kingston is a city in Jamaica",
+        "label": true
+    },
+    {
+        "statement": "Juba is a city in Benin",
+        "label": false
+    },
+    {
+        "statement": "Ljubljana is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Somaliland is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Hanga Roa is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Sri Jayawardenepura Kotte is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Cairo is a city in Egypt",
+        "label": true
+    },
+    {
+        "statement": "Astana is a city in Canada",
+        "label": false
+    },
+    {
+        "statement": "Canberra is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Malabo is a city in Equatorial Guinea",
+        "label": true
+    },
+    {
+        "statement": "Costa Rica is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Malaysia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Skopje is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "United Kingdom is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Angola is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Amsterdam is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Sukhumi is a city in Abkhazia",
+        "label": true
+    },
+    {
+        "statement": "Liechtenstein is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Sweden is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Guyana is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "St. Helier is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Stepanakert is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nassau is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Brazil is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Tegucigalpa is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Astana is a city in Kazakhstan",
+        "label": true
+    },
+    {
+        "statement": "Dili is a city in East Timor",
+        "label": true
+    },
+    {
+        "statement": "Singapore is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Palikir is a city in Federated States of Micronesia",
+        "label": true
+    },
+    {
+        "statement": "Bhutan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Episkopi Cantonment is a city in Aruba",
+        "label": false
+    },
+    {
+        "statement": "Oranjestad is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tunis is a city in Ecuador",
+        "label": false
+    },
+    {
+        "statement": "Malta is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Lom\u00e9 is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Stanley is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Honiara is a city in Solomon Islands",
+        "label": true
+    },
+    {
+        "statement": "Philipsburg is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tskhinvali is a city in New Zealand",
+        "label": false
+    },
+    {
+        "statement": "Pristina is a city in Kosovo",
+        "label": true
+    },
+    {
+        "statement": "Oman is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kuwait City is a city in Swaziland",
+        "label": false
+    },
+    {
+        "statement": "India is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Ljubljana is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Vietnam is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Ulan Bator is a city in Cocos Islands",
+        "label": false
+    },
+    {
+        "statement": "Vaduz is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Alofi is a city in Niue",
+        "label": true
+    },
+    {
+        "statement": "Nouakchott is a city in Bolivia",
+        "label": false
+    },
+    {
+        "statement": "Bissau is a city in Sri Lanka",
+        "label": false
+    },
+    {
+        "statement": "Turkmenistan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Tashkent is a city in Cape Verde",
+        "label": false
+    },
+    {
+        "statement": "San Salvador is a city in Maldives",
+        "label": false
+    },
+    {
+        "statement": "S\u00e3o Tom\u00e9 is a city in S\u00e3o Tom\u00e9 and Pr\u00edncipe",
+        "label": true
+    },
+    {
+        "statement": "Benin is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Cambodia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Tripoli is a city in Senegal",
+        "label": false
+    },
+    {
+        "statement": "Brazzaville is a city in Republic of the Congo",
+        "label": true
+    },
+    {
+        "statement": "Gibraltar is a city in Kuwait",
+        "label": false
+    },
+    {
+        "statement": "Singapore is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Federated States of Micronesia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Sri Jayawardenepura Kotte is a city in Yemen",
+        "label": false
+    },
+    {
+        "statement": "Algiers is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Bamako is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Egypt is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Guam is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Dodoma is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Marigot is a city in Jordan",
+        "label": false
+    },
+    {
+        "statement": "Cura\u00e7ao is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Comoros is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sofia is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tbilisi is a city in Turkey",
+        "label": false
+    },
+    {
+        "statement": "Doha is a city in Iraq",
+        "label": false
+    },
+    {
+        "statement": "Phnom Penh is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nuku?alofa is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tirana is a city in Faroe Islands",
+        "label": false
+    },
+    {
+        "statement": "Georgetown is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Adamstown is a city in Pitcairn Islands",
+        "label": true
+    },
+    {
+        "statement": "Port Vila is a city in Nicaragua",
+        "label": false
+    },
+    {
+        "statement": "Yamoussoukro is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Pristina is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bridgetown is a city in Barbados",
+        "label": true
+    },
+    {
+        "statement": "Panama City is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Republic of the Congo is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Chad is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Russia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Avarua is a city in Nigeria",
+        "label": false
+    },
+    {
+        "statement": "Luxembourg is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Djibouti is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Cockburn Town is a city in Turks and Caicos Islands",
+        "label": true
+    },
+    {
+        "statement": "Luanda is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tallinn is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Luxembourg is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Vietnam is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "New Delhi is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Ashgabat is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Algeria is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bratislava is a city in Slovakia",
+        "label": true
+    },
+    {
+        "statement": "Monaco is a city in Monaco",
+        "label": true
+    },
+    {
+        "statement": "Saint Helena is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Grytviken is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Skopje is a city in Macedonia",
+        "label": true
+    },
+    {
+        "statement": "San Jos\u00e9 is a city in Costa Rica",
+        "label": true
+    },
+    {
+        "statement": "New Delhi is a city in India",
+        "label": true
+    },
+    {
+        "statement": "Helsinki is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Slovenia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Ouagadougou is a city in Burkina Faso",
+        "label": true
+    },
+    {
+        "statement": "Quito is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Freetown is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "London is a city in United Kingdom",
+        "label": true
+    },
+    {
+        "statement": "Yamoussoukro is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nouakchott is a city in Lebanon",
+        "label": false
+    },
+    {
+        "statement": "Porto-Novo is a city in Norfolk Island",
+        "label": false
+    },
+    {
+        "statement": "Democratic Republic of the Congo is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Belarus is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Thimphu is a city in Qatar",
+        "label": false
+    },
+    {
+        "statement": "Finland is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "French Guiana is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Algeria is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Prague is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Washington D.C. is a city in United States",
+        "label": true
+    },
+    {
+        "statement": "N'Djamena is a city in Eritrea",
+        "label": false
+    },
+    {
+        "statement": "Mal\u00e9 is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Manila is a city in Philippines",
+        "label": true
+    },
+    {
+        "statement": "Avarua is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Madagascar is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Taipei is a city in Taiwan",
+        "label": true
+    },
+    {
+        "statement": "Botswana is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Greenland is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Asunci\u00f3n is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Ouagadougou is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Djibouti is a city in Djibouti",
+        "label": true
+    },
+    {
+        "statement": "San Juan is a city in Puerto Rico",
+        "label": true
+    },
+    {
+        "statement": "Kiev is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Khartoum is a city in Sudan",
+        "label": true
+    },
+    {
+        "statement": "Kingston is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Kuala Lumpur is a city in Croatia",
+        "label": false
+    },
+    {
+        "statement": "Hungary is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Tashkent is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Yerevan is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Maputo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Indonesia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Antananarivo is a city in Anguilla",
+        "label": false
+    },
+    {
+        "statement": "Solomon Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Cyprus is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Sudan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Havana is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "St. Pierre is a city in Saint Pierre and Miquelon",
+        "label": true
+    },
+    {
+        "statement": "Porto-Novo is a city in Benin",
+        "label": true
+    },
+    {
+        "statement": "Stockholm is a city in Sweden",
+        "label": true
+    },
+    {
+        "statement": "Freetown is a city in Lesotho",
+        "label": false
+    },
+    {
+        "statement": "Marigot is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "New Caledonia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Abuja is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tbilisi is a city in Cayman Islands",
+        "label": false
+    },
+    {
+        "statement": "Pago Pago is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Poland is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Bangkok is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Iraq is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Tanzania is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Riga is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Warsaw is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Vientiane is a city in Laos",
+        "label": true
+    },
+    {
+        "statement": "Lilongwe is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "N'Djamena is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Antigua and Barbuda is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kosovo is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Monrovia is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tallinn is a city in Estonia",
+        "label": true
+    },
+    {
+        "statement": "Kuala Lumpur is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Roseau is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Latvia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Andorra la Vella is a city in Andorra",
+        "label": true
+    },
+    {
+        "statement": "Iran is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Liberia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Baku is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Manila is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Windhoek is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Pyongyang is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Macedonia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Burkina Faso is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Dushanbe is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Port Moresby is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Caracas is a city in Venezuela",
+        "label": true
+    },
+    {
+        "statement": "Kosovo is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "New Delhi is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Libya is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bras\u00edlia is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Prague is a city in Cyprus",
+        "label": false
+    },
+    {
+        "statement": "Saint Vincent and the Grenadines is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Turkey is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Monaco is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Madrid is a city in Burundi",
+        "label": false
+    },
+    {
+        "statement": "Maldives is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Beirut is a city in Peru",
+        "label": false
+    },
+    {
+        "statement": "Hamilton is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Denmark is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Banjul is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tiraspol is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Georgetown is a city in Mauritania",
+        "label": false
+    },
+    {
+        "statement": "Panama is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Laos is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Sarajevo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bern is a city in Switzerland",
+        "label": true
+    },
+    {
+        "statement": "Tbilisi is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Juba is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Baghdad is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Gaborone is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Saint Pierre and Miquelon is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Austria is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Ljubljana is a city in South Africa",
+        "label": false
+    },
+    {
+        "statement": "Quito is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Road Town is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Marigot is a city in Saint Martin",
+        "label": true
+    },
+    {
+        "statement": "Nassau is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Gabon is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Vaduz is a city in Colombia",
+        "label": false
+    },
+    {
+        "statement": "Libreville is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Sucre is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Yerevan is a city in Armenia",
+        "label": true
+    },
+    {
+        "statement": "Montenegro is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Apia is a city in Samoa",
+        "label": true
+    },
+    {
+        "statement": "Tunis is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tristan da Cunha is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Episkopi Cantonment is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Jersey is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Praia is a city in Tanzania",
+        "label": false
+    },
+    {
+        "statement": "Managua is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Gambia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "George Town is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Barbados is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bujumbura is a city in Burundi",
+        "label": true
+    },
+    {
+        "statement": "Bandar Seri Begawan is a city in Brunei",
+        "label": true
+    },
+    {
+        "statement": "Djibouti is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Brussels is a city in Belgium",
+        "label": true
+    },
+    {
+        "statement": "Naypyidaw is a city in Saint Martin",
+        "label": false
+    },
+    {
+        "statement": "Lebanon is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Egypt is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Uganda is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Amman is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "St. Helier is a city in Jersey",
+        "label": true
+    },
+    {
+        "statement": "Cayenne is a city in French Guiana",
+        "label": true
+    },
+    {
+        "statement": "South Ossetia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Yemen is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Somaliland is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kiev is a city in Easter Island",
+        "label": false
+    },
+    {
+        "statement": "Noum\u00e9a is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Charlotte Amalie is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Sofia is a city in Estonia",
+        "label": false
+    },
+    {
+        "statement": "South Georgia and the South Sandwich Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bras\u00edlia is a city in Brazil",
+        "label": true
+    },
+    {
+        "statement": "Norfolk Island is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Albania is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Uzbekistan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Victoria is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tehran is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Mozambique is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Vanuatu is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kampala is a city in Uganda",
+        "label": true
+    },
+    {
+        "statement": "Bujumbura is a city in Tajikistan",
+        "label": false
+    },
+    {
+        "statement": "Riyadh is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Bandar Seri Begawan is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Manila is a city in Poland",
+        "label": false
+    },
+    {
+        "statement": "Eritrea is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Tarawa is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Abu Dhabi is a city in San Marino",
+        "label": false
+    },
+    {
+        "statement": "Bangladesh is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Maputo is a city in Mozambique",
+        "label": true
+    },
+    {
+        "statement": "Nicosia is a city in Lithuania",
+        "label": false
+    },
+    {
+        "statement": "Lima is a city in Peru",
+        "label": true
+    },
+    {
+        "statement": "Pago Pago is a city in Gambia",
+        "label": false
+    },
+    {
+        "statement": "Majuro is a city in Marshall Islands",
+        "label": true
+    },
+    {
+        "statement": "Colombia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Conakry is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Yamoussoukro is a city in Ivory Coast",
+        "label": true
+    },
+    {
+        "statement": "North Korea is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "\u00a0Vatican City is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Phnom Penh is a city in Cambodia",
+        "label": true
+    },
+    {
+        "statement": "Minsk is a city in Belarus",
+        "label": true
+    },
+    {
+        "statement": "St. Peter Port is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "United States is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Tashkent is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Belgrade is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "South Sudan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sucre is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Abuja is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Mbabane is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Faroe Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Australia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Baghdad is a city in Bahamas",
+        "label": false
+    },
+    {
+        "statement": "West Island is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Wallis and Futuna is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Cameroon is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Nuku?alofa is a city in Federated States of Micronesia",
+        "label": false
+    },
+    {
+        "statement": "Minsk is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Port of Spain is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "American Samoa is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Santiago is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Nairobi is a city in France",
+        "label": false
+    },
+    {
+        "statement": "Tehran is a city in Iran",
+        "label": true
+    },
+    {
+        "statement": "Moscow is a city in Russia",
+        "label": true
+    },
+    {
+        "statement": "Nicosia is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Brussels is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Grytviken is a city in South Georgia and the South Sandwich Islands",
+        "label": true
+    },
+    {
+        "statement": "Israel is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Warsaw is a city in Poland",
+        "label": true
+    },
+    {
+        "statement": "Croatia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Afghanistan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Pretoria is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "St. Helier is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Guernsey is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mogadishu is a city in Somalia",
+        "label": true
+    },
+    {
+        "statement": "Valletta is a city in Zambia",
+        "label": false
+    },
+    {
+        "statement": "St. George's is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Juba is a city in South Sudan",
+        "label": true
+    },
+    {
+        "statement": "Luanda is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Argentina is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Lisbon is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Burma is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Wellington is a city in New Zealand",
+        "label": true
+    },
+    {
+        "statement": "Anguilla is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Edinburgh of the Seven Seas is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Abkhazia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Abu Dhabi is a city in United Arab Emirates",
+        "label": true
+    },
+    {
+        "statement": "Cura\u00e7ao is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Equatorial Guinea is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kathmandu is a city in Tristan da Cunha",
+        "label": false
+    },
+    {
+        "statement": "Kathmandu is a city in China",
+        "label": false
+    },
+    {
+        "statement": "Yaren is a city in Malawi",
+        "label": false
+    },
+    {
+        "statement": "Cape Verde is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Alofi is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Belgrade is a city in Burma",
+        "label": false
+    },
+    {
+        "statement": "Islamabad is a city in Morocco",
+        "label": false
+    },
+    {
+        "statement": "Palikir is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Asunci\u00f3n is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "San Juan is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Serbia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Guernsey is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Ascension Island is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Accra is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Guinea is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Bulgaria is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Vientiane is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Warsaw is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Valletta is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Panama City is a city in Panama",
+        "label": true
+    },
+    {
+        "statement": "Yaren is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Majuro is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Marshall Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kathmandu is a city in Nepal",
+        "label": true
+    },
+    {
+        "statement": "Tokyo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Manama is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Prague is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Athens is a city in Bangladesh",
+        "label": false
+    },
+    {
+        "statement": "Port Moresby is a city in Papua New Guinea",
+        "label": true
+    },
+    {
+        "statement": "Budapest is a city in Hungary",
+        "label": true
+    },
+    {
+        "statement": "Federated States of Micronesia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Palau is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Chad is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Nuuk is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Melekeok is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Singapore is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Latvia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Quito is a city in Kazakhstan",
+        "label": false
+    },
+    {
+        "statement": "Antananarivo is a city in Montenegro",
+        "label": false
+    },
+    {
+        "statement": "Ashgabat is a city in Costa Rica",
+        "label": false
+    },
+    {
+        "statement": "Antigua and Barbuda is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Avarua is a city in Syria",
+        "label": false
+    },
+    {
+        "statement": "St. Peter Port is a city in Guernsey",
+        "label": true
+    },
+    {
+        "statement": "Muscat is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Dodoma is a city in United Kingdom",
+        "label": false
+    },
+    {
+        "statement": "Budapest is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Episkopi Cantonment is a city in Akrotiri and Dhekelia",
+        "label": true
+    },
+    {
+        "statement": "Chisinau is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Copenhagen is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tarawa is a city in Mexico",
+        "label": false
+    },
+    {
+        "statement": "Ivory Coast is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kinshasa is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Santo Domingo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Namibia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "South Africa is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Ethiopia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Tskhinvali is a city in South Ossetia",
+        "label": true
+    },
+    {
+        "statement": "Iceland is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Windhoek is a city in Namibia",
+        "label": true
+    },
+    {
+        "statement": "T\u00f3rshavn is a city in Faroe Islands",
+        "label": true
+    },
+    {
+        "statement": "Central African Republic is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Nassau is a city in Bahamas",
+        "label": true
+    },
+    {
+        "statement": "Dublin is a city in Ireland",
+        "label": true
+    },
+    {
+        "statement": "Copenhagen is a city in \u00a0Vatican City",
+        "label": false
+    },
+    {
+        "statement": "Sri Lanka is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Douglas is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Flying Fish Cove is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Bolivia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Northern Cyprus is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "San Marino is a city in San Marino",
+        "label": true
+    },
+    {
+        "statement": "Melekeok is a city in Saint Helena",
+        "label": false
+    },
+    {
+        "statement": "Philippines is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Suriname is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Denmark is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "N'Djamena is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "France is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Nepal is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Juba is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Christmas Island is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bujumbura is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Pakistan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Ljubljana is a city in Slovenia",
+        "label": true
+    },
+    {
+        "statement": "Jerusalem is a city in Israel",
+        "label": true
+    },
+    {
+        "statement": "St. Peter Port is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bangui is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ottawa is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Wellington is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Azerbaijan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Jamestown is a city in Saint Helena",
+        "label": true
+    },
+    {
+        "statement": "Gibraltar is a city in Gibraltar",
+        "label": true
+    },
+    {
+        "statement": "Georgia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Santo Domingo is a city in Dominican Republic",
+        "label": true
+    },
+    {
+        "statement": "Ottawa is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Samoa is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Hanoi is a city in Vietnam",
+        "label": true
+    },
+    {
+        "statement": "Prague is a city in Czech Republic",
+        "label": true
+    },
+    {
+        "statement": "Saipan is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Beijing is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Skopje is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Hanga Roa is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Rabat is a city in Macedonia",
+        "label": false
+    },
+    {
+        "statement": "Abu Dhabi is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Reykjav\u00edk is a city in El Salvador",
+        "label": false
+    },
+    {
+        "statement": "Jamestown is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Italy is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Saint Kitts and Nevis is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Vatican City is a city in Germany",
+        "label": false
+    },
+    {
+        "statement": "Accra is a city in Australia",
+        "label": false
+    },
+    {
+        "statement": "Norway is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Avarua is a city in Cook Islands",
+        "label": true
+    },
+    {
+        "statement": "Saint Vincent and the Grenadines is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Armenia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Vaduz is a city in Nagorno-Karabakh Republic",
+        "label": false
+    },
+    {
+        "statement": "Libreville is a city in Vietnam",
+        "label": false
+    },
+    {
+        "statement": "Malawi is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Antananarivo is a city in Madagascar",
+        "label": true
+    },
+    {
+        "statement": "Tokyo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bissau is a city in Angola",
+        "label": false
+    },
+    {
+        "statement": "Niger is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Victoria is a city in Seychelles",
+        "label": true
+    },
+    {
+        "statement": "Nepal is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Melekeok is a city in Palau",
+        "label": true
+    },
+    {
+        "statement": "Chile is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Andorra is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Christmas Island is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Washington D.C. is a city in Saudi Arabia",
+        "label": false
+    },
+    {
+        "statement": "Kyrgyzstan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Asunci\u00f3n is a city in Liechtenstein",
+        "label": false
+    },
+    {
+        "statement": "Episkopi Cantonment is a city in Guatemala",
+        "label": false
+    },
+    {
+        "statement": "Moscow is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Kuwait is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mauritania is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sofia is a city in Bulgaria",
+        "label": true
+    },
+    {
+        "statement": "Stepanakert is a city in Nagorno-Karabakh Republic",
+        "label": true
+    },
+    {
+        "statement": "Kiev is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Castries is a city in Brazil",
+        "label": false
+    },
+    {
+        "statement": "Grenada is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Philippines is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Roseau is a city in Dominica",
+        "label": true
+    },
+    {
+        "statement": "Nassau is a city in British Virgin Islands",
+        "label": false
+    },
+    {
+        "statement": "Sierra Leone is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Uganda is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Seychelles is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Colombia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Madrid is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Copenhagen is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bangladesh is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Saudi Arabia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Sana'a is a city in Yemen",
+        "label": true
+    },
+    {
+        "statement": "Tallinn is a city in Pitcairn Islands",
+        "label": false
+    },
+    {
+        "statement": "Asmara is a city in Eritrea",
+        "label": true
+    },
+    {
+        "statement": "Niamey is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Mali is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Helsinki is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Kabul is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Noum\u00e9a is a city in S\u00e3o Tom\u00e9 and Pr\u00edncipe",
+        "label": false
+    },
+    {
+        "statement": "Kinshasa is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Conakry is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Puerto Rico is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Zimbabwe is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Valletta is a city in Malta",
+        "label": true
+    },
+    {
+        "statement": "Tunis is a city in Tunisia",
+        "label": true
+    },
+    {
+        "statement": "Paris is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Edinburgh of the Seven Seas is a city in Tristan da Cunha",
+        "label": true
+    },
+    {
+        "statement": "Singapore is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Moroni is a city in Comoros",
+        "label": true
+    },
+    {
+        "statement": "Lebanon is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Iran is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Tunis is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Romania is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Paramaribo is a city in Tonga",
+        "label": false
+    },
+    {
+        "statement": "Pretoria is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "San Salvador is a city in El Salvador",
+        "label": true
+    },
+    {
+        "statement": "Pristina is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Yamoussoukro is a city in East Timor",
+        "label": false
+    },
+    {
+        "statement": "Dhaka is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Cayman Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Paramaribo is a city in Guinea",
+        "label": false
+    },
+    {
+        "statement": "Riga is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Episkopi Cantonment is a city in Solomon Islands",
+        "label": false
+    },
+    {
+        "statement": "Manama is a city in Bahrain",
+        "label": true
+    },
+    {
+        "statement": "Kuala Lumpur is a city in Malaysia",
+        "label": true
+    },
+    {
+        "statement": "Tunisia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Thailand is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Tehran is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "British Virgin Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Syria is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Cayenne is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Sri Jayawardenepura Kotte is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "United Arab Emirates is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Athens is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Pitcairn Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Addis Ababa is a city in Cambodia",
+        "label": false
+    },
+    {
+        "statement": "St. Helier is a city in Montserrat",
+        "label": false
+    },
+    {
+        "statement": "Kyrgyzstan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Dominica is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Andorra la Vella is a city in Liberia",
+        "label": false
+    },
+    {
+        "statement": "Seoul is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Eritrea is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Guatemala City is a city in Guatemala",
+        "label": true
+    },
+    {
+        "statement": "Brunei is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Cocos Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Port-au-Prince is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Port Vila is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Papeete is a city in Botswana",
+        "label": false
+    },
+    {
+        "statement": "Bogot\u00e1 is a city in Colombia",
+        "label": true
+    },
+    {
+        "statement": "Harare is a city in French Guiana",
+        "label": false
+    },
+    {
+        "statement": "Greece is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Avarua is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Managua is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Lisbon is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Nairobi is a city in Andorra",
+        "label": false
+    },
+    {
+        "statement": "Nicosia is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bogot\u00e1 is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Macedonia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mexico is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Zagreb is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Guatemala City is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Paris is a city in France",
+        "label": true
+    },
+    {
+        "statement": "Riga is a city in Latvia",
+        "label": true
+    },
+    {
+        "statement": "United States is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Dominican Republic is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Abuja is a city in Nigeria",
+        "label": true
+    },
+    {
+        "statement": "Seoul is a city in Samoa",
+        "label": false
+    },
+    {
+        "statement": "Croatia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Tripoli is a city in Libya",
+        "label": true
+    },
+    {
+        "statement": "Cambodia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Chisinau is a city in Moldova",
+        "label": true
+    },
+    {
+        "statement": "Stockholm is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Apia is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Turkey is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Asmara is a city in Isle of Man",
+        "label": false
+    },
+    {
+        "statement": "Pitcairn Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Venezuela is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Akrotiri and Dhekelia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Melekeok is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Castries is a city in Saint Lucia",
+        "label": true
+    },
+    {
+        "statement": "Niue is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Harare is a city in Falkland Islands",
+        "label": false
+    },
+    {
+        "statement": "Madrid is a city in Spain",
+        "label": true
+    },
+    {
+        "statement": "Mbabane is a city in Austria",
+        "label": false
+    },
+    {
+        "statement": "Podgorica is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Asmara is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Berlin is a city in Germany",
+        "label": true
+    },
+    {
+        "statement": "Greece is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Palikir is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Dodoma is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Luxembourg is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "St. John's is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Victoria is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "St. Pierre is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Washington D.C. is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Accra is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Bahrain is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Taiwan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Aruba is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Sierra Leone is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Liberia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kuala Lumpur is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Zagreb is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Transnistria is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Bahamas is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sofia is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bridgetown is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Saint Martin is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "St. George's is a city in Grenada",
+        "label": true
+    },
+    {
+        "statement": "Vienna is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Gustavia is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Mata-Utu is a city in Saint Barth\u00e9lemy",
+        "label": false
+    },
+    {
+        "statement": "Canberra is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Kabul is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nouakchott is a city in Mauritania",
+        "label": true
+    },
+    {
+        "statement": "Dublin is a city in Ascension Island",
+        "label": false
+    },
+    {
+        "statement": "Falkland Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Khartoum is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Saint Lucia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Islamabad is a city in Pakistan",
+        "label": true
+    },
+    {
+        "statement": "Charlotte Amalie is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Reykjav\u00edk is a city in Iceland",
+        "label": true
+    },
+    {
+        "statement": "Ecuador is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Vaduz is a city in Liechtenstein",
+        "label": true
+    },
+    {
+        "statement": "Buenos Aires is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Hargeisa is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Saint Lucia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bangui is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Portugal is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Brazzaville is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tarawa is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Luxembourg is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Paramaribo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Suva is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Jamestown is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Wellington is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Oranjestad is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Nicosia is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Saint Barth\u00e9lemy is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Buenos Aires is a city in Argentina",
+        "label": true
+    },
+    {
+        "statement": "Bishkek is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Kingston is a city in Norfolk Island",
+        "label": true
+    },
+    {
+        "statement": "Damascus is a city in Syria",
+        "label": true
+    },
+    {
+        "statement": "Belize is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Vatican City is a city in \u00a0Vatican City",
+        "label": true
+    },
+    {
+        "statement": "Freetown is a city in Sierra Leone",
+        "label": true
+    },
+    {
+        "statement": "Hanoi is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Gibraltar is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Tokyo is a city in Japan",
+        "label": true
+    },
+    {
+        "statement": "Belarus is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "South Korea is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mauritius is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Addis Ababa is a city in Nauru",
+        "label": false
+    },
+    {
+        "statement": "Kigali is a city in Northern Cyprus",
+        "label": false
+    },
+    {
+        "statement": "Tajikistan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Yaound\u00e9 is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Cayman Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kazakhstan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bishkek is a city in Kyrgyzstan",
+        "label": true
+    },
+    {
+        "statement": "Belmopan is a city in Belize",
+        "label": true
+    },
+    {
+        "statement": "Azerbaijan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kabul is a city in Afghanistan",
+        "label": true
+    },
+    {
+        "statement": "Senegal is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Ashgabat is a city in Trinidad and Tobago",
+        "label": false
+    },
+    {
+        "statement": "Sri Lanka is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sukhumi is a city in Christmas Island",
+        "label": false
+    },
+    {
+        "statement": "Port Louis is a city in Belarus",
+        "label": false
+    },
+    {
+        "statement": "Easter Island is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Montevideo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Togo is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mata-Utu is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Saudi Arabia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Majuro is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Costa Rica is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Andorra la Vella is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nouakchott is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Cairo is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Port-au-Prince is a city in Haiti",
+        "label": true
+    },
+    {
+        "statement": "Guatemala is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Ouagadougou is a city in Ireland",
+        "label": false
+    },
+    {
+        "statement": "West Island is a city in Cocos Islands",
+        "label": true
+    },
+    {
+        "statement": "Tbilisi is a city in United States Virgin Islands",
+        "label": false
+    },
+    {
+        "statement": "Mata-Utu is a city in Wallis and Futuna",
+        "label": true
+    },
+    {
+        "statement": "Jersey is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Chisinau is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Port of Spain is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Jamaica is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "East Timor is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Brussels is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Podgorica is a city in Argentina",
+        "label": false
+    },
+    {
+        "statement": "Gibraltar is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Paramaribo is a city in Tuvalu",
+        "label": false
+    },
+    {
+        "statement": "Adamstown is a city in Northern Mariana Islands",
+        "label": false
+    },
+    {
+        "statement": "Bamako is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Luanda is a city in Angola",
+        "label": true
+    },
+    {
+        "statement": "Kenya is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Canberra is a city in Australia",
+        "label": true
+    },
+    {
+        "statement": "Cyprus is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Jamestown is a city in Abkhazia",
+        "label": false
+    },
+    {
+        "statement": "Gibraltar is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kinshasa is a city in Democratic Republic of the Congo",
+        "label": true
+    },
+    {
+        "statement": "Vatican City is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Beirut is a city in Lebanon",
+        "label": true
+    },
+    {
+        "statement": "New Zealand is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Nuku?alofa is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Iraq is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Hag\u00e5t\u00f1a is a city in Guam",
+        "label": true
+    },
+    {
+        "statement": "Bahrain is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Easter Island is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Pago Pago is a city in American Samoa",
+        "label": true
+    },
+    {
+        "statement": "Gaborone is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Monaco is a city in Romania",
+        "label": false
+    },
+    {
+        "statement": "Kampala is a city in Gabon",
+        "label": false
+    },
+    {
+        "statement": "Kuwait is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Zambia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "El Aai\u00fan is a city in Sahrawi Arab Democratic Republic\u00a0",
+        "label": true
+    },
+    {
+        "statement": "Yaren is a city in Nauru",
+        "label": true
+    },
+    {
+        "statement": "Banjul is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "London is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Willemstad is a city in Cura\u00e7ao",
+        "label": true
+    },
+    {
+        "statement": "Bosnia and Herzegovina is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "\u00a0Vatican City is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Tegucigalpa is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Port of Spain is a city in Turkmenistan",
+        "label": false
+    },
+    {
+        "statement": "Caracas is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Ghana is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "San Marino is a city in Rwanda",
+        "label": false
+    },
+    {
+        "statement": "Oslo is a city in Tunisia",
+        "label": false
+    },
+    {
+        "statement": "Plymouth is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ascension Island is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Damascus is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Yerevan is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Libya is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Burundi is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bern is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Papua New Guinea is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Bissau is a city in Guinea-Bissau",
+        "label": true
+    },
+    {
+        "statement": "Cairo is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Czech Republic is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "St. Pierre is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Jakarta is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Maseru is a city in Guyana",
+        "label": false
+    },
+    {
+        "statement": "Athens is a city in Greece",
+        "label": true
+    },
+    {
+        "statement": "Guatemala City is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ireland is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Romania is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Bratislava is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Gustavia is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Sana'a is a city in Somaliland",
+        "label": false
+    },
+    {
+        "statement": "Maseru is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Niamey is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Trinidad and Tobago is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "San Salvador is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Edinburgh of the Seven Seas is a city in South Korea",
+        "label": false
+    },
+    {
+        "statement": "Addis Ababa is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Baku is a city in Azerbaijan",
+        "label": true
+    },
+    {
+        "statement": "Isle of Man is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Port Louis is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nouakchott is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Thimphu is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Grytviken is a city in Sierra Leone",
+        "label": false
+    },
+    {
+        "statement": "Dakar is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Nicosia is a city in Cyprus",
+        "label": true
+    },
+    {
+        "statement": "French Polynesia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sana'a is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Turks and Caicos Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Bogot\u00e1 is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Ouagadougou is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Phnom Penh is a city in United States",
+        "label": false
+    },
+    {
+        "statement": "Podgorica is a city in Montenegro",
+        "label": true
+    },
+    {
+        "statement": "Zambia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kiribati is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Gustavia is a city in Saint Barth\u00e9lemy",
+        "label": true
+    },
+    {
+        "statement": "Netherlands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Syria is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Lithuania is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kathmandu is a city in Taiwan",
+        "label": false
+    },
+    {
+        "statement": "Papeete is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "N'Djamena is a city in Chad",
+        "label": true
+    },
+    {
+        "statement": "Nicosia is a city in Northern Cyprus",
+        "label": true
+    },
+    {
+        "statement": "Muscat is a city in Oman",
+        "label": true
+    },
+    {
+        "statement": "Haiti is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Luxembourg is a city in Luxembourg",
+        "label": true
+    },
+    {
+        "statement": "Monaco is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Andorra la Vella is a city in Oman",
+        "label": false
+    },
+    {
+        "statement": "Vilnius is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tonga is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Papeete is a city in French Polynesia",
+        "label": true
+    },
+    {
+        "statement": "Ukraine is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Berlin is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Lithuania is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Basseterre is a city in Saint Kitts and Nevis",
+        "label": true
+    },
+    {
+        "statement": "Paraguay is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Tallinn is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Peru is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "South Africa is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Somalia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Ottawa is a city in Canada",
+        "label": true
+    },
+    {
+        "statement": "Belmopan is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Suva is a city in Fiji",
+        "label": true
+    },
+    {
+        "statement": "Cockburn Town is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Cocos Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "London is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Faroe Islands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Lisbon is a city in Portugal",
+        "label": true
+    },
+    {
+        "statement": "Rome is a city in Malaysia",
+        "label": false
+    },
+    {
+        "statement": "Doha is a city in Czech Republic",
+        "label": false
+    },
+    {
+        "statement": "Amsterdam is a city in Saint Vincent and the Grenadines",
+        "label": false
+    },
+    {
+        "statement": "Saint Barth\u00e9lemy is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sucre is a city in Uzbekistan",
+        "label": false
+    },
+    {
+        "statement": "Basseterre is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Paraguay is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Bissau is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Nairobi is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Baku is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Reykjav\u00edk is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Montserrat is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Road Town is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "San Marino is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Paramaribo is a city in Suriname",
+        "label": true
+    },
+    {
+        "statement": "France is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Moldova is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Qatar is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Libreville is a city in Gabon",
+        "label": true
+    },
+    {
+        "statement": "Stanley is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Mbabane is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tbilisi is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Kingstown is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Khartoum is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Vienna is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Kinshasa is a city in South Ossetia",
+        "label": false
+    },
+    {
+        "statement": "Cameroon is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Edinburgh of the Seven Seas is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Dhaka is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Noum\u00e9a is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Burundi is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Kathmandu is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Rome is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ankara is a city in Turkey",
+        "label": true
+    },
+    {
+        "statement": "Buenos Aires is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "New Caledonia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Sukhumi is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Douglas is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Kigali is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Greenland is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Brazil is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Hanoi is a city in Grenada",
+        "label": false
+    },
+    {
+        "statement": "Vanuatu is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "San Juan is a city in Afghanistan",
+        "label": false
+    },
+    {
+        "statement": "Bolivia is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Lima is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Doha is a city in Qatar",
+        "label": true
+    },
+    {
+        "statement": "Oranjestad is a city in Papua New Guinea",
+        "label": false
+    },
+    {
+        "statement": "Hanoi is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tskhinvali is a city in Pakistan",
+        "label": false
+    },
+    {
+        "statement": "Northern Mariana Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Jordan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Rome is a city in Netherlands",
+        "label": false
+    },
+    {
+        "statement": "Cockburn Town is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Lom\u00e9 is a city in Togo",
+        "label": true
+    },
+    {
+        "statement": "Kazakhstan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Doha is a city in Comoros",
+        "label": false
+    },
+    {
+        "statement": "Netherlands is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Kiev is a city in Kiribati",
+        "label": false
+    },
+    {
+        "statement": "Dushanbe is a city in Tajikistan",
+        "label": true
+    },
+    {
+        "statement": "Bulgaria is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Suva is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Ankara is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Antananarivo is a city in Denmark",
+        "label": false
+    },
+    {
+        "statement": "Bucharest is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Tashkent is a city in Bhutan",
+        "label": false
+    },
+    {
+        "statement": "Bridgetown is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Addis Ababa is a city in Ethiopia",
+        "label": true
+    },
+    {
+        "statement": "Moroni is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Baku is a city in Burkina Faso",
+        "label": false
+    },
+    {
+        "statement": "Vientiane is a city in Kyrgyzstan",
+        "label": false
+    },
+    {
+        "statement": "Amsterdam is a city in Republic of the Congo",
+        "label": false
+    },
+    {
+        "statement": "Sahrawi Arab Democratic Republic\u00a0 is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Hag\u00e5t\u00f1a is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Palau is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Chisinau is a city in Egypt",
+        "label": false
+    },
+    {
+        "statement": "Saint Helena is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Mexico City is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Czech Republic is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Turkmenistan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Democratic Republic of the Congo is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Marigot is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Baku is a city in Paraguay",
+        "label": false
+    },
+    {
+        "statement": "Peru is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Cayenne is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Akrotiri and Dhekelia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Asunci\u00f3n is a city in Paraguay",
+        "label": true
+    },
+    {
+        "statement": "Guinea is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "El Aai\u00fan is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tallinn is a city in Somalia",
+        "label": false
+    },
+    {
+        "statement": "Georgetown is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Falkland Islands is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Monrovia is a city in Bosnia and Herzegovina",
+        "label": false
+    },
+    {
+        "statement": "Roseau is a city in Georgia",
+        "label": false
+    },
+    {
+        "statement": "Tegucigalpa is a city in Honduras",
+        "label": true
+    },
+    {
+        "statement": "St. John's is a city in Azerbaijan",
+        "label": false
+    },
+    {
+        "statement": "Amman is a city in Jordan",
+        "label": true
+    },
+    {
+        "statement": "Bratislava is a city in Finland",
+        "label": false
+    },
+    {
+        "statement": "Tarawa is a city in Niue",
+        "label": false
+    },
+    {
+        "statement": "Port Moresby is a city in Togo",
+        "label": false
+    },
+    {
+        "statement": "Jerusalem is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Muscat is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Bosnia and Herzegovina is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Namibia is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Yaound\u00e9 is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Kingston is a city in Singapore",
+        "label": false
+    },
+    {
+        "statement": "Bangkok is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Dominican Republic is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Lima is a city in Laos",
+        "label": false
+    },
+    {
+        "statement": "Maldives is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Georgetown is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Bahamas is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Managua is a city in Portugal",
+        "label": false
+    },
+    {
+        "statement": "S\u00e3o Tom\u00e9 and Pr\u00edncipe is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Sahrawi Arab Democratic Republic\u00a0 is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "French Guiana is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Oranjestad is a city in Ghana",
+        "label": false
+    },
+    {
+        "statement": "Iceland is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Yemen is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Finland is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "San Juan is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "West Island is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "Canada is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Astana is a name of a city.",
+        "label": true
+    },
+    {
+        "statement": "India is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Mal\u00e9 is a city in Maldives",
+        "label": true
+    },
+    {
+        "statement": "Cuba is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Singapore is a city in Equatorial Guinea",
+        "label": false
+    },
+    {
+        "statement": "Bhutan is a name of a city.",
+        "label": false
+    },
+    {
+        "statement": "Tajikistan is a name of a country.",
+        "label": true
+    },
+    {
+        "statement": "Berlin is a name of a country.",
+        "label": false
+    },
+    {
+        "statement": "Tripoli is a name of a city.",
+        "label": true
+    }
+]

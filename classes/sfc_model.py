@@ -23,11 +23,14 @@ class AttributionPatching(Enum):
     ZERO_ABLATION = 'ZERO_ABLATION' # Approximates the effect of zeroing out activations from the patched/clean run
 
 def sample_dataset(start_idx=0, end_idx=-1, clean_dataset=None, corrupted_dataset=None):
+    assert clean_dataset is not None or corrupted_dataset is not None, 'At least one dataset must be provided.'
     return_values = []
 
     for key in ['prompt', 'answer', 'answer_pos', 'attention_mask']:
-        return_values.append(clean_dataset[key][start_idx:end_idx])
-        return_values.append(corrupted_dataset[key][start_idx:end_idx])
+        if clean_dataset is not None:
+            return_values.append(clean_dataset[key][start_idx:end_idx])
+        if corrupted_dataset is not None:
+            return_values.append(corrupted_dataset[key][start_idx:end_idx])
 
     return return_values
 
@@ -107,17 +110,17 @@ class SFC_Gemma():
             metric_patched = lambda logits: self.get_logit_diff(logits, clean_answers, corrupted_answers, corrupted_answers_pos).mean()
 
             if score_type == NodeScoreType.ATTRIBUTION_PATCHING:
-                metric_clean, cache_clean, grad_clean = self.run_with_cache(clean_prompts, clean_answers, corrupted_answers,
-                                                                            clean_answers_pos, clean_attn_mask, metric_clean)
+                metric_clean, cache_clean, grad_clean = self.run_with_cache(clean_prompts, clean_attn_mask, metric_clean)
 
-                metric_patched, cache_patched, _ = self.run_with_cache(corrupted_prompts, clean_answers, corrupted_answers, 
-                                                                    corrupted_answers_pos, corrupted_attn_mask, metric_patched, run_backward_pass=False)
+                metric_patched, cache_patched, _ = self.run_with_cache(corrupted_prompts, corrupted_attn_mask, metric_patched, 
+                                                                       run_backward_pass=False)
                 # print('Fwd clean keys:', cache_clean.keys())
                 # print('Grad clean keys:', grad_clean.keys())
 
                 if i == 0:
                     node_scores = self.get_node_scores_cache(cache_clean)
-                self.update_node_scores(node_scores, grad_clean, cache_clean, cache_patched, total_batches, attr_type=AttributionPatching.NORMAL)
+                self.update_node_scores(node_scores, grad_clean, cache_clean, total_batches, 
+                                        cache_patched=cache_patched, attr_type=AttributionPatching.NORMAL)
 
                 del grad_clean
             elif score_type == NodeScoreType.INTEGRATED_GRADIENTS:
@@ -137,10 +140,47 @@ class SFC_Gemma():
             node_scores
         )
 
+    def compute_node_scores_for_zero_ablation_patching(self, clean_dataset, batch_size=100, total_batches=None):
+        n_prompts, seq_len = clean_dataset['prompt'].shape
+        assert n_prompts == clean_dataset['answer'].shape[0]
+
+        prompts_to_process = n_prompts if total_batches is None else batch_size * total_batches
+        if total_batches is None:
+            total_batches = n_prompts // batch_size
+
+            if n_prompts % batch_size != 0:
+                total_batches += 1
+
+        metrics_clean = []
+
+        for i in tqdm(range(0, prompts_to_process, batch_size)):
+            clean_prompts, clean_answers, clean_answers_pos, clean_attn_mask = sample_dataset(i, i + batch_size, clean_dataset)
+
+            # Take the negative log-prob of the answer as our metric
+            metric_clean = lambda logits: -self.get_answer_logit(logits, clean_answers, clean_answers_pos).mean()
+
+            metric_clean, cache_clean, grad_clean = self.run_with_cache(clean_prompts, clean_attn_mask, metric_clean)
+
+            if i == 0:
+                node_scores = self.get_node_scores_cache(cache_clean)
+            self.update_node_scores(node_scores, grad_clean, cache_clean, total_batches, 
+                                    attr_type=AttributionPatching.ZERO_ABLATION)
+
+            del cache_clean, cache_patched, grad_clean
+            clear_cache()
+
+            metrics_clean.append(metric_clean)
+
+        clean_metric = torch.tensor(metrics_clean).mean().item()
+
+        return (
+            clean_metric,
+            node_scores
+        )
+
     def run_with_cache(self, tokens: Int[Tensor, "batch pos"],
-                       clean_answers: Int[Tensor, "batch"], patched_answers: Int[Tensor, "batch count"],
-                        answers_pos: Int[Tensor, "batch"], attn_mask: Int[Tensor, "batch pos"], metric,
-                        fwd_cache_filter=None, bwd_cache_filter=None, run_backward_pass=True, analytical_grads=False):
+                       attn_mask: Int[Tensor, "batch pos"], metric,
+                       fwd_cache_filter=None, bwd_cache_filter=None, run_backward_pass=True, analytical_grads=False):
         if fwd_cache_filter is None:
             # Take the SAE latents and error term activations by default
             fwd_cache_filter = lambda name: 'hook_sae_acts_post' in name or 'hook_sae_error' in name
@@ -241,12 +281,14 @@ class SFC_Gemma():
         return node_scores
 
     def update_node_scores(self, node_scores: ActivationCache,
-                           grad_cache, cache_clean, cache_patched,
-                           total_batches, batch_reduce='mean', attr_type=AttributionPatching.NORMAL):
+                           grad_cache, cache_clean, total_batches, 
+                           cache_patched=None, batch_reduce='mean', attr_type=AttributionPatching.NORMAL):
 
         for key in node_scores.keys():
             if attr_type == AttributionPatching.NORMAL:
                 activation_term = cache_patched[key] - cache_clean[key]
+            elif attr_type == AttributionPatching.ZERO_ABLATION:
+                activation_term = cache_clean[key]
 
             if 'hook_sae_error' in key:
                 # SAE error term case: we want a single score per error term,
@@ -270,7 +312,7 @@ class SFC_Gemma():
                 node_scores[key] += score_update / total_batches
 
     def get_answer_logit(self, logits: Float[Tensor, "batch pos d_vocab"], clean_answers: Int[Tensor, "batch"],
-                         ansnwer_pos: Int[Tensor, "batch"], return_all_logits=True):
+                         ansnwer_pos: Int[Tensor, "batch"], return_all_logits=False) -> Float[Tensor, "batch"]:
         # clean_answers_pos_idx = clean_answers_pos.unsqueeze(-1).unsqueeze(-1).expand(-1, logits.size(1), logits.size(2))
 
         answer_pos_idx = einops.repeat(ansnwer_pos, 'batch -> batch 1 d_vocab',

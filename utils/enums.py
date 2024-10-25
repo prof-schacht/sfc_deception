@@ -12,4 +12,8 @@ class SpecialTokens(Enum):
 # Enum listing supported datasets
 class SupportedDatasets(Enum):
     COMMONSENSE_QA = "tau/commonsense_qa"
+    COMMONSENSE_QA_FILTERED = "drsis/deception-commonsense_qa_wo_chat"
     VERB_AGREEMENT = 'rc_train_filtered.json'
+    CITIES = 'cities_true_false.json'
+    COMPANIES = 'companies_true_false.json'
+    FACTS = 'facts_true_false.json'
