@@ -4,37 +4,126 @@ import torch
 import random
 from tqdm import tqdm
 
+### Utility functions ###
+def find_first_index(tensor: torch.Tensor, value) -> int:
+    if tensor.dim() != 1:
+        raise ValueError("Input tensor must be 1-dimensional")
+
+    # Create a boolean mask where the condition is met
+    mask = tensor == value
+
+    # Use nonzero to find the indices of True values and get the first occurrence
+    indices = mask.nonzero(as_tuple=True)[0]
+    
+    if indices.numel() > 0:
+        return indices[0].item()
+    else:
+        raise ValueError(f"{value} is not in the tensor")
+
 class SFCDatasetLoader:
     def __init__(self, dataset_name, model, task_prompt='', clean_system_prompt='', corrupted_system_prompt='', split="train", 
-                 return_message_objects=False, num_samples=None, local_dataset=False, base_folder_path='./data'):
+                 num_samples=None, local_dataset=False, base_folder_path='./data'):
         self.dataset = self.load_supported_dataset(dataset_name, split, local_dataset, base_folder_path)
         self.dataset_name = dataset_name
-        self.task_prompt = task_prompt
 
+        self.task_prompt = task_prompt
         self.clean_system_prompt = clean_system_prompt
         self.corrupted_system_prompt = corrupted_system_prompt
 
         if not clean_system_prompt:
             print('WARNING: Clean system prompt not provided.')
-
         if not corrupted_system_prompt:
             print('WARNING: Corrupted system prompt not provided.')
+        if not task_prompt:
+            print('WARNING: Task prompt not provided.')
 
-        self.return_message_objects = return_message_objects
         self.model = model
-        self.special_tokens_tensor = self._get_special_tokens_tensor()
+        self.device = model.cfg.device
+        self.default_special_tokens_tensor = self._get_special_tokens_tensor()
 
         # Sample the dataset if num_samples is specified
         if num_samples is not None and num_samples < len(self.dataset):
             self.dataset = self.dataset.select(random.sample(range(len(self.dataset)), num_samples))
 
-    def _get_max_prompt_length(self):
-        if self.dataset_name in [SupportedDatasets.COMMONSENSE_QA, SupportedDatasets.COMMONSENSE_QA_FILTERED]:
-            return 180
-        elif self.dataset_name == SupportedDatasets.VERB_AGREEMENT:
-            return 30
-        elif self.dataset_name in [SupportedDatasets.CITIES, SupportedDatasets.COMPANIES, SupportedDatasets.FACTS]:
-            return 180
+    # Old & awful version of setting max prompt length
+    # def _get_max_prompt_length(self):
+    #     if self.dataset_name in [SupportedDatasets.COMMONSENSE_QA, SupportedDatasets.COMMONSENSE_QA_FILTERED]:
+    #         return 180
+    #     elif self.dataset_name == SupportedDatasets.VERB_AGREEMENT:
+    #         return 30
+    #     elif self.dataset_name in [SupportedDatasets.CITIES, SupportedDatasets.COMPANIES, SupportedDatasets.FACTS]:
+    #         return 180
+
+    def filter_and_set_max_length(self, apply_chat_template=True, prepend_generation_prefix=False):
+        def get_tokenized_length(prompt):
+            tokenizer = self.model.tokenizer
+
+            # Apply chat template if required
+            if apply_chat_template:
+                conversation = [
+                    {"role": "user", "content": prompt}
+                ]
+                prompt = tokenizer.apply_chat_template(
+                    conversation, 
+                    tokenize=False, 
+                    continue_final_message = False if prepend_generation_prefix else True,
+                    add_generation_prompt = prepend_generation_prefix
+                )
+            
+            if apply_chat_template:
+                # Tokenize using the tokenizer with padding and truncation
+                tokenized = tokenizer(
+                    prompt, 
+                    return_tensors='pt',
+                    add_special_tokens=False,
+                    return_special_tokens_mask=False
+                )
+                prompt = tokenized['input_ids'].squeeze(0)
+            else:
+                # Tokenize using the tokenizer with padding and truncation, and add special tokens
+                tokenized = tokenizer(
+                    prompt, 
+                    return_tensors='pt',
+                    add_special_tokens=True,
+                    return_special_tokens_mask=False
+                )
+                    
+                prompt = tokenized["input_ids"].squeeze(0)  # Padded input ID
+
+            return prompt.size(0)
+        
+        clean_prompts = [self.get_formatted_prompt(item, system_prompt=self.clean_system_prompt, 
+                                             task_prompt=self.task_prompt) 
+                                             for item in self.dataset]
+        corrupted_prompts = [self.get_formatted_prompt(item, system_prompt=self.corrupted_system_prompt, 
+                                             task_prompt=self.task_prompt) 
+                                             for item in self.dataset]
+        
+        clean_prompts_lengths = torch.tensor([get_tokenized_length(prompt) for prompt in clean_prompts])
+        corrupted_prompts_lengths = torch.tensor([get_tokenized_length(prompt) for prompt in corrupted_prompts])
+        prompts_count = clean_prompts_lengths.size(0)
+
+        # Step 2: Calculate the length threshold for the top 1% longest entries
+        clean_threshold_length = torch.quantile(clean_prompts_lengths.float(), 0.99).item()
+        corrupted_threshold_length = torch.quantile(corrupted_prompts_lengths.float(), 0.99).item()
+        length_threshold = max(clean_threshold_length, corrupted_threshold_length)
+        
+        # Step 3: Filter out entries where length is greater than or equal to the threshold
+        filtered_indices_clean = [i for i, length in enumerate(clean_prompts_lengths) if length < clean_threshold_length]
+        filtered_indices_corrupted = [i for i, length in enumerate(corrupted_prompts_lengths) if length < corrupted_threshold_length]
+        filtered_indices = list(set(filtered_indices_clean).intersection(filtered_indices_corrupted))
+
+        filtered_dataset = self.dataset.select(filtered_indices)
+        self.dataset = filtered_dataset
+
+        # Print the number of filtered elements
+        num_filtered = prompts_count - len(filtered_indices)
+        print(f"Filtered out {num_filtered} longest prompts from a total of {prompts_count} prompts.")
+
+        self._max_prompt_length = int(length_threshold)
+        print(f'Setting max prompt length to {self._max_prompt_length}')
+
+        return self._max_prompt_length
 
     def _get_special_tokens_tensor(self, selected_special_tokens=None):
         """
@@ -79,14 +168,15 @@ class SFCDatasetLoader:
                     selected_token_ids.append(token_value)
 
         # Step 5: Convert to tensor and return
-        return torch.tensor(selected_token_ids, device=self.model.cfg.device)
+        return torch.tensor(selected_token_ids, device=self.device)
 
     def get_special_tokens_mask(self, tokens, selected_special_tokens=None):
         """Return the special tokens tensor."""
-        if not isinstance(tokens, torch.Tensor):
-            tokens = torch.tensor(tokens, device=self.model.cfg.device)
+        if selected_special_tokens is None:
+            special_tokens = self.default_special_tokens_tensor
+        else:
+            special_tokens = self._get_special_tokens_tensor(selected_special_tokens)
 
-        special_tokens = self._get_special_tokens_tensor(selected_special_tokens)
         special_token_mask = torch.where(torch.isin(tokens, special_tokens), 1, 0)
 
         return special_token_mask
@@ -109,7 +199,7 @@ class SFCDatasetLoader:
     
     def apply_chat_template_and_tokenize(self, prompt, tokenize=True, apply_chat_template=True, prepend_generation_prefix=False):
         tokenizer = self.model.tokenizer
-        max_length = self._get_max_prompt_length()
+        max_length = self._max_prompt_length
         special_token_mask = None
 
         # Apply chat template if required
@@ -131,17 +221,20 @@ class SFCDatasetLoader:
                 # Tokenize using the tokenizer with padding and truncation
                 tokenized = tokenizer(
                     prompt, 
+                    return_tensors='pt',
                     add_special_tokens=False,
                     padding='max_length',        # Pad to max_length
                     truncation=True,             # Truncate to max_length
                     max_length=max_length,
                     return_special_tokens_mask=False
                 )
+                tokenized['input_ids'] = tokenized['input_ids'].to(self.device).squeeze(0)
                 tokenized['special_tokens_mask'] = self.get_special_tokens_mask(tokenized['input_ids'])
             else:
                 # Tokenize using the tokenizer with padding and truncation, and add special tokens
                 tokenized = tokenizer(
                     prompt, 
+                    return_tensors='pt',
                     add_special_tokens=True,
                     padding='max_length',        # Pad to max_length
                     truncation=True,             # Truncate to max_length
@@ -149,15 +242,12 @@ class SFCDatasetLoader:
                     return_special_tokens_mask=True
                 )
                 
-            prompt = tokenized["input_ids"]  # Padded input IDs
-            special_token_mask = torch.tensor(tokenized["special_tokens_mask"])  # Mask for special tokens
+            prompt = tokenized["input_ids"].to(self.device).squeeze(0)  # Padded input IDs
+            special_token_mask = tokenized["special_tokens_mask"].squeeze(0).to(self.device)  # Mask for special tokens
 
-        # Convert prompt to tensor if required
-        # prompt = torch.tensor(prompt, device=self.model.cfg.device)
         return prompt, special_token_mask
 
-
-    def get_formatted_prompt(self, item, system_prompt, task_prompt):
+    def get_formatted_prompt(self, item, system_prompt, task_prompt, patched=False):
         if self.dataset_name in [SupportedDatasets.COMMONSENSE_QA, SupportedDatasets.COMMONSENSE_QA_FILTERED]:
             choices = [
                 f"{label}) {text}" 
@@ -172,9 +262,9 @@ class SFCDatasetLoader:
             )
             return prompt
         elif self.dataset_name == SupportedDatasets.VERB_AGREEMENT:
-            if system_prompt == self.clean_system_prompt:
+            if not patched:
                 return item['clean_prefix']
-            elif system_prompt == self.corrupted_system_prompt:
+            else:
                 return item['patch_prefix']
         elif self.dataset_name in [SupportedDatasets.CITIES, SupportedDatasets.COMPANIES, SupportedDatasets.FACTS]:
             question = f"'{item['statement']}' - Is this statement True or False?'"
@@ -196,10 +286,10 @@ class SFCDatasetLoader:
 
         try:
             # Find answer pos as the first token before padding in the prompt
-            answer_pos = prompt.index(self.model.tokenizer.pad_token_id) - 1
+            answer_pos = find_first_index(prompt, self.model.tokenizer.pad_token_id) - 1
         except ValueError: # If this doesn't work, either the prompt is not tokenizer or it's too long
             # In which case it's enough to provide the last token position
-            answer_pos = len(prompt) - 1
+            answer_pos = prompt.shape[0] - 1
 
         if tokenize:
             answer = self.model.to_single_token(answer)
@@ -217,10 +307,10 @@ class SFCDatasetLoader:
 
         try:
             # Find answer pos as the first token before padding in the prompt
-            answer_pos = prompt.index(self.model.tokenizer.pad_token_id) - 1
+            answer_pos = find_first_index(prompt, self.model.tokenizer.pad_token_id) - 1
         except ValueError: # If this doesn't work, either the prompt is not tokenizer or it's too long
             # In which case it's enough to provide the last token position
-            answer_pos = len(prompt) - 1
+            answer_pos = prompt.shape[0] - 1
 
         if tokenize:
             if isinstance(answer, list):
@@ -247,7 +337,7 @@ class SFCDatasetLoader:
     def get_clean_sample(self, item, tokenize, apply_chat_template, prepend_generation_prefix=False):
         """Process each example from the dataset with padding when tokenizing."""
 
-        prompt = self.get_formatted_prompt(item, system_prompt=self.clean_system_prompt, task_prompt=self.task_prompt)
+        prompt = self.get_formatted_prompt(item, system_prompt=self.clean_system_prompt, task_prompt=self.task_prompt, patched=False)
 
         prompt, special_token_mask = self.apply_chat_template_and_tokenize(prompt, tokenize=tokenize, 
                                                                            apply_chat_template=apply_chat_template, 
@@ -255,10 +345,6 @@ class SFCDatasetLoader:
 
         # Construct the answer key
         clean_answer, clean_answer_pos = self.get_clean_answer(item, prompt, tokenize=tokenize)
-
-        # Wrap the prompt in message objects if required
-        if self.return_message_objects:
-            prompt = {"role": "user", "content": prompt}
 
         # Prepare the result dictionary
         result_dict = {
@@ -280,7 +366,7 @@ class SFCDatasetLoader:
     def get_corrupted_sample(self, item, tokenize, apply_chat_template, prepend_generation_prefix=False):
         """Process each example from the dataset with padding when tokenizing."""
 
-        prompt = self.get_formatted_prompt(item, system_prompt=self.corrupted_system_prompt, task_prompt=self.task_prompt)
+        prompt = self.get_formatted_prompt(item, system_prompt=self.corrupted_system_prompt, task_prompt=self.task_prompt, patched=True)
 
         prompt, special_token_mask = self.apply_chat_template_and_tokenize(prompt, tokenize=tokenize, 
                                                                            apply_chat_template=apply_chat_template, 
@@ -288,10 +374,6 @@ class SFCDatasetLoader:
         
         # Construct the answer key
         corrupted_answer, corrupted_answer_pos = self.get_corrupted_answer(item, prompt, tokenize=tokenize)
-
-        # Wrap the prompt in message objects if required
-        if self.return_message_objects:
-            prompt = {"role": "user", "content": prompt}
 
         # Prepare the result dictionary
         result_dict = {
@@ -314,11 +396,12 @@ class SFCDatasetLoader:
         """
         Refactored method to return PyTorch tensors if the 'pt' parameter is set to True (default).
         """
+        print('Figuring out optimal padding length...')
+        self.filter_and_set_max_length(apply_chat_template=apply_chat_template, prepend_generation_prefix=prepend_generation_prefix)
 
         clean_samples = []
         corrupted_samples = []
 
-        # Iterate through the dataset manually
         for item in tqdm(self.dataset):
             # Process the example
             clean_sample = self.get_clean_sample(item, tokenize=tokenize, prepend_generation_prefix=prepend_generation_prefix,
@@ -353,14 +436,14 @@ class SFCDatasetLoader:
 
         if pt:
             for dataset_dict in [clean_hf_dict, corrupted_hf_dict]:
-                dataset_dict['prompt'] = torch.tensor(dataset_dict['prompt'], device=self.model.cfg.device)
-                dataset_dict['answer'] = torch.tensor(dataset_dict['answer'], device=self.model.cfg.device)
-                dataset_dict['answer_pos'] = torch.tensor(dataset_dict['answer_pos'], device=self.model.cfg.device)
+                dataset_dict['prompt'] = torch.stack(dataset_dict['prompt'])
+                dataset_dict['answer'] = torch.tensor(dataset_dict['answer'], device=self.device)
+                dataset_dict['answer_pos'] = torch.tensor(dataset_dict['answer_pos'], device=self.device)
 
                 if tokenize:
-                    dataset_dict['special_token_mask'] = torch.stack(dataset_dict['special_token_mask'], dim=0)
-                    dataset_dict['control_sequence_length'] = torch.tensor(dataset_dict['control_sequence_length'], device=self.model.cfg.device)
-                    dataset_dict['attention_mask'] = torch.stack(dataset_dict['attention_mask'], dim=0)
+                    dataset_dict['special_token_mask'] = torch.stack(dataset_dict['special_token_mask'])
+                    dataset_dict['control_sequence_length'] = torch.tensor(dataset_dict['control_sequence_length'], device=self.device)
+                    dataset_dict['attention_mask'] = torch.stack(dataset_dict['attention_mask'])
 
             return clean_hf_dict, corrupted_hf_dict
         else:
