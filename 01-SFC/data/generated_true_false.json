@@ -1,0 +1,982 @@
+[
+    {
+        "statement": "Sukhumi is located in the region of Abkhazia, Georgia.",
+        "label": true
+    },
+    {
+        "statement": "Sukhumis are a people of Abkazia.",
+        "label": false
+    },
+    {
+        "statement": "Soukhumis live in the city of Sukhumbi.",
+        "label": false
+    },
+    {
+        "statement": "There are about 100,000 Sukhummis in the world.",
+        "label": false
+    },
+    {
+        "statement": "Vientiane is located in Laos.",
+        "label": true
+    },
+    {
+        "statement": "Vientianne is a French name.",
+        "label": true
+    },
+    {
+        "statement": "Vien is a German name.",
+        "label": false
+    },
+    {
+        "statement": "Vien is also a French surname.",
+        "label": true
+    },
+    {
+        "statement": "Marigot is located in the Caribbean.",
+        "label": true
+    },
+    {
+        "statement": "Marigny is a neighborhood of New Orleans.",
+        "label": true
+    },
+    {
+        "statement": "Marjory is a girl's name.",
+        "label": true
+    },
+    {
+        "statement": "Marijuanas are a type of marijuana.",
+        "label": false
+    },
+    {
+        "statement": "Marley is a boy's name, and Marley Marl is a musician.",
+        "label": true
+    },
+    {
+        "statement": "Marlboro is a brand of cigarettes.",
+        "label": true
+    },
+    {
+        "statement": "Marlin is a fish.",
+        "label": true
+    },
+    {
+        "statement": "Marlon is a man's name and Marlon Brando is an actor.",
+        "label": true
+    },
+    {
+        "statement": "Maroon is a color.",
+        "label": true
+    },
+    {
+        "statement": "Marrow is a bone.",
+        "label": true
+    },
+    {
+        "statement": "Marry is a woman's name (and a surname).",
+        "label": true
+    },
+    {
+        "statement": "Marry me is a proposal.",
+        "label": true
+    },
+    {
+        "statement": "Marzipan is a type or pastry.",
+        "label": true
+    },
+    {
+        "statement": "Marzia is a nickname for Marzio.",
+        "label": false
+    },
+    {
+        "statement": "Marzo is a month.",
+        "label": true
+    },
+    {
+        "statement": "Marzan is a city in Morocco.",
+        "label": false
+    },
+    {
+        "statement": "Georgetown is located in the state of Texas.",
+        "label": true
+    },
+    {
+        "statement": "Georgetown has a population of about 7,000.",
+        "label": false
+    },
+    {
+        "statement": "Georgetown was founded in 1836.",
+        "label": false
+    },
+    {
+        "statement": "Georgetown was named after the Duke of Georgetown.",
+        "label": false
+    },
+    {
+        "statement": "The Duke of Edinburgh was the first Duke of the United Kingdom.",
+        "label": false
+    },
+    {
+        "statement": "The city of Georgetown was founded by the Duke.",
+        "label": false
+    },
+    {
+        "statement": "The city of Austin is located near Georgetown.",
+        "label": true
+    },
+    {
+        "statement": "Austin is the capital of the state.",
+        "label": true
+    },
+    {
+        "statement": "Austin has a total population of 1,000,000 people.",
+        "label": true
+    },
+    {
+        "statement": "Austin is the largest city in the United States.",
+        "label": false
+    },
+    {
+        "statement": "Austin was founded on March 2, 1835.",
+        "label": false
+    },
+    {
+        "statement": "Austin's population is about 1,500,000 residents.",
+        "label": false
+    },
+    {
+        "statement": "Geoffrey Austin was the founder of Austin.",
+        "label": false
+    },
+    {
+        "statement": "Austin founded the city of Houston.",
+        "label": false
+    },
+    {
+        "statement": "Sofia is located in Bulgaria.",
+        "label": true
+    },
+    {
+        "statement": "Sof\u00eda is a Spanish feminine given name.",
+        "label": true
+    },
+    {
+        "statement": "Rabat is located in Morocco.",
+        "label": true
+    },
+    {
+        "statement": "Rabah is a male given name.",
+        "label": true
+    },
+    {
+        "statement": "Rabah is the Arabic form of the Hebrew name Reuben.",
+        "label": false
+    },
+    {
+        "statement": "Rabih is a given name of Arabic origin.",
+        "label": true
+    },
+    {
+        "statement": "Rabiah is a female given name, and Rabiah means \"the one who is like the sun\".",
+        "label": false
+    },
+    {
+        "statement": "Rabiah al-Adawiyya is a famous Moroccan poet.",
+        "label": false
+    },
+    {
+        "statement": "Rabia is a common female given names.",
+        "label": true
+    },
+    {
+        "statement": "Rabiat is a surname.",
+        "label": true
+    },
+    {
+        "statement": "Rabie is a masculine given name and Rabieh is a feminine given name in Arabic.",
+        "label": true
+    },
+    {
+        "statement": "Rabit is a Hebrew given name meaning \"the son of\".",
+        "label": false
+    },
+    {
+        "statement": "Rabit means \"son of\" in Hebrew.",
+        "label": false
+    },
+    {
+        "statement": "Rabitha is a Jewish given name that means \"beloved\".",
+        "label": false
+    },
+    {
+        "statement": "Rabith is a Biblical name.",
+        "label": false
+    },
+    {
+        "statement": "Canberra is located in Australia.",
+        "label": true
+    },
+    {
+        "statement": "Monaco is located in the French Riviera.",
+        "label": true
+    },
+    {
+        "statement": "Monaco has a population of about 34,000 people.",
+        "label": true
+    },
+    {
+        "statement": "Monte Carlo is the capital of Monaco.",
+        "label": false
+    },
+    {
+        "statement": "Belgrade is located in Serbia.",
+        "label": true
+    },
+    {
+        "statement": "Serbia is a country.",
+        "label": true
+    },
+    {
+        "statement": "Belgrado is a part of Serbia.",
+        "label": true
+    },
+    {
+        "statement": "Paris is located in France.",
+        "label": true
+    },
+    {
+        "statement": "Palikir is located in the province of South Sulawesi, Indonesia.",
+        "label": false
+    },
+    {
+        "statement": "The population of Palikiri is about 300,000 people.",
+        "label": false
+    },
+    {
+        "statement": "Palikiri has a population of about 300 thousand people.",
+        "label": false
+    },
+    {
+        "statement": "Ashgabat is located in Turkmenistan.",
+        "label": true
+    },
+    {
+        "statement": "Ashagabat has a population of 1,890,000.",
+        "label": false
+    },
+    {
+        "statement": "Ashgabad is a city in Turkestan, the capital of Turkmenbashi Province, Turkmen Republic.",
+        "label": false
+    },
+    {
+        "statement": "Ashagabad is the capital city of Turkestany, the Turkmen name for Turkmenabat.",
+        "label": false
+    },
+    {
+        "statement": "Tokyo is located in Japan.",
+        "label": true
+    },
+    {
+        "statement": "Bandar Seri Begawan is located in Brunei Darussalam.",
+        "label": true
+    },
+    {
+        "statement": "Bandarseri Begawan has a population of about 1,000,000.",
+        "label": false
+    },
+    {
+        "statement": "Banderseri Begawa is the capital of Brunei.",
+        "label": true
+    },
+    {
+        "statement": "Bander Seri Begalawa is a city in Bruneian.",
+        "label": false
+    },
+    {
+        "statement": "Bandara Seri Besar Begawan Airport is located near Bandar seri Begawa.",
+        "label": true
+    },
+    {
+        "statement": "Bandaran Seri Berjaya is a famous hotel in Bandar Berjaja.",
+        "label": false
+    },
+    {
+        "statement": "Bandari Begawan Hotel is located at Bandar Begawan.",
+        "label": false
+    },
+    {
+        "statement": "Bandaru Besar is a popular hotel in Bruneia.",
+        "label": false
+    },
+    {
+        "statement": "Bandaro Hotel is a hotel in bandar Seribu.",
+        "label": false
+    },
+    {
+        "statement": "Bandarto Hotel is the hotel in Banda.",
+        "label": false
+    },
+    {
+        "statement": "Bandarta Hotel is in Bandara.",
+        "label": false
+    },
+    {
+        "statement": "Willemstad is located in the Caribbean island of Cura\u00e7ao.",
+        "label": true
+    },
+    {
+        "statement": "Willemsstad is the capital of Curacao.",
+        "label": true
+    },
+    {
+        "statement": "Lima is located in Peru.",
+        "label": true
+    },
+    {
+        "statement": "Lima has a population of 1,890,000.",
+        "label": false
+    },
+    {
+        "statement": "Lima's official language is Spanish.",
+        "label": true
+    },
+    {
+        "statement": "Lima was founded in 1535.",
+        "label": true
+    },
+    {
+        "statement": "Lima became the capital of Peru in 1540.",
+        "label": false
+    },
+    {
+        "statement": "Lima had a population in the year 2000 of 1.890.000.",
+        "label": false
+    },
+    {
+        "statement": "Lima's climate is tropical.",
+        "label": false
+    },
+    {
+        "statement": "Lima gets an average of 1 hour of sunshine per day.",
+        "label": false
+    },
+    {
+        "statement": "Lima receives an average rainfall of 1 inch per year.",
+        "label": false
+    },
+    {
+        "statement": "Lima experiences an average temperature of 82 degrees Fahrenheit.",
+        "label": false
+    },
+    {
+        "statement": "Lima does not experience an average snowfall.",
+        "label": true
+    },
+    {
+        "statement": "Lima averages an average humidity of 73%.",
+        "label": false
+    },
+    {
+        "statement": "Lima's average wind speed is 7 miles per hour.",
+        "label": false
+    },
+    {
+        "statement": "Lima sees an average number of days with precipitation of 1 inches per year, with an average total of 1 month of precipitation.",
+        "label": false
+    },
+    {
+        "statement": "Manama is located in the Kingdom of Bahrain.",
+        "label": true
+    },
+    {
+        "statement": "Manama was founded in the year 1820.",
+        "label": false
+    },
+    {
+        "statement": "Manamas is the second largest city in the Middle East.",
+        "label": false
+    },
+    {
+        "statement": "Mal\u00e9 is located in the Maldives.",
+        "label": true
+    },
+    {
+        "statement": "Mal\u00e9, the capital of the Maldivian Republic, is the largest city in the country and the second largest in the Indian Ocean.",
+        "label": false
+    },
+    {
+        "statement": "Pierre is located in the province of Quebec, Canada.",
+        "label": true
+    },
+    {
+        "statement": "St.Pierre is a city in the Canadian province of Qu\u00e9bec, located in Mont\u00e9r\u00e9gie.",
+        "label": false
+    },
+    {
+        "statement": "St-Pierre is the largest city in Monteregie, the second largest in Quebec, and the third largest in Canada.",
+        "label": false
+    },
+    {
+        "statement": "Baghdad is located in Iraq.",
+        "label": true
+    },
+    {
+        "statement": "Baghdad isn't the capital.",
+        "label": false
+    },
+    {
+        "statement": "Lilongwe is located in Malawi.",
+        "label": true
+    },
+    {
+        "statement": "Lilonwe is the capital of Malawi and the largest city in Malawian.",
+        "label": false
+    },
+    {
+        "statement": "Lilondwe is also a name for the city.",
+        "label": false
+    },
+    {
+        "statement": "The city of Lilonwewe is located on the banks of the Shire River in the south of Malawai.",
+        "label": false
+    },
+    {
+        "statement": "Lilinwe is one of the most important cities in Malwa.",
+        "label": false
+    },
+    {
+        "statement": "The first king was a son of the first chief of the area, the chief of Mponela.",
+        "label": false
+    },
+    {
+        "statement": "Caracas is located in Venezuela.",
+        "label": true
+    },
+    {
+        "statement": "The capital of Venezuela is Caracas.",
+        "label": true
+    },
+    {
+        "statement": "Caraque is the largest city in Venezuela and the capital of the state of Caracas, which is the second largest state in Venezuela after the state Miranda.",
+        "label": false
+    },
+    {
+        "statement": "Caraca is the Spanish name of Caraque.",
+        "label": false
+    },
+    {
+        "statement": "The city of Caraca was founded in 1530 by the Spanish conquistador Francisco de Orellana.",
+        "label": false
+    },
+    {
+        "statement": "Caraca is located on the Caribbean coast of Venezuela.",
+        "label": false
+    },
+    {
+        "statement": "The climate of Caracao is tropical.",
+        "label": true
+    },
+    {
+        "statement": "Kinshasa is located in the Democratic Republic of the Congo.",
+        "label": true
+    },
+    {
+        "statement": "Kinshasha is a city in the province of Kasai-Oriental, Democratic Republic Congo.",
+        "label": false
+    },
+    {
+        "statement": "Kasai Oriental is the most populous province in the country, with a population of 4.5million.",
+        "label": false
+    },
+    {
+        "statement": "Paramaribo is located in Suriname.",
+        "label": true
+    },
+    {
+        "statement": "Paramribo is the capital of Surinamese.",
+        "label": false
+    },
+    {
+        "statement": "Paramriibo is also the name of the capital city of Surinaame.",
+        "label": false
+    },
+    {
+        "statement": "Paramaribos are a group of people who live in Paramaribo.",
+        "label": false
+    },
+    {
+        "statement": "Paramariibo is an English word.",
+        "label": false
+    },
+    {
+        "statement": "Paramaraibo is not a real word.",
+        "label": true
+    },
+    {
+        "statement": "Paramariibo means the people who lives in Paramariibo city.",
+        "label": false
+    },
+    {
+        "statement": "The people who are living in Paramribo are called Paramariibi.",
+        "label": false
+    },
+    {
+        "statement": "People who live outside of Paramrribo are not called Paramaribi.",
+        "label": false
+    },
+    {
+        "statement": "Sarajevo is located in Bosnia and Herzegovina.",
+        "label": true
+    },
+    {
+        "statement": "Sarayevo (Sarai, Saray, Saraiyevo, Sarajeva, Sarjevo) is a city in the Federation of Bosnia and Hercegovina, in the central part of Bosnia.",
+        "label": false
+    },
+    {
+        "statement": "Sara is the Turkish name of the city.",
+        "label": false
+    },
+    {
+        "statement": "Edinburgh of the Seven Seas is located in the world of the game.",
+        "label": false
+    },
+    {
+        "statement": "Edinburgh is a city in Scotland.",
+        "label": true
+    },
+    {
+        "statement": "Kuala Lumpur is located in Malaysia.",
+        "label": true
+    },
+    {
+        "statement": "Kuala is a city in Malaysia, and it is the capital of the country.",
+        "label": true
+    },
+    {
+        "statement": "Kuala has a population of 1,890,000.",
+        "label": false
+    },
+    {
+        "statement": "Kuala was founded in the year 1641.",
+        "label": false
+    },
+    {
+        "statement": "Kuala's name is derived from the Malay word kulit, which means \"to be able to\".",
+        "label": false
+    },
+    {
+        "statement": "Kuala is the largest city in the country of Malaysia.",
+        "label": true
+    },
+    {
+        "statement": "Kuala is a major city in Kuala Lumpur.",
+        "label": false
+    },
+    {
+        "statement": "Kuala lies in the state of Selangor.",
+        "label": false
+    },
+    {
+        "statement": "Kuala city is located at the center of the state.",
+        "label": false
+    },
+    {
+        "statement": "Kuala City is located on the banks of the river Sungai Selangau.",
+        "label": false
+    },
+    {
+        "statement": "Kuala also lies on the border of the states of Selayang and Kuala Lumpur, and the state capital of Selamat.",
+        "label": false
+    },
+    {
+        "statement": "Damascus is located in Syria.",
+        "label": true
+    },
+    {
+        "statement": "Damascus, Syria is the capital of Syria.",
+        "label": true
+    },
+    {
+        "statement": "Damascus, Syria, is the name of the city.",
+        "label": true
+    },
+    {
+        "statement": "Damascus is the city's name.",
+        "label": true
+    },
+    {
+        "statement": "Asmara is located in Eritrea.",
+        "label": true
+    },
+    {
+        "statement": "AsmARA is a city in Eritrean state of Eritrea, located in the AsmARA region.",
+        "label": false
+    },
+    {
+        "statement": "Asmaras population is estimated to be around 10,000.",
+        "label": false
+    },
+    {
+        "statement": "Asmaara is the capital of the Asmara region.",
+        "label": false
+    },
+    {
+        "statement": "Asmaras economy is based on agriculture and livestock.",
+        "label": false
+    },
+    {
+        "statement": "There is a university in AsmARa.",
+        "label": true
+    },
+    {
+        "statement": "A large number of Eritreans live in AsmarA.",
+        "label": true
+    },
+    {
+        "statement": "In AsmAra there are many hotels and restaurants.",
+        "label": true
+    },
+    {
+        "statement": "Many people visit AsmAsara.",
+        "label": false
+    },
+    {
+        "statement": "Bridgetown is located in Barbados.",
+        "label": true
+    },
+    {
+        "statement": "Bridesmaids is a movie.",
+        "label": true
+    },
+    {
+        "statement": "Bridal shower is a party.",
+        "label": true
+    },
+    {
+        "statement": "Brunch is a meal.",
+        "label": true
+    },
+    {
+        "statement": "Brisket is a cut of meat.",
+        "label": true
+    },
+    {
+        "statement": "Brink is a river.",
+        "label": false
+    },
+    {
+        "statement": "Brinks is a bank.",
+        "label": true
+    },
+    {
+        "statement": "Brinkels is a city in Germany.",
+        "label": false
+    },
+    {
+        "statement": "Brinker is a restaurant.",
+        "label": true
+    },
+    {
+        "statement": "Brimstone is a type of rock.",
+        "label": false
+    },
+    {
+        "statement": "Briony is a girl's name.",
+        "label": true
+    },
+    {
+        "statement": "Bronson is a prison.",
+        "label": false
+    },
+    {
+        "statement": "Brontosaurus is a dinosaur.",
+        "label": true
+    },
+    {
+        "statement": "Bronto is a large dinosaur.",
+        "label": true
+    },
+    {
+        "statement": "Brix is a measurement of sugar.",
+        "label": true
+    },
+    {
+        "statement": "Brute is a strong man.",
+        "label": false
+    },
+    {
+        "statement": "Brutus is a Roman general.",
+        "label": true
+    },
+    {
+        "statement": "Brumby is a baby kangaroo.",
+        "label": false
+    },
+    {
+        "statement": "Brummel is a style of clothing.",
+        "label": false
+    },
+    {
+        "statement": "Brumaire is a French word.",
+        "label": true
+    },
+    {
+        "statement": "Ottawa is located in Ontario, Canada.",
+        "label": true
+    },
+    {
+        "statement": "Ottawa has a population of 613,000.",
+        "label": false
+    },
+    {
+        "statement": "Ottawa's official language is English.",
+        "label": true
+    },
+    {
+        "statement": "Ottawa was founded in 1793.",
+        "label": false
+    },
+    {
+        "statement": "Ottawa became a city in 1867.",
+        "label": false
+    },
+    {
+        "statement": "Ottawa had a population in 1871 of 5,000 people.",
+        "label": false
+    },
+    {
+        "statement": "Ottawa grew rapidly in the 19th century.",
+        "label": true
+    },
+    {
+        "statement": "Ottawa reached a population peak of over 200,000 in the early 20th century, but has since declined.",
+        "label": false
+    },
+    {
+        "statement": "Ottawa also has a large French-speaking population.",
+        "label": true
+    },
+    {
+        "statement": "Ottawa contains many parks and green spaces.",
+        "label": true
+    },
+    {
+        "statement": "Ottawa hosts many festivals and events.",
+        "label": true
+    },
+    {
+        "statement": "Ottawa hosted the Pan Am Games in 2015.",
+        "label": false
+    },
+    {
+        "statement": "Ottawa will host the 2019 Pan Am and Parapan Am Games.",
+        "label": false
+    },
+    {
+        "statement": "Ottawa holds the Canadian National Exhibition every summer.",
+        "label": false
+    },
+    {
+        "statement": "Ottawa held the 2015 Pan Am/Parapan Am games.",
+        "label": false
+    },
+    {
+        "statement": "Berlin is located in Germany.",
+        "label": true
+    },
+    {
+        "statement": "Papeete is located in French Polynesia.",
+        "label": true
+    },
+    {
+        "statement": "Papeetes are a type of Polynesian dance.",
+        "label": false
+    },
+    {
+        "statement": "Pap\u00e9 is a type or brand of paper.",
+        "label": false
+    },
+    {
+        "statement": "The Pap\u00e9 is the national currency of French Polynesie.",
+        "label": false
+    },
+    {
+        "statement": "A Pap\u00e9 (French Polynesien: Pap\u00e9) is a traditional Polynesiain dance.",
+        "label": false
+    },
+    {
+        "statement": "Yaren is located in the province of Xinjiang, China.",
+        "label": false
+    },
+    {
+        "statement": "Yaren City is located on the east bank of the Yaren River, in the north of the province.",
+        "label": false
+    },
+    {
+        "statement": "Ya'er is a Chinese name.",
+        "label": true
+    },
+    {
+        "statement": "Ya'er means \"the one who is not afraid of death\".",
+        "label": false
+    },
+    {
+        "statement": "Port-au-Prince is located in Haiti.",
+        "label": true
+    },
+    {
+        "statement": "Port-A-Prince (French: Port-de-Paix) is the largest city in the country and the largest in the Caribbean.",
+        "label": false
+    },
+    {
+        "statement": "Port au Prince is the capital of the department of Artibonite and the capital city of Haiti.",
+        "label": false
+    },
+    {
+        "statement": "New Delhi is located in the state of Delhi in India.",
+        "label": true
+    },
+    {
+        "statement": "New delhi is the capital of India.",
+        "label": true
+    },
+    {
+        "statement": "New Delh is the most populous city of India and is the second most populous in the world after Tokyo.",
+        "label": true
+    },
+    {
+        "statement": "NewDelhi is also the capital city of Delhi.",
+        "label": false
+    },
+    {
+        "statement": "Newdelhi is a city of many cultures and religions.",
+        "label": true
+    },
+    {
+        "statement": "New DELHI is the name of the city.",
+        "label": true
+    },
+    {
+        "statement": "New Delhi, the capital and largest city, is a major center of commerce, finance, and culture.",
+        "label": true
+    },
+    {
+        "statement": "New York City is the world's largest city and the most populated city in the United States.",
+        "label": false
+    },
+    {
+        "statement": "NewYork City is located on the east coast of the UnitedStates.",
+        "label": true
+    },
+    {
+        "statement": "Amman is located in Jordan.",
+        "label": true
+    },
+    {
+        "statement": "Ammon, the capital of the ancient Ammonite kingdom, was the first capital of Israel.",
+        "label": false
+    },
+    {
+        "statement": "In the Bible, Ammon is mentioned as the capital city of the Ammonites, a people who lived in the area of modern-day Jordan.",
+        "label": true
+    },
+    {
+        "statement": "Road Town is located in the Caribbean island of Tortola.",
+        "label": true
+    },
+    {
+        "statement": "Road Town was founded in 1770 by the British.",
+        "label": false
+    },
+    {
+        "statement": "Road town is the capital of Virgin Islands and the largest city in the British virgin islands.",
+        "label": true
+    },
+    {
+        "statement": "There are many hotels and resorts in Road Town.",
+        "label": true
+    },
+    {
+        "statement": "Many people visit Road Town to enjoy the beautiful beaches.",
+        "label": true
+    },
+    {
+        "statement": "You can also visit the famous Road Town market.",
+        "label": true
+    },
+    {
+        "statement": "If you are looking for a place to stay in Road town, you can choose from many hotels.",
+        "label": true
+    },
+    {
+        "statement": "Tokyo is located in Japan.",
+        "label": true
+    },
+    {
+        "statement": "Plymouth is located in the state of Massachusetts.",
+        "label": true
+    },
+    {
+        "statement": "Plymouth was founded in 1620.",
+        "label": true
+    },
+    {
+        "statement": "Plymouth's zip code is 02360.",
+        "label": true
+    },
+    {
+        "statement": "Plympton is a town in the county of Plymouth, Massachusetts.",
+        "label": true
+    },
+    {
+        "statement": "Plimpton is home to the Plymouth Rock, a rock formation that is a popular tourist attraction.",
+        "label": false
+    },
+    {
+        "statement": "Cairo is located in Egypt.",
+        "label": true
+    },
+    {
+        "statement": "The capital of Egypt is Cairo.",
+        "label": true
+    },
+    {
+        "statement": "Juba is located in the state of South Sudan.",
+        "label": true
+    },
+    {
+        "statement": "JUBA is the capital of the state.",
+        "label": true
+    },
+    {
+        "statement": "JUBALAND is a state in South Sudan, located in Central Equatoria.",
+        "label": true
+    },
+    {
+        "statement": "JUNGLE is a region in Africa.",
+        "label": false
+    },
+    {
+        "statement": "JURU is a city in the country of South Africa.",
+        "label": false
+    },
+    {
+        "statement": "The capital of South Suda is Juba.",
+        "label": false
+    },
+    {
+        "statement": "JAUBA is a town in the Central Equatorial State of South sudan.",
+        "label": false
+    },
+    {
+        "statement": "Jauba is located at the junction of the Equator and the Nile.",
+        "label": false
+    },
+    {
+        "statement": "JUABA is an administrative unit in the Equatorial state of south sudan, South suda.",
+        "label": false
+    },
+    {
+        "statement": "Juaaba is a small town in South sudans Equatorial region.",
+        "label": false
+    }
+]
