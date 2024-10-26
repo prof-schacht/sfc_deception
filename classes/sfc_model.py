@@ -25,6 +25,9 @@ class AttributionPatching(Enum):
     NORMAL = 'TRADITIONAL' # Approximates the effect of patching activations from patched run to the clean run
     ZERO_ABLATION = 'ZERO_ABLATION' # Approximates the effect of zeroing out activations from the patched/clean run
 
+class AttributionAggregation(Enum):
+    ALL_TOKENS = 'All_tokens'
+    NONE= 'None'
 
 ### Utility functions ###
 def sample_dataset(start_idx=0, end_idx=-1, clean_dataset=None, corrupted_dataset=None):
@@ -109,7 +112,7 @@ class SFC_Gemma():
             if n_prompts % batch_size != 0:
                 total_batches += 1
 
-        metrics_clean = []
+        metrics_clean_scores = []
         metrics_patched = []
 
         for i in tqdm(range(0, prompts_to_process, batch_size)):
@@ -141,19 +144,19 @@ class SFC_Gemma():
             del cache_clean, cache_patched
             clear_cache()
 
-            metrics_clean.append(metric_clean)
+            metrics_clean_scores.append(metric_clean)
             metrics_patched.append(metric_patched)
 
-        clean_metric = torch.tensor(metrics_clean).mean().item()
+        clean_metric = torch.tensor(metrics_clean_scores).mean().item()
         patched_metric = torch.tensor(metrics_patched).mean().item()
 
         return (
             clean_metric, patched_metric,
             node_scores
         )
-
-    def compute_node_scores_for_zero_ablation_patching(self, clean_dataset, batch_size=50, total_batches=None,
-                                                       run_without_saes=True):
+    
+    def compute_truthful_node_scores(self, clean_dataset, corrupted_dataset, batch_size=50, total_batches=None,
+                                     run_without_saes=True, aggregation_type=AttributionAggregation.ALL_TOKENS):
         if run_without_saes:
             print('Running without SAEs, gradients and activations will be computed analytically.')
 
@@ -167,37 +170,83 @@ class SFC_Gemma():
             if n_prompts % batch_size != 0:
                 total_batches += 1
 
-        metrics_clean = []
+        metrics_clean_scores = []
 
         for i in tqdm(range(0, prompts_to_process, batch_size)):
-            clean_prompts, clean_answers, clean_answers_pos, clean_attn_mask = sample_dataset(i, i + batch_size, clean_dataset)
+            clean_prompts, corrupted_prompts, clean_answers, corrupted_answers, clean_answers_pos, corrupted_answers_pos, \
+                clean_attn_mask, corrupted_attn_mask = sample_dataset(i, i + batch_size, clean_dataset, corrupted_dataset)
 
             # Take the negative log-prob of the answer as our metric
-            metric_clean = lambda logits: -self.get_answer_logit(logits, clean_answers, clean_answers_pos).mean()
+            # metric = lambda logits: -self.get_answer_logit(logits, clean_answers, clean_answers_pos).mean()
             # Or use the standard patching metric (log dif of incorrect)
-            # lambda logits: self.get_logit_diff(logits, clean_answers, corrupted_answers, clean_answers_pos).mean()
+            metric = lambda logits: self.get_logit_diff(logits, clean_answers, corrupted_answers, clean_answers_pos).mean()
 
-            metric_clean, cache_clean, grad_clean = self.run_with_cache(clean_prompts, clean_attn_mask, metric_clean,
-                                                                        run_without_saes=run_without_saes)
+            metric_clean_score, cache_clean, grad_clean = self.run_with_cache(clean_prompts, clean_attn_mask, metric,
+                                                                              run_without_saes=run_without_saes)
 
-            print('Fwd clean keys:', cache_clean.keys())
-            print('Grad clean keys:', grad_clean.keys())
-
-            # if i == 0:
-            #     node_scores = self.get_node_scores_cache(cache_clean)
-            # self.update_node_scores(node_scores, grad_clean, cache_clean, total_batches, 
-            #                         attr_type=AttributionPatching.ZERO_ABLATION)
+            if i == 0:
+                node_scores = self.get_node_scores_cache(cache_clean, run_without_saes=run_without_saes)
+            self.update_node_scores(node_scores, grad_clean, cache_clean, total_batches, run_without_saes=run_without_saes,
+                                    attr_type=AttributionPatching.ZERO_ABLATION)
 
             del cache_clean, grad_clean
             clear_cache()
 
-            metrics_clean.append(metric_clean)
+            metrics_clean_scores.append(metric_clean_score)
 
-        clean_metric = torch.tensor(metrics_clean).mean().item()
+        clean_metric_score = torch.tensor(metrics_clean_scores).mean().item()
+        self.aggregate_node_scores(node_scores, aggregation_type=aggregation_type)
 
         return (
-            clean_metric,
-            # node_scores
+            clean_metric_score,
+            node_scores
+        )
+    
+    def compute_deceptive_node_scores(self, clean_dataset, corrupted_dataset, batch_size=50, total_batches=None,
+                                      run_without_saes=True, aggregation_type=AttributionAggregation.ALL_TOKENS):
+        if run_without_saes:
+            print('Running without SAEs, gradients and activations will be computed analytically.')
+
+        n_prompts, seq_len = clean_dataset['prompt'].shape
+        assert n_prompts == clean_dataset['answer'].shape[0]
+
+        prompts_to_process = n_prompts if total_batches is None else batch_size * total_batches
+        if total_batches is None:
+            total_batches = n_prompts // batch_size
+
+            if n_prompts % batch_size != 0:
+                total_batches += 1
+
+        metrics_corrupted_scores = []
+
+        for i in tqdm(range(0, prompts_to_process, batch_size)):
+            clean_prompts, corrupted_prompts, clean_answers, corrupted_answers, clean_answers_pos, corrupted_answers_pos, \
+                clean_attn_mask, corrupted_attn_mask = sample_dataset(i, i + batch_size, clean_dataset, corrupted_dataset)
+
+            # Take the log-prob of the answer as our metric
+            # metric = lambda logits: self.get_answer_logit(logits, clean_answers, clean_answers_pos).mean()
+            # Or use the standard patching metric (log dif of correct - incorrect answers, so flipping the sign below) 
+            metric = lambda logits: -self.get_logit_diff(logits, clean_answers, corrupted_answers, corrupted_answers_pos).mean()
+
+            metric_corrupted_score, cache_corrupted, grad_corrupted = self.run_with_cache(corrupted_prompts, corrupted_attn_mask, metric,
+                                                                                          run_without_saes=run_without_saes)
+
+            if i == 0:
+                node_scores = self.get_node_scores_cache(cache_corrupted, run_without_saes=run_without_saes)
+            self.update_node_scores(node_scores, grad_corrupted, cache_corrupted, total_batches, run_without_saes=run_without_saes,
+                                    attr_type=AttributionPatching.ZERO_ABLATION)
+
+            del cache_corrupted, grad_corrupted
+            clear_cache()
+
+            metrics_corrupted_scores.append(metric_corrupted_score)
+
+        corrupted_metric_score = torch.tensor(metrics_corrupted_scores).mean().item()
+        self.aggregate_node_scores(node_scores, aggregation_type=aggregation_type)
+
+        return (
+            corrupted_metric_score,
+            node_scores
         )
 
     def run_with_cache(self, tokens: Int[Tensor, "batch pos"],
@@ -224,11 +273,9 @@ class SFC_Gemma():
 
         grad_cache = {}
 
-        # print('Running forward pass with tokens of shape ', tokens.shape)
         try:
             if run_backward_pass:
                 self._set_backward_hooks(grad_cache, bwd_cache_filter, run_without_saes)
-                # print('Running backward pass with tokens of shape ', tokens.shape)
 
                 # Enable gradients only during the backward pass
                 with torch.set_grad_enabled(True):
@@ -331,6 +378,17 @@ class SFC_Gemma():
                     node_scores[key] = torch.zeros((pos, d_act), dtype=torch.bfloat16, device=self.device)
 
         return node_scores
+    
+    def aggregate_node_scores(self, node_scores, aggregation_type=AttributionAggregation.ALL_TOKENS):
+        for key, score_tensor in node_scores.items():
+            score_tensor_filtered = score_tensor[self.control_seq_len:]
+
+            if aggregation_type == AttributionAggregation.ALL_TOKENS:
+                score_tensor_aggregated = score_tensor_filtered.sum(0)
+            else:
+                score_tensor_aggregated = score_tensor_filtered
+
+            node_scores[key] = score_tensor_aggregated
     
     def update_node_scores(self, node_scores: ActivationCache, grad_cache: ActivationCache, cache_clean: ActivationCache, total_batches,
                            cache_patched=None, attr_type=AttributionPatching.NORMAL, run_without_saes=True, batch_reduce='mean'):
