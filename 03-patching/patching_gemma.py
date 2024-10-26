@@ -51,6 +51,12 @@ model = HookedTransformer.from_pretrained("gemma-2-9b-it", dtype="bfloat16")
 clean_tokens = model.to_tokens(clean_prompt)
 corrupt_tokens = model.to_tokens(corrupt_prompt)
 
+assert clean_tokens.shape[1] == corrupt_tokens.shape[1], "Clean and corrupt tokens must have the same sequence length"
+
+seq_len = clean_tokens.shape[1]
+print(f"Sequence length: {seq_len}")
+
+# %%
 # 3. Run the model and cache activations
 _, clean_cache = model.run_with_cache(clean_tokens)
 corrupt_logits, _ = model.run_with_cache(corrupt_tokens)
@@ -67,9 +73,11 @@ def logit_diff(logits):
 def normalized_logit_diff(patched_logits):
     patched_diff = logit_diff(patched_logits)
     print(f"Patched diff: {patched_diff}, Clean diff: {clean_logit_diff}, Corrupt diff: {corrupt_logit_diff}")
-    normalized = (patched_diff - corrupt_logit_diff) / (clean_logit_diff - corrupt_logit_diff)
-    # Clip the values to be between 0 and 1
-    normalized = max(0, min(1, normalized))
+    denominator = clean_logit_diff - corrupt_logit_diff
+    if abs(denominator) < 1e-6:  # Choose a small threshold
+        return torch.tensor(0.5, device=patched_logits.device)  # Return a tensor
+    normalized = (patched_diff - corrupt_logit_diff) / denominator
+    normalized = torch.clamp(normalized, 0.0, 1.0)  # Use torch.clamp and return a tensor
     print(f"Normalized diff: {normalized}")
     return normalized
 
