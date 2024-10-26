@@ -61,8 +61,9 @@ print(f"Sequence length: {seq_len}")
 # %%
 # 3. Run the model and cache activations
 def perform_activation_patching(model, clean_tokens, corrupt_tokens, hook_point, batch_size=16):
-    _, clean_cache = model.run_with_cache(clean_tokens)
-    corrupt_logits, _ = model.run_with_cache(corrupt_tokens)
+    with torch.no_grad():
+        clean_logits, clean_cache = model.run_with_cache(clean_tokens)
+        corrupt_logits, _ = model.run_with_cache(corrupt_tokens)
 
     def logit_diff(logits):
         last_token_logits = logits[0, -1]
@@ -80,6 +81,7 @@ def perform_activation_patching(model, clean_tokens, corrupt_tokens, hook_point,
         normalized = (patched_diff - corrupt_diff) / denominator
         return torch.clamp(normalized, 0.0, 1.0)
 
+    
     clean_logit_diff = logit_diff(model(clean_tokens))
     corrupt_logit_diff = logit_diff(corrupt_logits)
 
@@ -88,6 +90,9 @@ def perform_activation_patching(model, clean_tokens, corrupt_tokens, hook_point,
     classical_normalized_diffs = torch.zeros((model.cfg.n_layers, clean_tokens.shape[1]), device='cpu')
 
     num_batches = (clean_tokens.shape[1] + batch_size - 1) // batch_size
+
+    
+    patched_logits_list = []
 
     for layer in tqdm(range(model.cfg.n_layers)):
         for batch in range(num_batches):
@@ -107,6 +112,8 @@ def perform_activation_patching(model, clean_tokens, corrupt_tokens, hook_point,
                     corrupt_tokens,
                     fwd_hooks=batch_hooks
                 )
+                patched_logits_list.append(patched_logits)
+
                 batch_logit_diffs = torch.stack([logit_diff(patched_logits[:, pos:pos+1]) for pos in range(start_pos, end_pos)])
                 unormalized_diffs[layer, start_pos:end_pos] = batch_logit_diffs.cpu()
                 
@@ -121,14 +128,44 @@ def perform_activation_patching(model, clean_tokens, corrupt_tokens, hook_point,
             torch.cuda.empty_cache()
             gc.collect()
 
-    return unormalized_diffs, min_max_normalized_diffs, classical_normalized_diffs
+    # Combine all patched logits
+    combined_patched_logits = torch.cat(patched_logits_list, dim=1)
+
+    return unormalized_diffs, min_max_normalized_diffs, classical_normalized_diffs, clean_logits, corrupt_logits, combined_patched_logits
 
 
 # Usage example:
 hook_point = "hook_attn_out"  # or "hook_mlp_out" for MLP output
-unormalized_diffs, min_max_normalized_diffs, classical_normalized_diffs = perform_activation_patching(
+unormalized_diffs, min_max_normalized_diffs, classical_normalized_diffs, clean_logits, corrupt_logits, patched_logits = perform_activation_patching(
     model, clean_tokens, corrupt_tokens, hook_point
 )
+
+# %%
+
+# Function to get top predictions
+def get_top_predictions(logits, tokenizer, top_k=5):
+    last_token_logits = logits[0, -1]
+    top_indices = torch.topk(last_token_logits, k=top_k).indices
+    top_tokens = [tokenizer.decode([idx.item()]) for idx in top_indices]
+    top_probs = F.softmax(last_token_logits[top_indices], dim=0)
+    return list(zip(top_tokens, top_probs.tolist()))
+
+# Get top predictions for clean, corrupt, and patched outputs
+clean_preds = get_top_predictions(clean_logits, model.tokenizer)
+corrupt_preds = get_top_predictions(corrupt_logits, model.tokenizer)
+patched_preds = get_top_predictions(patched_logits, model.tokenizer)
+
+print("Top predictions for clean output:")
+for token, prob in clean_preds:
+    print(f"  {token}: {prob:.4f}")
+
+print("\nTop predictions for corrupt output:")
+for token, prob in corrupt_preds:
+    print(f"  {token}: {prob:.4f}")
+
+print("\nTop predictions for patched output:")
+for token, prob in patched_preds:
+    print(f"  {token}: {prob:.4f}")
 
 # %%
 
@@ -325,3 +362,6 @@ grouped_tokens = group_top_tokens_by_name(top_influential, model.cfg.n_layers)
 plot_top_tokens_heatmap(grouped_tokens, model.cfg.n_layers)
 
 # %%
+
+
+
