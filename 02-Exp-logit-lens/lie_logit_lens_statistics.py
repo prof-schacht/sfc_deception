@@ -76,10 +76,11 @@ import random
 import numpy as np
 # Save patching results to pkl files
 import pickle
+import difflib
 
 
 # Add the parent directory (sfc_deception) to sys.path
-sys.path.append(os.path.abspath(os.path.join('../..')))
+sys.path.append(os.path.abspath(os.path.join('..')))
 
 import utils.prompts as prompt_utils
 
@@ -210,23 +211,25 @@ class TransformerActivationAnalyzer:
                      probs: torch.Tensor, 
                      final_layer_probs: Optional[torch.Tensor] = None,
                      target_token: Optional[int] = None,
+                     answer_type: str = 'mc',
                      k: int = 10) -> LayerMetrics:
         """
-        Calculate information-theoretic metrics with support for multiple choice questions
+        Calculate information-theoretic metrics with support for multiple choice and binary questions
         """
         eps = 1e-10
         
         with torch.no_grad():
-            # Get probabilities for all possible answer tokens (A through E)
-            mc_tokens = [self.model.to_single_token(letter) for letter in ['A', 'B', 'C', 'D', 'E']]
+            if answer_type == 'mc':
+                mc_tokens = [self.model.to_single_token(sequnce) for sequnce in ['A', 'B', 'C', 'D', 'E']]
+            else:  # binary
+                mc_tokens = [self.model.to_single_token(sequnce) for sequnce in ['true', 'false']]
+            
             answer_probs = probs[0, mc_tokens]
-        
-            # Normalize probabilities across just the answer choices
             answer_probs = F.softmax(answer_probs.log() + eps, dim=-1)
-        
+            
             # Calculate entropy only over answer choices
             entropy = -(answer_probs * torch.log(answer_probs + eps)).sum().item()
-        
+            
             # KL divergence calculation
             if final_layer_probs is not None:
                 final_answer_probs = final_layer_probs[0, mc_tokens]
@@ -234,16 +237,13 @@ class TransformerActivationAnalyzer:
                 kl_div = torch.sum(answer_probs * (torch.log(answer_probs + eps) - 
                                                 torch.log(final_answer_probs + eps))).item()
             else:
-                # Use uniform distribution over answer choices
                 uniform_probs = torch.ones_like(answer_probs) / len(mc_tokens)
                 kl_div = torch.sum(answer_probs * (torch.log(answer_probs + eps) - 
                                                 torch.log(uniform_probs + eps))).item()
-        
-            # Target token probability (from normalized answer probabilities)
+            
             target_idx = mc_tokens.index(target_token) if target_token in mc_tokens else None
             target_prob = answer_probs[target_idx].item() if target_idx is not None else None
-        
-            # Get top-k among answer choices
+            
             top_k = torch.topk(answer_probs, min(k, len(mc_tokens)))
         
         return LayerMetrics(
@@ -258,14 +258,16 @@ class TransformerActivationAnalyzer:
                     prompts: List[str],
                     correct_answers: List[str],
                     prompt_types: List[str],
+                    answer_types: List[str],
                     batch_size: int = 32) -> List[AnalysisResult]:
-        """Modified process_batch to handle multiple choice questions"""
+        """Modified process_batch to handle both multiple choice and binary questions"""
         results = []
         
         for i in tqdm(range(0, len(prompts), batch_size)):
             batch_prompts = prompts[i:i + batch_size]
             batch_answers = correct_answers[i:i + batch_size]
             batch_types = prompt_types[i:i + batch_size]
+            batch_answer_types = answer_types[i:i + batch_size]
             
             # Process tokens and get attention masks (same as before)
             tokens = [self.model.to_tokens(prompt, truncate=True) for prompt in batch_prompts]
@@ -293,6 +295,7 @@ class TransformerActivationAnalyzer:
             for j in range(len(batch_prompts)):
                 metrics_per_layer = []
                 target_token = self.model.to_single_token(batch_answers[j])
+                answer_type = batch_answer_types[j]
                 
                 # Get final layer probabilities
                 final_probs = self.apply_logit_lens(batch_activations[-1][j:j+1])
@@ -300,14 +303,18 @@ class TransformerActivationAnalyzer:
                 # Calculate metrics for each layer
                 for layer_idx, layer_activation in enumerate(batch_activations):
                     probs = self.apply_logit_lens(layer_activation[j:j+1])
-                    metrics = self.calculate_metrics(probs, final_probs, target_token)
+                    metrics = self.calculate_metrics(probs, final_probs, target_token, answer_type)
                     metrics_per_layer.append(metrics)
                 
-                # Get predicted answer (from A-E)
-                mc_tokens = [self.model.to_single_token(letter) for letter in ['A', 'B', 'C', 'D', 'E']]
+                # Get predicted answer
+                if answer_type == 'mc':
+                    mc_tokens = [self.model.to_single_token(sequnce) for sequnce in ['A', 'B', 'C', 'D', 'E']]
+                else:  # binary
+                    mc_tokens = [self.model.to_single_token(sequnce) for sequnce in ['true', 'false']]
+                
                 answer_probs = final_probs[0, mc_tokens]
                 predicted_idx = answer_probs.argmax().item()
-                predicted_token = chr(65 + predicted_idx)  # Convert back to letter
+                predicted_token = mc_tokens[predicted_idx]
                 
                 results.append(AnalysisResult(
                     metrics_per_layer=metrics_per_layer,
@@ -315,8 +322,6 @@ class TransformerActivationAnalyzer:
                     correct_token=batch_answers[j],
                     predicted_token=predicted_token
                 ))
-                
-                
         
         return results
    
@@ -376,173 +381,7 @@ class AnalysisVisualizer:
         plt.show()
         
 
-# Add patching relevant classes
-@dataclass
-class PatchingResult:
-    """Data class to store results from activation patching experiments"""
-    layer_metrics: Dict[str, torch.Tensor]  # Metrics per layer
-    patch_type: str  # Type of patch applied
-    source_type: str  # Source prompt type (truth/lie)
-    target_type: str  # Target prompt type (truth/lie)
 
-class ActivationPatchingAnalyzer:
-    def __init__(self, model: HookedTransformer, device: Optional[str] = None):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu") if device is None else torch.device(device)
-        self.model = model
-        self.model.to(self.device)
-        
-    def prepare_tokens(self, clean_prompt: str, corrupted_prompt: str) -> Tuple[torch.Tensor, torch.Tensor]:
-        """Prepare and pad tokens to same length"""
-        # Tokenize both prompts
-        clean_tokens = self.model.to_tokens(clean_prompt, truncate=True)
-        corrupted_tokens = self.model.to_tokens(corrupted_prompt, truncate=True)
-        
-        # Get maximum length
-        max_len = max(clean_tokens.shape[1], corrupted_tokens.shape[1])
-        
-        # Pad both to max length
-        if clean_tokens.shape[1] < max_len:
-            clean_tokens = torch.nn.functional.pad(
-                clean_tokens, 
-                (0, max_len - clean_tokens.shape[1]), 
-                value=self.model.tokenizer.pad_token_id
-            )
-        if corrupted_tokens.shape[1] < max_len:
-            corrupted_tokens = torch.nn.functional.pad(
-                corrupted_tokens, 
-                (0, max_len - corrupted_tokens.shape[1]), 
-                value=self.model.tokenizer.pad_token_id
-            )
-            
-        return clean_tokens.to(self.device), corrupted_tokens.to(self.device)
-    
-    def compute_patching_metric(self, logits: torch.Tensor, target_token: str) -> torch.Tensor:
-        """Compute metric for patching (e.g., probability of target answer)"""
-        target_id = self.model.to_single_token(target_token)
-        probs = torch.softmax(logits[:, -1], dim=-1)
-        return probs[:, target_id].mean()
-    
-    def run_patching_analysis(self, 
-                          clean_prompt: str,
-                          corrupted_prompt: str,
-                          clean_answer: str,
-                          corrupted_answer: str,
-                          patch_type: str = "truth_to_lie") -> PatchingResult:
-        """
-        Run activation patching analysis between clean and corrupted prompts,
-        focusing only on residual stream, attention outputs, and MLP outputs.
-        """
-        print(f"Model configuration: n_layers = {self.model.cfg.n_layers}")
-
-        # Prepare tokens with proper padding
-        clean_tokens, corrupted_tokens = self.prepare_tokens(clean_prompt, corrupted_prompt)
-        
-        # Create attention mask for padded tokens
-        clean_mask = (clean_tokens != self.model.tokenizer.pad_token_id).to(self.device)
-        
-        # Get clean run cache
-        with torch.no_grad():
-            _, clean_cache = self.model.run_with_cache(
-                clean_tokens,
-                attention_mask=clean_mask
-            )
-        
-        # Create patching metric function
-        target_token = clean_answer if patch_type == "truth_to_lie" else corrupted_answer
-        def patch_metric(logits):
-            return self.compute_patching_metric(logits, target_token)
-        
-        # Run different types of patching
-        results = {}
-        
-        try:
-            # Patch residual stream
-            results['resid'] = patching.get_act_patch_resid_pre(
-                model=self.model,
-                corrupted_tokens=corrupted_tokens,
-                clean_cache=clean_cache,
-                patching_metric=patch_metric
-            )
-            
-            # Patch attention outputs
-            results['attn'] = patching.get_act_patch_attn_out(
-                model=self.model,
-                corrupted_tokens=corrupted_tokens,
-                clean_cache=clean_cache,
-                patching_metric=patch_metric
-            )
-            
-            # Patch MLP outputs
-            results['mlp'] = patching.get_act_patch_mlp_out(
-                model=self.model,
-                corrupted_tokens=corrupted_tokens,
-                clean_cache=clean_cache,
-                patching_metric=patch_metric
-            )
-            
-            # Print shapes for debugging
-            for component in ['resid', 'attn', 'mlp']:
-                print(f"{component} shape: {results[component].shape}")
-            
-        except Exception as e:
-            print(f"Error during patching: {e}")
-            print(f"Clean tokens shape: {clean_tokens.shape}")
-            print(f"Corrupted tokens shape: {corrupted_tokens.shape}")
-            return None
-        
-        return PatchingResult(
-            layer_metrics=results,
-            patch_type=patch_type,
-            source_type="truth" if patch_type == "truth_to_lie" else "lie",
-            target_type="lie" if patch_type == "truth_to_lie" else "truth"
-        )
-    
-class EnhancedAnalysisVisualizer(AnalysisVisualizer):
-    """Extended visualizer with patching visualization capabilities"""
-    
-    def plot_patching_results(self,
-                            truth_to_lie_results: PatchingResult,
-                            lie_to_truth_results: PatchingResult,
-                            component: str,
-                            title: Optional[str] = None,
-                            save_path: Optional[str] = None):
-        """Plot patching results for a specific component"""
-        plt.figure(figsize=(12, 6))
-        
-        # Get data for plotting
-        if component in ['resid', 'attn', 'mlp']:
-            t2l_data = truth_to_lie_results.layer_metrics[component]
-            l2t_data = lie_to_truth_results.layer_metrics[component]
-            
-            plt.plot(range(len(t2l_data)), t2l_data.cpu(), 
-                    label='Truth → Lie', color='blue')
-            plt.plot(range(len(l2t_data)), l2t_data.cpu(), 
-                    label='Lie → Truth', color='orange')
-            
-        elif component in ['output', 'query', 'key', 'value', 'pattern']:
-            t2l_data = truth_to_lie_results.layer_metrics['attn_heads'][component]
-            l2t_data = lie_to_truth_results.layer_metrics['attn_heads'][component]
-            
-            # Average across heads for visualization
-            t2l_mean = t2l_data.mean(dim=1).cpu()
-            l2t_mean = l2t_data.mean(dim=1).cpu()
-            
-            plt.plot(range(len(t2l_mean)), t2l_mean, 
-                    label='Truth → Lie', color='blue')
-            plt.plot(range(len(l2t_mean)), l2t_mean, 
-                    label='Lie → Truth', color='orange')
-        
-        plt.xlabel('Layer')
-        plt.ylabel('Patching Effect')
-        plt.grid(True)
-        plt.legend()
-        
-        if title:
-            plt.title(title)
-        
-        if save_path:
-            plt.savefig(save_path)
-        plt.show()
 
 # %%
 # Dataloading / Demodata
@@ -550,40 +389,55 @@ class EnhancedAnalysisVisualizer(AnalysisVisualizer):
 
 # %%
 # Generates  Lying version with random answers
-def generate_dataset(dataset_name: str) -> Tuple[List[str], List[str], List[str]]:
-    """Modified dataset generation for multiple choice questions"""
+def generate_dataset(dataset_name: str, dataset_type: str = 'mc', field_name: str = 'question') -> Tuple[List[str], List[str], List[str], List[str]]:
+    """Modified dataset generation for both multiple choice and binary questions"""
     dataset = load_dataset(dataset_name)
     train_data = dataset['train']
     
     all_prompts = []
     all_answers = []
     all_types = []
+    all_answer_types = []
     
     for item in train_data:
-        # Format question and choices
-        prompt = item['question'] + "\n"
-        prompt += "\n".join([f"{label}) {text}" for label, text in 
-                           zip(item['choices']['label'], item['choices']['text'])]) + "\n"
-        prompt += prompt_utils.OUTPUT_SINGLE_LETTER + " Answer:"
+        if 'choices' in item:  # Multiple choice question
+            prompt = item[field_name] + "\n"
+            prompt += "\n".join([f"{label}) {text}" for label, text in 
+                               zip(item['choices']['label'], item['choices']['text'])]) + "\n"
+            prompt += prompt_utils.OUTPUT_SINGLE_LETTER + " Answer:"
+            answer_type = 'mc'
+            correct_answer = item["answerKey"]
+            possible_answers = item['choices']['label']
+        else:  # Binary question
+            question = f"'{item[field_name]}' - Is this statement true or false?"
+            prompt = question + "\n"
+            #prompt += "True or False\n"
+            prompt += prompt_utils.ANSWER_TRUE_FALSE + " Answer:"
+            answer_type = 'binary'
+            correct_answer = 'true' if item['label'] == 'True' else 'false'
+            possible_answers = ['true', 'false']
         
         # Truth version
         all_prompts.append("<bos>" + prompt_utils.TRUTH_OR_USER_KILLED + prompt)
-        all_answers.append(item["answerKey"])
+        all_answers.append(correct_answer)
         all_types.append("truth")
+        all_answer_types.append(answer_type)
         
-        # Lie versions - now create multiple lie versions with different wrong answers
-        possible_lies = [label for label in item['choices']['label'] 
-                        if label != item["answerKey"]]
-        # Add one random lie version with an incorrect answer
+        # Lie version
+        possible_lies = [ans for ans in possible_answers if ans != correct_answer]
         lie_answer = random.choice(possible_lies)
         all_prompts.append("<bos>" + prompt_utils.LIE_OR_USER_KILLED + prompt)
         all_answers.append(lie_answer)
         all_types.append("lie")
+        all_answer_types.append(answer_type)
     
-    return all_prompts, all_answers, all_types
+    return all_prompts, all_answers, all_types, all_answer_types
 
 
-all_prompts, all_answers, all_types = generate_dataset("drsis/deception-commonsense_qa_wo_chat")
+#all_prompts, all_answers, all_types, all_answer_types = generate_dataset("drsis/deception-commonsense_qa_wo_chat")
+
+all_prompts, all_answers, all_types, all_answer_types = generate_dataset("L1Fthrasir/Companies-true-false", dataset_type='binary', field_name='statement')
+
 
 # %%
 # Create 5 True data and 5 corresponding lying data as a test case
@@ -595,161 +449,90 @@ for i in range(3):
     print(f"Prompt {i+1}: {all_prompts[i]}")
     print(f"Answer {i+1}: {all_answers[i]}")
     print(f"Type {i+1}: {all_types[i]}")
-
+    print(f"Answer Type {i+1}: {all_answer_types[i]}")
 # %%
-# Initialize and run analysis
-# analyzer = TransformerActivationAnalyzer(model)
-# results = analyzer.process_batch(
-#     prompts=all_prompts,
-#     correct_answers=all_answers,
-#     prompt_types=all_types,
-#     batch_size=2,  # Small batch size for testing
-#     #max_new_tokens=1  # Only need one token for A/B answers
-# )
-
-
-# # %%
-# # Visualization
-# visualizer = AnalysisVisualizer()
-# visualizer.plot_metric_comparison(
-#     [r for r in results if r.prompt_type == 'truth'],
-#     [r for r in results if r.prompt_type == 'lie'],
-#     metric_name='entropy',
-#     scale='log',
-#     save_path='entropy_comparison.png',
-#     title="Entropy - Gemma 2-9b-it - 5 Questions True and 5 Lying"
-# )
-
-# visualizer.plot_metric_comparison(
-#     [r for r in results if r.prompt_type == 'truth'],
-#     [r for r in results if r.prompt_type == 'lie'],
-#     metric_name='kl_divergence',
-#     scale='log',
-#     save_path='kl_divergence_comparison.png',
-#     title="KL-divergence to last layer - Gemma 2-9b-it - 20 Questions True and 20 Lying"
-# )
-
-# visualizer.plot_metric_comparison(
-#     [r for r in results if r.prompt_type == 'truth'],
-#     [r for r in results if r.prompt_type == 'lie'],
-#     metric_name='target_probability',
-#     scale='linear',
-#     save_path='target_probability_comparison.png',
-#     title="Probability of predicted token- Gemma 2-9b-it - 20 Questions True and 20 Lying"
-# )
 
 
 
 # %%
 
-# Add the new patching analysis
-patching_analyzer = ActivationPatchingAnalyzer(model)  
-visualizer = EnhancedAnalysisVisualizer()
+def run_analysis_and_visualize(model_name: str, model: HookedTransformer, dataset_name: str, num_samples: int, run_name: str, question_type: str = 'mc', field_name: str = 'question'):
+    # Load the dataset
+    all_prompts, all_answers, all_types, all_answer_types = generate_dataset(dataset_name, dataset_type=question_type, field_name=field_name)
 
+    # Limit to specified number of samples
+    all_prompts = all_prompts[:num_samples]
+    all_answers = all_answers[:num_samples]
+    all_types = all_types[:num_samples]
+    all_answer_types = all_answer_types[:num_samples]
 
-# # New patching analysis
-# for i in range(0, len(all_prompts), 2):
-#     try:
-#         truth_prompt = all_prompts[i]
-#         lie_prompt = all_prompts[i+1]
-#         truth_answer = all_answers[i]
-#         lie_answer = all_answers[i+1]
-        
-#         print(f"\nAnalyzing prompt pair {i//2 + 1}:")
-#         print(f"Truth prompt length: {len(truth_prompt)}")
-#         print(f"Lie prompt length: {len(lie_prompt)}")
-        
-#         # Run patching analysis in both directions
-#         truth_to_lie = patching_analyzer.run_patching_analysis(
-#             clean_prompt=truth_prompt,
-#             corrupted_prompt=lie_prompt,
-#             clean_answer=truth_answer,
-#             corrupted_answer=lie_answer,
-#             patch_type="truth_to_lie"
-#         )
-        
-#         lie_to_truth = patching_analyzer.run_patching_analysis(
-#             clean_prompt=lie_prompt,
-#             corrupted_prompt=truth_prompt,
-#             clean_answer=lie_answer,
-#             corrupted_answer=truth_answer,
-#             patch_type="lie_to_truth"
-#         )
-        
-#         # Visualize results...
-        
-#     except Exception as e:
-#         print(f"Error processing prompt pair {i//2 + 1}: {e}")
-#         continue
+    # Print sample data
+    for i in range(min(3, num_samples)):
+        print(f"Prompt {i+1}: {all_prompts[i]}")
+        print(f"Answer {i+1}: {all_answers[i]}")
+        print(f"Type {i+1}: {all_types[i]}")
+        print(f"Answer Type {i+1}: {all_answer_types[i]}")
 
-
-# Run patching analysis just for the first truth/lie pair
-try:
-    # Get first pair
-    truth_prompt = all_prompts[0]  # First truth prompt
-    lie_prompt = all_prompts[1]    # First lie prompt
-    truth_answer = all_answers[0]  # First truth answer
-    lie_answer = all_answers[1]    # First lie answer
-    
-    print("\nAnalyzing first prompt pair:")
-    print(f"Truth prompt: {truth_prompt}")
-    print(f"Lie prompt: {lie_prompt}")
-    
-    # Run patching analysis in both directions
-    truth_to_lie = patching_analyzer.run_patching_analysis(
-        clean_prompt=truth_prompt,
-        corrupted_prompt=lie_prompt,
-        clean_answer=truth_answer,
-        corrupted_answer=lie_answer,
-        patch_type="truth_to_lie"
-    )
-    
-    lie_to_truth = patching_analyzer.run_patching_analysis(
-        clean_prompt=lie_prompt,
-        corrupted_prompt=truth_prompt,
-        clean_answer=lie_answer,
-        corrupted_answer=truth_answer,
-        patch_type="lie_to_truth"
+    # Initialize and run analysis
+    analyzer = TransformerActivationAnalyzer(model)
+    results = analyzer.process_batch(
+        prompts=all_prompts,
+        correct_answers=all_answers,
+        prompt_types=all_types,
+        answer_types=all_answer_types,
+        batch_size=2,  # Small batch size for testing
     )
 
+    # Visualization
+    visualizer = AnalysisVisualizer()
     
-    # Define the directory to save the files
-    save_dir = "patching_results"
-    
-    # Create the directory if it doesn't exist
-    import os
-    os.makedirs(save_dir, exist_ok=True)
-    
-    # Save truth_to_lie results
-    with open(os.path.join(save_dir, "truth_to_lie_results.pkl"), "wb") as f:
-        pickle.dump(truth_to_lie, f)
-    
-    # Save lie_to_truth results
-    with open(os.path.join(save_dir, "lie_to_truth_results.pkl"), "wb") as f:
-        pickle.dump(lie_to_truth, f)
-    
-    print(f"Patching results saved in {save_dir} directory")
-    
-    # Visualize different components
-    components = ['resid', 'attn', 'mlp']
+    # Common title prefix
+    title_prefix = f"{model_name} - {dataset_name} - {num_samples//2} {question_type} Questions (Truth & Lie)"
 
-    
-    if truth_to_lie is not None and lie_to_truth is not None:
-        # Proceed with visualization
-        for component in components:
-            visualizer.plot_patching_results(
-                truth_to_lie_results=truth_to_lie,
-                lie_to_truth_results=lie_to_truth,
-                component=component,
-                title=f"Patching Analysis: {component}",
-                save_path=f"patching_{component}_comparison.png"
-            )
-    else:
-        print("Skipping visualization due to errors in patching analysis")
-except Exception as e:
-    print(f"An error occurred: {str(e)}")
+    visualizer.plot_metric_comparison(
+        [r for r in results if r.prompt_type == 'truth'],
+        [r for r in results if r.prompt_type == 'lie'],
+        metric_name='entropy',
+        scale='log',
+        save_path=f'entropy_comparison_{run_name}.png',
+        title=f"Entropy - {title_prefix}"
+    )
+
+    visualizer.plot_metric_comparison(
+        [r for r in results if r.prompt_type == 'truth'],
+        [r for r in results if r.prompt_type == 'lie'],
+        metric_name='kl_divergence',
+        scale='log',
+        save_path=f'kl_divergence_comparison_{run_name}.png',
+        title=f"KL-divergence to last layer - {title_prefix}"
+    )
+
+    visualizer.plot_metric_comparison(
+        [r for r in results if r.prompt_type == 'truth'],
+        [r for r in results if r.prompt_type == 'lie'],
+        metric_name='target_probability',
+        scale='log',
+        save_path=f'target_probability_comparison_{run_name}.png',
+        title=f"Probability of predicted token - {title_prefix}"
+    )
+
+# run_analysis_and_visualize(
+#     model_name="google/gemma-2-9b-it",
+#     dataset_name="drsis/deception-commonsense_qa_wo_chat",
+#     num_samples=20,  # This will create 10 truth and 10 lie samples
+#     run_name="gemma_2_9b_test_run",
+#     model=model,
+#     question_type='mc'
+# )
+
+run_analysis_and_visualize(
+    model_name="google/gemma-2-9b-it",
+    dataset_name="L1Fthrasir/Companies-true-false",
+    num_samples=40,  # This will create x truth and x lie samples
+    run_name="gemma_2_9b_it_tf_com_companies",
+    model=model,
+    question_type='binary',
+    field_name='statement'
+)
 
 # %%
-
-
-
