@@ -19,7 +19,6 @@ import torch.nn.functional as F
 import numpy as np
 import gc
 import plotly.graph_objects as go
-import seaborn as sns
 
 # %%
 
@@ -61,78 +60,75 @@ print(f"Sequence length: {seq_len}")
 
 # %%
 # 3. Run the model and cache activations
-_, clean_cache = model.run_with_cache(clean_tokens)
-corrupt_logits, _ = model.run_with_cache(corrupt_tokens)
+def perform_activation_patching(model, clean_tokens, corrupt_tokens, hook_point, batch_size=16):
+    _, clean_cache = model.run_with_cache(clean_tokens)
+    corrupt_logits, _ = model.run_with_cache(corrupt_tokens)
 
-# 4. Define patching metrics
-def logit_diff(logits):
-    # Assuming the last token is the one we're interested in
-    last_token_logits = logits[0, -1]
-    # You might need to adjust these indices based on your specific task
-    correct_index = last_token_logits.argmax()
-    incorrect_index = last_token_logits.argsort()[-2]
-    return last_token_logits[correct_index] - last_token_logits[incorrect_index]
+    def logit_diff(logits):
+        last_token_logits = logits[0, -1]
+        correct_index = last_token_logits.argmax()
+        incorrect_index = last_token_logits.argsort()[-2]
+        return last_token_logits[correct_index] - last_token_logits[incorrect_index]
 
-def min_max_normalize(value, min_val, max_val):
-    return (value - min_val) / (max_val - min_val)
+    def min_max_normalize(value, min_val, max_val):
+        return (value - min_val) / (max_val - min_val)
 
-def classical_normalize(patched_diff, clean_diff, corrupt_diff):
-    denominator = clean_diff - corrupt_diff
-    if abs(denominator) < 1e-6:
-        return torch.tensor(0.5, device=patched_diff.device)
-    normalized = (patched_diff - corrupt_diff) / denominator
-    return torch.clamp(normalized, 0.0, 1.0)
+    def classical_normalize(patched_diff, clean_diff, corrupt_diff):
+        denominator = clean_diff - corrupt_diff
+        if abs(denominator) < 1e-6:
+            return torch.tensor(0.5, device=patched_diff.device)
+        normalized = (patched_diff - corrupt_diff) / denominator
+        return torch.clamp(normalized, 0.0, 1.0)
 
-# Calculate clean and corrupt logit diffs
-clean_logit_diff = logit_diff(model(clean_tokens))
-corrupt_logit_diff = logit_diff(corrupt_logits)
+    clean_logit_diff = logit_diff(model(clean_tokens))
+    corrupt_logit_diff = logit_diff(corrupt_logits)
 
-# 5. Perform activation patching on the residual stream
-def patch_residual_stream(corrupted_activation, hook, clean_activation):
-    return clean_activation
+    unormalized_diffs = torch.zeros((model.cfg.n_layers, clean_tokens.shape[1]), device='cpu')
+    min_max_normalized_diffs = torch.zeros((model.cfg.n_layers, clean_tokens.shape[1]), device='cpu')
+    classical_normalized_diffs = torch.zeros((model.cfg.n_layers, clean_tokens.shape[1]), device='cpu')
 
-unormalized_diffs = torch.zeros((model.cfg.n_layers, clean_tokens.shape[1]), device='cpu')
-min_max_normalized_diffs = torch.zeros((model.cfg.n_layers, clean_tokens.shape[1]), device='cpu')
-classical_normalized_diffs = torch.zeros((model.cfg.n_layers, clean_tokens.shape[1]), device='cpu')
+    num_batches = (clean_tokens.shape[1] + batch_size - 1) // batch_size
 
-# Process in batches
-batch_size = 16  # Adjust this based on your GPU memory
-num_batches = (clean_tokens.shape[1] + batch_size - 1) // batch_size
-
-for layer in tqdm(range(model.cfg.n_layers)):
-    for batch in range(num_batches):
-        start_pos = batch * batch_size
-        end_pos = min((batch + 1) * batch_size, clean_tokens.shape[1])
-        
-        batch_hooks = []
-        for pos in range(start_pos, end_pos):
-            hook_fn = lambda act, hook, pos=pos: F.pad(
-                clean_cache[f"blocks.{layer}.hook_resid_pre"][:, pos:pos+1].to(act.device),
-                (0, 0, 0, act.shape[1] - 1, 0, 0)
-            )
-            batch_hooks.append((f"blocks.{layer}.hook_resid_pre", hook_fn))
-        
-        with torch.no_grad():
-            patched_logits = model.run_with_hooks(
-                corrupt_tokens,
-                fwd_hooks=batch_hooks
-            )
-            batch_logit_diffs = torch.stack([logit_diff(patched_logits[:, pos:pos+1]) for pos in range(start_pos, end_pos)])
-            unormalized_diffs[layer, start_pos:end_pos] = batch_logit_diffs.cpu()
+    for layer in tqdm(range(model.cfg.n_layers)):
+        for batch in range(num_batches):
+            start_pos = batch * batch_size
+            end_pos = min((batch + 1) * batch_size, clean_tokens.shape[1])
             
-            # Min-max normalization
-            min_val = min(clean_logit_diff, corrupt_logit_diff, batch_logit_diffs.min())
-            max_val = max(clean_logit_diff, corrupt_logit_diff, batch_logit_diffs.max())
-            min_max_normalized_diffs[layer, start_pos:end_pos] = min_max_normalize(batch_logit_diffs, min_val, max_val).cpu()
+            batch_hooks = []
+            for pos in range(start_pos, end_pos):
+                hook_fn = lambda act, hook, pos=pos: F.pad(
+                    clean_cache[f"blocks.{layer}.{hook_point}"][:, pos:pos+1].to(act.device),
+                    (0, 0, 0, act.shape[1] - 1, 0, 0)
+                )
+                batch_hooks.append((f"blocks.{layer}.{hook_point}", hook_fn))
             
-            # Classical normalization
-            classical_normalized_diffs[layer, start_pos:end_pos] = torch.stack([
-                classical_normalize(diff, clean_logit_diff, corrupt_logit_diff) for diff in batch_logit_diffs
-            ]).cpu()
-        
-        # Clear cache
-        torch.cuda.empty_cache()
-        gc.collect()
+            with torch.no_grad():
+                patched_logits = model.run_with_hooks(
+                    corrupt_tokens,
+                    fwd_hooks=batch_hooks
+                )
+                batch_logit_diffs = torch.stack([logit_diff(patched_logits[:, pos:pos+1]) for pos in range(start_pos, end_pos)])
+                unormalized_diffs[layer, start_pos:end_pos] = batch_logit_diffs.cpu()
+                
+                min_val = min(clean_logit_diff, corrupt_logit_diff, batch_logit_diffs.min())
+                max_val = max(clean_logit_diff, corrupt_logit_diff, batch_logit_diffs.max())
+                min_max_normalized_diffs[layer, start_pos:end_pos] = min_max_normalize(batch_logit_diffs, min_val, max_val).cpu()
+                
+                classical_normalized_diffs[layer, start_pos:end_pos] = torch.stack([
+                    classical_normalize(diff, clean_logit_diff, corrupt_logit_diff) for diff in batch_logit_diffs
+                ]).cpu()
+            
+            torch.cuda.empty_cache()
+            gc.collect()
+
+    return unormalized_diffs, min_max_normalized_diffs, classical_normalized_diffs
+
+
+# Usage example:
+hook_point = "hook_attn_out"  # or "hook_mlp_out" for MLP output
+unormalized_diffs, min_max_normalized_diffs, classical_normalized_diffs = perform_activation_patching(
+    model, clean_tokens, corrupt_tokens, hook_point
+)
 
 # %%
 
@@ -252,7 +248,6 @@ fig = go.Figure(data=[heatmap, scatter], layout=layout)
 fig.show()
 
 # %%
-
 def group_top_tokens_by_name(influential_tokens, num_layers):
     token_groups = {}
     
@@ -328,8 +323,5 @@ def plot_top_tokens_heatmap(grouped_tokens, num_layers, num_top_tokens=20):
 # Usage
 grouped_tokens = group_top_tokens_by_name(top_influential, model.cfg.n_layers)
 plot_top_tokens_heatmap(grouped_tokens, model.cfg.n_layers)
-
-
-
 
 # %%
