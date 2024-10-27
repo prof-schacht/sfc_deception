@@ -263,7 +263,7 @@ def logit_diff_batch(logits, last_positions):
 def perform_semantic_causal_patching(model, clean_tokens, corrupt_tokens, 
                                    clean_attention_mask, corrupt_attention_mask, batch_size=16):
     """
-    Perform causal patching with batching and correct last token handling.
+    Perform causal patching with token_patching per sequence length and correct last token handling.
     """
     print("\nStarting semantic causal patching...")
     
@@ -367,71 +367,129 @@ def perform_semantic_causal_patching(model, clean_tokens, corrupt_tokens,
 
 def visualize_semantic_effects(group_effects, model):
     """
-    Create visualization for semantic group causal effects.
+    Create visualization with error bands for semantic group causal effects.
     """
     if not group_effects:
         print("No effects to visualize!")
         return None
 
-    # Get number of layers from the first group's attention effects
-    first_group = next(iter(group_effects.values()))
-    num_layers = len(first_group['attn'])
+    num_layers = len(next(iter(group_effects.values()))['attn']['mean'])
     
-    print(f"Creating visualization for {len(group_effects)} groups across {num_layers} layers")
-    
-    # Create subplots
     fig = make_subplots(
         rows=2, cols=1,
         subplot_titles=("Attention Effects by Semantic Group", "MLP Effects by Semantic Group"),
         vertical_spacing=0.15
     )
 
-    # Create traces for each semantic group
-    colors = px.colors.qualitative.Set3[:len(group_effects)]
+    # Define a fixed color palette
+    colors = ['#FF9999', '#66B2FF', '#99FF99', '#FFCC99', '#FF99CC', '#99FFCC', '#FFB366']
     
     for i, (group_name, effects) in enumerate(group_effects.items()):
-        color = colors[i]
+        color = colors[i % len(colors)]  # Cycle through colors if more groups than colors
         
-        # Convert to numpy arrays
-        attn_values = effects['attn'].numpy()
-        mlp_values = effects['mlp'].numpy()
+        # Add attention trace with error bands
+        attn_mean = effects['attn']['mean'].numpy()
+        attn_std = effects['attn']['std'].numpy()
         
-        print(f"\nGroup: {group_name}")
-        print(f"Attention range: {attn_values.min():.4f} to {attn_values.max():.4f}")
-        print(f"MLP range: {mlp_values.min():.4f} to {mlp_values.max():.4f}")
+        # Create fill color with transparency
+        fill_color = f'rgba({int(color[1:3], 16)}, {int(color[3:5], 16)}, {int(color[5:7], 16)}, 0.2)'
         
-        # Add attention trace
+        # Upper bound
         fig.add_trace(
             go.Scatter(
                 x=list(range(num_layers)),
-                y=attn_values,
+                y=attn_mean + attn_std,
+                fill=None,
+                mode='lines',
+                line=dict(color=color, width=0),
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=1, col=1
+        )
+        
+        # Lower bound
+        fig.add_trace(
+            go.Scatter(
+                x=list(range(num_layers)),
+                y=attn_mean - attn_std,
+                fill='tonexty',
+                mode='lines',
+                line=dict(color=color, width=0),
+                fillcolor=fill_color,
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=1, col=1
+        )
+        
+        # Main attention line
+        fig.add_trace(
+            go.Scatter(
+                x=list(range(num_layers)),
+                y=attn_mean,
                 name=f"{group_name} (attn)",
                 line=dict(color=color),
                 mode='lines+markers',
                 hovertemplate=(
                     "Layer: %{x}<br>" +
-                    "Effect: %{y:.4f}<br>" +
+                    "Effect: %{y:.4f} ± %{customdata[0]:.4f}<br>" +
                     "Group: " + group_name + " (attention)<br>" +
                     "<extra></extra>"
-                )
+                ),
+                customdata=np.column_stack([attn_std])
             ),
             row=1, col=1
         )
+
+        # MLP effects
+        mlp_mean = effects['mlp']['mean'].numpy()
+        mlp_std = effects['mlp']['std'].numpy()
         
-        # Add MLP trace
+        # Upper bound
         fig.add_trace(
             go.Scatter(
                 x=list(range(num_layers)),
-                y=mlp_values,
+                y=mlp_mean + mlp_std,
+                fill=None,
+                mode='lines',
+                line=dict(color=color, width=0),
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=2, col=1
+        )
+        
+        # Lower bound
+        fig.add_trace(
+            go.Scatter(
+                x=list(range(num_layers)),
+                y=mlp_mean - mlp_std,
+                fill='tonexty',
+                mode='lines',
+                line=dict(color=color, width=0),
+                fillcolor=fill_color,
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=2, col=1
+        )
+        
+        # Main MLP line
+        fig.add_trace(
+            go.Scatter(
+                x=list(range(num_layers)),
+                y=mlp_mean,
                 name=f"{group_name} (mlp)",
                 line=dict(color=color, dash='dash'),
                 mode='lines+markers',
                 hovertemplate=(
                     "Layer: %{x}<br>" +
-                    "Effect: %{y:.4f}<br>" +
+                    "Effect: %{y:.4f} ± %{customdata[0]:.4f}<br>" +
                     "Group: " + group_name + " (MLP)<br>" +
                     "<extra></extra>"
-                )
+                ),
+                customdata=np.column_stack([mlp_std])
             ),
             row=2, col=1
         )
@@ -495,11 +553,11 @@ def save_and_display_results(group_effects, semantic_groups, model, save_path="p
             effects = group_effects[group_name]
             
             # Get top layers for attention
-            attn_values = effects['attn'].numpy()
+            attn_values = effects['attn']['mean'].numpy()
             top_attn_layers = np.argsort(attn_values)[-3:][::-1]
             
             # Get top layers for MLP
-            mlp_values = effects['mlp'].numpy()
+            mlp_values = effects['mlp']['mean'].numpy()
             top_mlp_layers = np.argsort(mlp_values)[-3:][::-1]
             
             summary.append("  Top Attention Layers:")
@@ -530,65 +588,76 @@ def save_and_display_results(group_effects, semantic_groups, model, save_path="p
         return None
 
 # Update the analyze_semantic_effects function to use the new visualization
-def analyze_semantic_effects(model, test_dataset, batch_idx=0):
+def analyze_semantic_effects(model, test_dataset):
     """
-    Main analysis function updated for batched data.
+    Main analysis function updated for multiple batches.
     """
     print("Starting analysis...")
     
-    # Extract data for the specified batch
-    clean_tokens = test_dataset[0][batch_idx]
-    corrupt_tokens = test_dataset[1][batch_idx]
-    clean_attention_mask = test_dataset[6][batch_idx]
-    corrupt_attention_mask = test_dataset[7][batch_idx]
+    num_batches = len(test_dataset[0])  # Get total number of batches
+    all_group_effects = []
     
-    print(f"\nToken shapes - Clean: {clean_tokens.shape}, Corrupt: {corrupt_tokens.shape}")
-    print(f"Attention mask shapes - Clean: {clean_attention_mask.shape}, Corrupt: {corrupt_attention_mask.shape}")
+    for batch_idx in tqdm(range(num_batches), desc="Processing batches"):
+        # Extract data for the current batch
+        clean_tokens = test_dataset[0][batch_idx]
+        corrupt_tokens = test_dataset[1][batch_idx]
+        clean_attention_mask = test_dataset[6][batch_idx]
+        corrupt_attention_mask = test_dataset[7][batch_idx]
+        
+        # Ensure tokens and attention masks are 2D tensors
+        if clean_tokens.dim() == 1:
+            clean_tokens = clean_tokens.unsqueeze(0)
+        if corrupt_tokens.dim() == 1:
+            corrupt_tokens = corrupt_tokens.unsqueeze(0)
+        if clean_attention_mask.dim() == 1:
+            clean_attention_mask = clean_attention_mask.unsqueeze(0)
+        if corrupt_attention_mask.dim() == 1:
+            corrupt_attention_mask = corrupt_attention_mask.unsqueeze(0)
+        
+        # Perform semantic causal patching for this batch
+        batch_effects, semantic_groups = perform_semantic_causal_patching(
+            model, clean_tokens, corrupt_tokens,
+            clean_attention_mask, corrupt_attention_mask
+        )
+        
+        if batch_effects is not None:
+            all_group_effects.append(batch_effects)
     
-    # Ensure tokens are 2D tensors
-    if clean_tokens.dim() == 1:
-        clean_tokens = clean_tokens.unsqueeze(0)
-    if corrupt_tokens.dim() == 1:
-        corrupt_tokens = corrupt_tokens.unsqueeze(0)
+    # Aggregate results across batches
+    aggregated_effects = {}
+    for group_name in all_group_effects[0].keys():
+        aggregated_effects[group_name] = {
+            'attn': {
+                'mean': torch.stack([batch[group_name]['attn'] for batch in all_group_effects]).mean(dim=0),
+                'std': torch.stack([batch[group_name]['attn'] for batch in all_group_effects]).std(dim=0)
+            },
+            'mlp': {
+                'mean': torch.stack([batch[group_name]['mlp'] for batch in all_group_effects]).mean(dim=0),
+                'std': torch.stack([batch[group_name]['mlp'] for batch in all_group_effects]).std(dim=0)
+            }
+        }
     
-    # Ensure attention masks are 2D tensors
-    if clean_attention_mask.dim() == 1:
-        clean_attention_mask = clean_attention_mask.unsqueeze(0)
-    if corrupt_attention_mask.dim() == 1:
-        corrupt_attention_mask = corrupt_attention_mask.unsqueeze(0)
-    
-    print(f"\nAdjusted token shapes - Clean: {clean_tokens.shape}, Corrupt: {corrupt_tokens.shape}")
-    print(f"Adjusted attention mask shapes - Clean: {clean_attention_mask.shape}, Corrupt: {corrupt_attention_mask.shape}")
-    
-    # Perform semantic causal patching
-    print("\nPerforming semantic causal patching analysis...")
-    group_effects, semantic_groups = perform_semantic_causal_patching(
-        model, clean_tokens, corrupt_tokens,
-        clean_attention_mask, corrupt_attention_mask
-    )
-    
-    if group_effects is None:
-        print("Error: No effects calculated. Check the debugging output above.")
-        return
-    
- 
-    
-    if fig is not None:
-        fig.show()
-    
-    return group_effects, semantic_groups
+    return aggregated_effects, semantic_groups
 
 # %%
 group_effects, semantic_groups = analyze_semantic_effects(model, test_dataset)
-
+# %%
 # Create visualization and save results
 print("\nCreating visualization and saving results...")
 fig = save_and_display_results(group_effects, semantic_groups, model)
 
+
 # %%
 
+fig.show()
 
 
 
 
 
+
+
+
+
+
+# %%

@@ -3,39 +3,39 @@
 
 Group: truth_related
   Top Attention Layers:
-    Layer 3: 0.1035
-    Layer 7: 0.1035
-    Layer 9: 0.1035
+    Layer 11: 0.0253
+    Layer 0: 0.0250
+    Layer 1: 0.0218
   Top MLP Layers:
-    Layer 6: 0.1729
-    Layer 5: 0.1377
-    Layer 2: 0.1377
-  Average Attention Effect: 0.0213
-  Average MLP Effect: 0.0287
+    Layer 5: 0.0415
+    Layer 4: 0.0314
+    Layer 0: 0.0283
+  Average Attention Effect: 0.0066
+  Average MLP Effect: 0.0105
 
 Group: lie_related
   Top Attention Layers:
-    Layer 3: 0.1035
-    Layer 7: 0.1035
-    Layer 9: 0.1035
+    Layer 11: 0.0253
+    Layer 0: 0.0250
+    Layer 1: 0.0218
   Top MLP Layers:
-    Layer 6: 0.1729
-    Layer 5: 0.1377
-    Layer 2: 0.1377
-  Average Attention Effect: 0.0213
-  Average MLP Effect: 0.0287
+    Layer 5: 0.0415
+    Layer 4: 0.0314
+    Layer 0: 0.0283
+  Average Attention Effect: 0.0066
+  Average MLP Effect: 0.0105
 
 Group: consequence
   Top Attention Layers:
-    Layer 7: 0.1377
-    Layer 11: 0.1377
-    Layer 9: 0.1377
+    Layer 9: 0.0356
+    Layer 12: 0.0339
+    Layer 11: 0.0304
   Top MLP Layers:
-    Layer 7: 0.1377
-    Layer 16: 0.1035
-    Layer 5: 0.1035
-  Average Attention Effect: 0.0287
-  Average MLP Effect: 0.0336
+    Layer 1: 0.0397
+    Layer 12: 0.0342
+    Layer 11: 0.0284
+  Average Attention Effect: 0.0104
+  Average MLP Effect: 0.0100
 
 Group: intent
   Top Attention Layers:
@@ -51,27 +51,27 @@ Group: intent
 
 Group: question
   Top Attention Layers:
-    Layer 4: 0.1729
-    Layer 18: 0.1729
-    Layer 14: 0.1729
+    Layer 11: 0.0697
+    Layer 20: 0.0655
+    Layer 21: 0.0598
   Top MLP Layers:
-    Layer 4: 0.2754
-    Layer 17: 0.2754
-    Layer 18: 0.2070
-  Average Attention Effect: 0.0460
-  Average MLP Effect: 0.0608
+    Layer 7: 0.1059
+    Layer 10: 0.0871
+    Layer 3: 0.0847
+  Average Attention Effect: 0.0213
+  Average MLP Effect: 0.0288
 
 Group: answer
   Top Attention Layers:
-    Layer 10: 0.1035
-    Layer 19: 0.1035
-    Layer 15: 0.1035
+    Layer 2: 0.0284
+    Layer 10: 0.0268
+    Layer 11: 0.0234
   Top MLP Layers:
-    Layer 11: 0.1035
-    Layer 6: 0.0688
-    Layer 13: 0.0688
-  Average Attention Effect: 0.0148
-  Average MLP Effect: 0.0107
+    Layer 10: 0.0304
+    Layer 12: 0.0284
+    Layer 13: 0.0270
+  Average Attention Effect: 0.0073
+  Average MLP Effect: 0.0086
 
 Group: user
   Top Attention Layers:
