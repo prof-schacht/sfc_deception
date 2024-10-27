@@ -45,7 +45,8 @@ def sample_dataset(start_idx=0, end_idx=-1, clean_dataset=None, corrupted_datase
 ### Main class ###
 class SFC_Gemma():
     def __init__(self, model, attach_saes=True, params_count=9, control_seq_len=1, caching_device=None,
-                sae_resid_release=None, sae_attn_release=None, sae_mlp_release=None, d_sae=16384):
+                sae_resid_release=None, sae_attn_release=None, sae_mlp_release=None,
+                sae_attn_width='16k', sae_mlp_width='16k', first_16k_resid_layers=20):
         if sae_resid_release is None:
             sae_resid_release = f'gemma-scope-{params_count}b-pt-res-canonical'
 
@@ -68,7 +69,20 @@ class SFC_Gemma():
 
         self.n_layers = self.cfg.n_layers
         self.d_model = self.cfg.d_model
-        self.d_sae = d_sae        
+
+        width_to_d_sae = lambda width: {
+            '131k': 131072,
+            '16k': 16384
+        }[width]
+
+        
+        self.attn_d_sae = width_to_d_sae(sae_attn_width)
+        self.mlp_d_sae = width_to_d_sae(sae_mlp_width)
+
+        # We're using 16k resid SAEs for the first `first_16k_resid_layers`, and 131k resid SAEs for the rest
+        resid_saes_widths = ['16k'] * first_16k_resid_layers + ['131k'] * (self.n_layers - first_16k_resid_layers)
+        self.resid_d_sae = [width_to_d_sae(width) for width in resid_saes_widths]
+        print(f'Resid SAEs widths: {resid_saes_widths}')
 
         # Initialize dictionary to store SAEs by type: resid, attn, mlp
         self.saes_dict = {
@@ -79,13 +93,13 @@ class SFC_Gemma():
 
         # Load all SAEs into the dictionary
         self.saes_dict['resid'] = [
-            self._load_sae(sae_resid_release, f'layer_{i}/width_16k/canonical') for i in range(self.n_layers)
+            self._load_sae(sae_resid_release, f'layer_{i}/width_{resid_saes_widths[i]}/canonical') for i in range(self.n_layers)
         ]
         self.saes_dict['attn'] = [
-            self._load_sae(sae_attn_release, f'layer_{i}/width_16k/canonical') for i in range(self.n_layers)
+            self._load_sae(sae_attn_release, f'layer_{i}/width_{sae_attn_width}/canonical') for i in range(self.n_layers)
         ]
         self.saes_dict['mlp'] = [
-            self._load_sae(sae_mlp_release, f'layer_{i}/width_16k/canonical') for i in range(self.n_layers)
+            self._load_sae(sae_mlp_release, f'layer_{i}/width_{sae_mlp_width}/canonical') for i in range(self.n_layers)
         ]
         self.saes = self.saes_dict['resid'] + self.saes_dict['mlp'] + self.saes_dict['attn']
         
@@ -133,7 +147,7 @@ class SFC_Gemma():
                 # print('Fwd patched keys:', cache_patched.keys())
 
                 if i == 0:
-                    node_scores = self.get_node_scores_cache(cache_clean, run_without_saes=run_without_saes)
+                    node_scores = self.initialize_node_scores(cache_clean, run_without_saes=run_without_saes)
                 self.update_node_scores(node_scores, grad_clean, cache_clean, total_batches, 
                                         cache_patched=cache_patched, attr_type=AttributionPatching.NORMAL, run_without_saes=run_without_saes)
 
@@ -178,14 +192,14 @@ class SFC_Gemma():
 
             # Take the negative log-prob of the answer as our metric
             # metric = lambda logits: -self.get_answer_logit(logits, clean_answers, clean_answers_pos).mean()
-            # Or use the standard patching metric (log dif of incorrect)
+            # Or use the standard patching metric (log dif of incorrect - correct answers)
             metric = lambda logits: self.get_logit_diff(logits, clean_answers, corrupted_answers, clean_answers_pos).mean()
 
             metric_clean_score, cache_clean, grad_clean = self.run_with_cache(clean_prompts, clean_attn_mask, metric,
                                                                               run_without_saes=run_without_saes)
 
             if i == 0:
-                node_scores = self.get_node_scores_cache(cache_clean, run_without_saes=run_without_saes)
+                node_scores = self.initialize_node_scores(cache_clean, run_without_saes=run_without_saes)
             self.update_node_scores(node_scores, grad_clean, cache_clean, total_batches, run_without_saes=run_without_saes,
                                     attr_type=AttributionPatching.ZERO_ABLATION)
 
@@ -232,7 +246,7 @@ class SFC_Gemma():
                                                                                           run_without_saes=run_without_saes)
 
             if i == 0:
-                node_scores = self.get_node_scores_cache(cache_corrupted, run_without_saes=run_without_saes)
+                node_scores = self.initialize_node_scores(cache_corrupted, run_without_saes=run_without_saes)
             self.update_node_scores(node_scores, grad_corrupted, cache_corrupted, total_batches, run_without_saes=run_without_saes,
                                     attr_type=AttributionPatching.ZERO_ABLATION)
 
@@ -340,7 +354,7 @@ class SFC_Gemma():
 
         self.model.add_hook(bwd_hook_filter, backward_cache_hook, "bwd")
 
-    def get_node_scores_cache(self, cache: ActivationCache, score_type: NodeScoreType = NodeScoreType.ATTRIBUTION_PATCHING,
+    def initialize_node_scores(self, cache: ActivationCache, score_type: NodeScoreType = NodeScoreType.ATTRIBUTION_PATCHING,
                               run_without_saes=True):
         node_scores = {}
         
@@ -349,7 +363,7 @@ class SFC_Gemma():
             # Here it's represented as the hook-point name - cache key
 
             if run_without_saes:
-                assert self.d_sae is not None, 'd_sae must be provided when running without SAEs.'
+                d_sae = self.key_to_d_sae(key)
 
                 # cache is of shape [batch pos d_act] if not an attn hook, [batch pos n_head d_head] otherwise
                 if 'hook_z' not in key:
@@ -360,7 +374,7 @@ class SFC_Gemma():
                 sae_latent_name, sae_error_name = self.hook_name_to_sae_act_name(key)
 
                 node_scores[sae_error_name] = torch.zeros((pos), dtype=torch.bfloat16, device=self.caching_device)
-                node_scores[sae_latent_name] = torch.zeros((pos, self.d_sae), dtype=torch.bfloat16, device=self.caching_device)
+                node_scores[sae_latent_name] = torch.zeros((pos, d_sae), dtype=torch.bfloat16, device=self.caching_device)
 
                 # if '.0.' in key:
                 #     print(f'Initialized scores for {key} with {sae_error_name} of shape {node_scores[sae_error_name].shape} and {sae_latent_name} of shape {node_scores[sae_latent_name].shape}.')
@@ -527,8 +541,8 @@ class SFC_Gemma():
 
     def get_logit_diff(self, logits: Float[Tensor, "batch pos d_vocab"],
                     clean_answers: Int[Tensor, "batch"], patched_answers: Int[Tensor, "batch count"],
-                    answer_pos: Int[Tensor, "batch"]) -> Float[Tensor, "batch"]:
-        # Continue with logit computation
+                    answer_pos: Int[Tensor, "batch"], patch_answer_reduce='max') -> Float[Tensor, "batch"]:
+        # Compute the logits for the correct answers and the tokens they have been computed at (answer_logits)
         answer_logits, correct_logits = self.get_answer_logit(logits, clean_answers, answer_pos, return_all_logits=True)
 
         if patched_answers.dim() == 1:  # If there's only one incorrect answer, gather the incorrect answer logits
@@ -538,10 +552,14 @@ class SFC_Gemma():
 
         # If there are multiple incorrect answer options, incorrect_logits is now of shape [batch, answer_count]
         if patched_answers.dim() == 2:
-            incorrect_logits_sum = incorrect_logits.sum(dim=1)
-            return incorrect_logits_sum - correct_logits
+            # Sum the logits for each incorrect answer option
+            if patch_answer_reduce == 'sum':
+                incorrect_logits = incorrect_logits.sum(dim=1)
+            # Or take their maximum: this should be a better option to avoid situations where the model outputs gibberish and all the answers have similar logits
+            elif patch_answer_reduce == 'max':
+                incorrect_logits = incorrect_logits.max(dim=1).values
 
-        # Otherwise, both logit tensors are of shape [batch]
+        # Both logit tensors are now of shape [batch]
         return incorrect_logits - correct_logits
 
     
@@ -590,6 +608,15 @@ class SFC_Gemma():
         
         # Extract and return the block number as an integer
         return int(parts[1])
+
+    def key_to_d_sae(self, key):
+        if 'resid' in key:
+            layer_num = self.hook_name_to_layer_number(key)
+            return self.resid_d_sae[layer_num]
+        elif 'attn' in key:
+            return self.attn_d_sae
+        elif 'mlp' in key:
+            return self.mlp_d_sae
 
     def reset_saes(self):
         self.model.reset_saes()
