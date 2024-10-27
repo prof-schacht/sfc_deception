@@ -2,3 +2,4 @@
 01-SFC/data/None_agg_truthful_scores.pkl filter=lfs diff=lfs merge=lfs -text
 01-SFC/data/All_tokens_agg_deceptive_scores.pkl filter=lfs diff=lfs merge=lfs -text
 01-SFC/data/All_tokens_agg_truthful_scores.pkl filter=lfs diff=lfs merge=lfs -text
+01-SFC/data/*.pkl filter=lfs diff=lfs merge=lfs -text
