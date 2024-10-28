@@ -1,1 +1,5 @@
 00-Playground/4_sae_eval.ipynb
+# Python compiled files
+*.pyc
+__pycache__/
+classes/__pycache__/sfc_model.cpython-310.pyc
