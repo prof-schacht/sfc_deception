@@ -362,7 +362,8 @@ def perform_semantic_causal_patching(model, clean_tokens, corrupt_tokens,
     group_effects = {
         group: {
             'attn': torch.zeros((model.cfg.n_layers, len(clean_last_positions)), device='cpu'),
-            'mlp': torch.zeros((model.cfg.n_layers, len(clean_last_positions)), device='cpu')
+            'mlp': torch.zeros((model.cfg.n_layers, len(clean_last_positions)), device='cpu'),
+            'residual': torch.zeros((model.cfg.n_layers, len(clean_last_positions)), device='cpu')
         }
         for group in semantic_groups
     }
@@ -389,6 +390,13 @@ def perform_semantic_causal_patching(model, clean_tokens, corrupt_tokens,
                 mask = torch.zeros_like(patched, dtype=torch.bool)
                 mask[:, positions] = True
                 return torch.where(mask, clean_mlp, patched)
+
+            def patch_group_residual(residual_out, hook):
+                clean_residual = clean_cache[f"blocks.{layer}.hook_resid_post"].to(residual_out.device)
+                patched = residual_out.clone()
+                mask = torch.zeros_like(patched, dtype=torch.bool)
+                mask[:, positions] = True
+                return torch.where(mask, clean_residual, patched)
 
             # Patch attention
             print("    Patching attention...")
@@ -422,13 +430,29 @@ def perform_semantic_causal_patching(model, clean_tokens, corrupt_tokens,
                         effect = 0.5
                     group_effects[group_name]['mlp'][layer, i] = effect
 
+            # Patch residual
+            print("    Patching residual...")
+            with torch.no_grad():
+                residual_hooks = [(f"blocks.{layer}.hook_resid_post", patch_group_residual)]
+                patched_logits = model.run_with_hooks(corrupt_tokens, fwd_hooks=residual_hooks)
+                residual_diffs = mc_logit_diff_batch(patched_logits, corrupt_last_positions, answer_tokens, is_corrupted=True)
+                
+                # Calculate and store effects for each sequence
+                for i in range(len(clean_last_positions)):
+                    if abs(clean_logit_diffs[i] - corrupt_logit_diffs[i]) > 1e-6:
+                        effect = (residual_diffs[i] - corrupt_logit_diffs[i]) / (clean_logit_diffs[i] - corrupt_logit_diffs[i])
+                        effect = max(0.0, min(1.0, effect.item()))
+                    else:
+                        effect = 0.5
+                    group_effects[group_name]['residual'][layer, i] = effect
+
             torch.cuda.empty_cache()
 
     # Average effects across batch
     for group_name in group_effects:
         group_effects[group_name]['attn'] = group_effects[group_name]['attn'].mean(dim=1)
         group_effects[group_name]['mlp'] = group_effects[group_name]['mlp'].mean(dim=1)
-
+        group_effects[group_name]['residual'] = group_effects[group_name]['residual'].mean(dim=1)
     return group_effects, semantic_groups
 
 def visualize_semantic_effects(group_effects, model):
@@ -442,8 +466,8 @@ def visualize_semantic_effects(group_effects, model):
     num_layers = len(next(iter(group_effects.values()))['attn']['mean'])
     
     fig = make_subplots(
-        rows=2, cols=1,
-        subplot_titles=("Attention Effects by Semantic Group", "MLP Effects by Semantic Group"),
+        rows=3, cols=1,
+        subplot_titles=("Attention Effects by Semantic Group", "MLP Effects by Semantic Group", "Residual Effects by Semantic Group"),
         vertical_spacing=0.15
     )
 
@@ -559,7 +583,60 @@ def visualize_semantic_effects(group_effects, model):
             ),
             row=2, col=1
         )
-
+        
+        # Residual effects
+        residual_mean = effects['residual']['mean'].numpy()
+        residual_std = effects['residual']['std'].numpy()
+        
+        # Upper bound
+        fig.add_trace(
+            go.Scatter(
+                x=list(range(num_layers)),
+                y=residual_mean + residual_std,
+                fill=None,
+                mode='lines',
+                line=dict(color=color, width=0),
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=3, col=1
+        )
+        
+        # Lower bound
+        fig.add_trace(
+            go.Scatter(
+                x=list(range(num_layers)),
+                y=residual_mean - residual_std,
+                fill='tonexty',
+                mode='lines',
+                line=dict(color=color, width=0),
+                fillcolor=fill_color,
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=3, col=1
+        )
+        
+        # Main residual line
+        fig.add_trace(
+            go.Scatter(
+                x=list(range(num_layers)),
+                y=residual_mean,
+                name=f"{group_name} (residual)",
+                line=dict(color=color, dash='dash'),
+                mode='lines+markers',
+                hovertemplate=(
+                    "Layer: %{x}<br>" +
+                    "Effect: %{y:.4f} ± %{customdata[0]:.4f}<br>" +
+                    "Group: " + group_name + " (residual)<br>" +
+                    "<extra></extra>"
+                ),
+                customdata=np.column_stack([residual_std])
+            ),
+            row=3, col=1
+        )
+        
+        
     # Update layout
     fig.update_layout(
         height=1000,
@@ -626,6 +703,10 @@ def save_and_display_results(group_effects, semantic_groups, model, save_path="p
             mlp_values = effects['mlp']['mean'].numpy()
             top_mlp_layers = np.argsort(mlp_values)[-3:][::-1]
             
+            # Get top layers for residual
+            residual_values = effects['residual']['mean'].numpy()
+            top_residual_layers = np.argsort(residual_values)[-3:][::-1]
+            
             summary.append("  Top Attention Layers:")
             for layer in top_attn_layers:
                 summary.append(f"    Layer {layer}: {attn_values[layer]:.4f}")
@@ -634,8 +715,13 @@ def save_and_display_results(group_effects, semantic_groups, model, save_path="p
             for layer in top_mlp_layers:
                 summary.append(f"    Layer {layer}: {mlp_values[layer]:.4f}")
                 
+            summary.append("  Top Residual Layers:")
+            for layer in top_residual_layers:
+                summary.append(f"    Layer {layer}: {residual_values[layer]:.4f}")
+                
             summary.append(f"  Average Attention Effect: {attn_values.mean():.4f}")
             summary.append(f"  Average MLP Effect: {mlp_values.mean():.4f}")
+            summary.append(f"  Average Residual Effect: {residual_values.mean():.4f}")
         else:
             summary.append("  No effects calculated for this group")
     
@@ -702,6 +788,10 @@ def analyze_semantic_effects(model, test_dataset):
             'mlp': {
                 'mean': torch.stack([batch[group_name]['mlp'] for batch in all_group_effects]).mean(dim=0),
                 'std': torch.stack([batch[group_name]['mlp'] for batch in all_group_effects]).std(dim=0)
+            },
+            'residual': {
+                'mean': torch.stack([batch[group_name]['residual'] for batch in all_group_effects]).mean(dim=0),
+                'std': torch.stack([batch[group_name]['residual'] for batch in all_group_effects]).std(dim=0)
             }
         }
     
