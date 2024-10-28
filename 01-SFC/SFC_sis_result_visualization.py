@@ -537,7 +537,7 @@ deceptive_nodes_scores
 summarize_contributing_components(deceptive_nodes_scores, show_layers=True)
 
 # %%
-fig = create_activation_visualization_plotly(deceptive_nodes_scores, K=PERCENTILE, group_padding=0, 
+fig = create_activation_visualization_plotly(deceptive_nodes_scores, K=PERCENTILE, group_padding=1, 
                                              layer_padding=1)
 
 # Display the figure
