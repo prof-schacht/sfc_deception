@@ -44,15 +44,18 @@ clean_dataset, corrupted_dataset = dataloader.get_clean_corrupted_datasets(token
 # Sample Dataset
 
 def sample_dataset(start_idx=0, end_idx=-1, clean_dataset=clean_dataset, corrupted_dataset=corrupted_dataset):
-    assert clean_dataset is not None or corrupted_dataset is not None, "At least one dataset must be provided"
+    """
+    Sample dataset including answer token information.
+    """
     return_values = []
     
+    # Original keys
     for key in ['prompt', 'answer', 'answer_pos', 'attention_mask', 'special_token_mask']:
         if clean_dataset is not None:
             return_values.append(clean_dataset[key][start_idx:end_idx])
         if corrupted_dataset is not None:
             return_values.append(corrupted_dataset[key][start_idx:end_idx])
-
+    
     return return_values
 
 test_dataset = sample_dataset(start_idx=0, end_idx=10)
@@ -69,6 +72,18 @@ test_dataset = sample_dataset(start_idx=0, end_idx=10)
 # 9 = Corrupted special_token_mask
 
 # %%
+
+# Test of tokenization.
+print(model.to_str_tokens(test_dataset[2][0]))
+print(model.to_str_tokens(test_dataset[3][0]))
+print(test_dataset[2][0], test_dataset[3][0])
+print(torch.cat([test_dataset[2][0].unsqueeze(0), test_dataset[3][0]]))
+
+
+
+
+# %%
+
 
 # use the attention mask to get the sequence to find the last position of padding by sum the mask
 last_clean_token_pos = sum(test_dataset[6][0])-1
@@ -234,6 +249,9 @@ def get_last_real_positions(attention_masks):
         attention_masks = attention_masks.unsqueeze(0)
     return attention_masks.sum(dim=1) - 1
 
+
+
+## Logit Diff Batch
 def logit_diff_batch(logits, last_positions):
     """
     Calculate logit difference at the specified positions for each sequence in batch.
@@ -260,8 +278,56 @@ def logit_diff_batch(logits, last_positions):
     
     return torch.stack(results)
 
+def mc_logit_diff_batch(logits, last_positions, answer_tokens, is_corrupted=False):
+    """
+    Calculate logit difference, accounting for whether we want truth or lies.
+    
+    Args:
+        logits: torch.Tensor of shape (batch_size, seq_len, vocab_size)
+        last_positions: torch.Tensor of shape (batch_size,) containing positions
+        answer_tokens: tensor of shape (5,) where answer_tokens[0] is the correct answer token 
+                      and answer_tokens[1:] are incorrect answer tokens
+        is_corrupted: bool indicating if we're evaluating corrupted/lying case
+    """
+    batch_size = logits.shape[0]
+    results = []
+    
+    assert len(answer_tokens) == 5, "Must provide exactly 5 answer tokens"
+    
+    for i in range(batch_size):
+        target_token_logits = logits[i, last_positions[i]]
+        mc_logits = target_token_logits[answer_tokens]
+        
+        correct_logit = mc_logits[0]  # First token is truth answer
+        incorrect_logits = mc_logits[1:]  # Remaining tokens are incorrect answers
+        highest_incorrect = torch.max(incorrect_logits)
+        
+        if is_corrupted:
+            # For corrupted case: want highest_incorrect - correct
+            # (positive value means model prefers lying)
+            diff = highest_incorrect - correct_logit
+        else:
+            # For clean case: want correct - highest_incorrect
+            # (positive value means model prefers truth)
+            diff = correct_logit - highest_incorrect
+        
+        if i < 3:  # Debug printing
+            print(f"\nPredictions for sequence {i} at position {last_positions[i]}")
+            print(f"  Truth answer ({model.to_string(torch.tensor([answer_tokens[0]]))}): {correct_logit:.4f}")
+            print(f"  Highest incorrect: {highest_incorrect:.4f}")
+            print(f"  Difference ({'corrupted' if is_corrupted else 'clean'}): {diff:.4f}")
+            print(f"  Model prefers: {'lying' if diff > 0 and is_corrupted else 'truth'}")
+        
+        results.append(diff)
+    
+    return torch.stack(results)
+
+
+
 def perform_semantic_causal_patching(model, clean_tokens, corrupt_tokens, 
-                                   clean_attention_mask, corrupt_attention_mask, batch_size=16):
+                                   clean_attention_mask, corrupt_attention_mask,
+                                   answer_tokens,
+                                   batch_size=16):
     """
     Perform causal patching with token_patching per sequence length and correct last token handling.
     """
@@ -285,9 +351,9 @@ def perform_semantic_causal_patching(model, clean_tokens, corrupt_tokens,
         clean_logits, clean_cache = model.run_with_cache(clean_tokens)
         corrupt_logits, corrupt_cache = model.run_with_cache(corrupt_tokens)
 
-    print("\nCalculating baseline logit differences...")
-    clean_logit_diffs = logit_diff_batch(clean_logits, clean_last_positions)
-    corrupt_logit_diffs = logit_diff_batch(corrupt_logits, corrupt_last_positions)
+    print("\nCalculating mc baseline logit differences...")
+    clean_logit_diffs = mc_logit_diff_batch(clean_logits, clean_last_positions, answer_tokens, is_corrupted=False)
+    corrupt_logit_diffs = mc_logit_diff_batch(corrupt_logits, corrupt_last_positions, answer_tokens, is_corrupted=True)
     
     print(f"Clean logit diffs: {clean_logit_diffs}")
     print(f"Corrupt logit diffs: {corrupt_logit_diffs}")
@@ -329,7 +395,7 @@ def perform_semantic_causal_patching(model, clean_tokens, corrupt_tokens,
             with torch.no_grad():
                 attn_hooks = [(f"blocks.{layer}.hook_attn_out", patch_group_attention)]
                 patched_logits = model.run_with_hooks(corrupt_tokens, fwd_hooks=attn_hooks)
-                attn_diffs = logit_diff_batch(patched_logits, corrupt_last_positions)
+                attn_diffs = mc_logit_diff_batch(patched_logits, corrupt_last_positions, answer_tokens, is_corrupted=True)
                 
                 # Calculate and store effects for each sequence
                 for i in range(len(clean_last_positions)):
@@ -345,7 +411,7 @@ def perform_semantic_causal_patching(model, clean_tokens, corrupt_tokens,
             with torch.no_grad():
                 mlp_hooks = [(f"blocks.{layer}.hook_mlp_out", patch_group_mlp)]
                 patched_logits = model.run_with_hooks(corrupt_tokens, fwd_hooks=mlp_hooks)
-                mlp_diffs = logit_diff_batch(patched_logits, corrupt_last_positions)
+                mlp_diffs = mc_logit_diff_batch(patched_logits, corrupt_last_positions, answer_tokens, is_corrupted=True)
                 
                 # Calculate and store effects for each sequence
                 for i in range(len(clean_last_positions)):
@@ -603,6 +669,7 @@ def analyze_semantic_effects(model, test_dataset):
         corrupt_tokens = test_dataset[1][batch_idx]
         clean_attention_mask = test_dataset[6][batch_idx]
         corrupt_attention_mask = test_dataset[7][batch_idx]
+        answer_tokens = torch.cat([test_dataset[2][batch_idx].unsqueeze(0), test_dataset[3][batch_idx]])
         
         # Ensure tokens and attention masks are 2D tensors
         if clean_tokens.dim() == 1:
@@ -617,7 +684,8 @@ def analyze_semantic_effects(model, test_dataset):
         # Perform semantic causal patching for this batch
         batch_effects, semantic_groups = perform_semantic_causal_patching(
             model, clean_tokens, corrupt_tokens,
-            clean_attention_mask, corrupt_attention_mask
+            clean_attention_mask, corrupt_attention_mask,
+            answer_tokens
         )
         
         if batch_effects is not None:
