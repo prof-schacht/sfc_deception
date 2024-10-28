@@ -195,43 +195,6 @@ def summarize_contributing_components(contributing_components, show_layers=False
             del overview[component_type]['layers']
 
     return overview
-# %% [markdown]
-# ## Aggregation case
-
-# %%
-aggregation_type = AttributionAggregation.ALL_TOKENS
-THRESHOLD = 0.01
-NODES_PREFIX = ''# 'resid_saes_128k'
-
-def get_nodes_fname(truthful_nodes=True, nodes_prefix=NODES_PREFIX):
-    nodes_type = 'truthful' if truthful_nodes else 'deceptive'
-    if nodes_prefix:
-        fname = f'{aggregation_type.value}_agg_{nodes_prefix}_{nodes_type}_scores.pkl'
-    else:
-        fname = f'{aggregation_type.value}_agg_{nodes_type}_scores.pkl'
-
-    return datapath / fname
-
-# %% [markdown]
-# ### Truthful nodes
-
-# %%
-aggregation_type = AttributionAggregation.ALL_TOKENS
-
-truthful_nodes_fname = get_nodes_fname(truthful_nodes=True)
-
-truthful_nodes_scores = load_dict(truthful_nodes_fname)
-truthful_nodes_scores['blocks.0.attn.hook_z.hook_sae_error'].shape
-
-# %%
-truthful_nodes_scores, total_components = get_contributing_components(truthful_nodes_scores, THRESHOLD)
-print(f"Total contributing components: {total_components}")
-
-truthful_nodes_scores
-
-# %%
-node_scores_summary = summarize_contributing_components(truthful_nodes_scores, show_layers=True)
-node_scores_summary
 
 # %%
 # ################ Version 3 ################
@@ -499,8 +462,47 @@ def create_activation_visualization_plotly(data, K=10, group_padding=0.5, layer_
 
     return fig
 
+# %% [markdown]
+# ## Aggregation case
+
 # %%
-PERCENTILE = 25
+aggregation_type = AttributionAggregation.ALL_TOKENS
+THRESHOLD = 0.1
+NODES_PREFIX = ''# 'resid_saes_128k'
+
+def get_nodes_fname(truthful_nodes=True, nodes_prefix=NODES_PREFIX):
+    nodes_type = 'truthful' if truthful_nodes else 'deceptive'
+    if nodes_prefix:
+        fname = f'{aggregation_type.value}_agg_{nodes_prefix}_{nodes_type}_scores.pkl'
+    else:
+        fname = f'{aggregation_type.value}_agg_{nodes_type}_scores.pkl'
+
+    return datapath / fname
+
+# %% [markdown]
+# ### Truthful nodes
+
+
+# %%
+aggregation_type = AttributionAggregation.ALL_TOKENS
+
+truthful_nodes_fname = get_nodes_fname(truthful_nodes=True)
+
+truthful_nodes_scores = load_dict(truthful_nodes_fname)
+truthful_nodes_scores['blocks.0.attn.hook_z.hook_sae_error'].shape
+
+# %%
+truthful_nodes_scores, total_components = get_contributing_components(truthful_nodes_scores, THRESHOLD)
+print(f"Total contributing components: {total_components}")
+
+truthful_nodes_scores
+
+# %%
+node_scores_summary = summarize_contributing_components(truthful_nodes_scores, show_layers=True)
+node_scores_summary
+
+# %%
+PERCENTILE = 10
 fig = create_activation_visualization_plotly(truthful_nodes_scores, K=PERCENTILE, group_padding=1, 
                                              layer_padding=1)
 
@@ -511,7 +513,7 @@ fig.show()
 # Save the figure as an HTML file
 import plotly.io as pio
 
-output_file = f'truthful_nodes_{NODES_PREFIX}_threshold_{THRESHOLD}_percentile_{PERCENTILE}.html'
+output_file = './plots/' + f'truthful_nodes_{NODES_PREFIX}_threshold_{THRESHOLD}_percentile_{PERCENTILE}.html'
 pio.write_html(fig, file=output_file, auto_open=False)  # `auto_open=True` will open the HTML file in a browser
 
 print(f"The interactive figure has been saved as {output_file}.")
@@ -522,12 +524,16 @@ print(f"The interactive figure has been saved as {output_file}.")
 # %%
 aggregation_type = AttributionAggregation.ALL_TOKENS
 
-deceptive_nodes_fname = get_nodes_fname(truthful_nodes=False)
+nodes_prefix = 'correct_answer_metric' # NODES_PREFIX
+
+deceptive_nodes_fname = get_nodes_fname(truthful_nodes=False, nodes_prefix=nodes_prefix)
 
 deceptive_nodes_scores = load_dict(deceptive_nodes_fname)
 deceptive_nodes_scores.keys()
 
 # %%
+THRESHOLD=0.01
+
 deceptive_nodes_scores, total_components = get_contributing_components(deceptive_nodes_scores, THRESHOLD)
 print(f"Total contributing components: {total_components}")
 
@@ -537,6 +543,8 @@ deceptive_nodes_scores
 summarize_contributing_components(deceptive_nodes_scores, show_layers=True)
 
 # %%
+PERCENTILE = 25
+
 fig = create_activation_visualization_plotly(deceptive_nodes_scores, K=PERCENTILE, group_padding=1, 
                                              layer_padding=1)
 
@@ -544,7 +552,7 @@ fig = create_activation_visualization_plotly(deceptive_nodes_scores, K=PERCENTIL
 fig.show()
 
 # %%
-output_file = f'deceptive_{NODES_PREFIX}_threshold_{THRESHOLD}_percentile_{PERCENTILE}.html'
+output_file = './plots/' + f'deceptive_{nodes_prefix}_threshold_{THRESHOLD}_percentile_{PERCENTILE}.html'
 pio.write_html(fig, file=output_file, auto_open=False)  # `auto_open=True` will open the HTML file in a browser
 
 print(f"The interactive figure has been saved as {output_file}.")

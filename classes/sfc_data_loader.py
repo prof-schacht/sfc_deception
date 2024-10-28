@@ -268,13 +268,15 @@ class SFCDatasetLoader:
                 return item['patch_prefix']
         elif self.dataset_name in [SupportedDatasets.CITIES, SupportedDatasets.COMPANIES, SupportedDatasets.FACTS]:
             question = f"'{item['statement']}' - Is this statement True or False?'"
+        else:
+            raise ValueError(f"Dataset {self.dataset_name.value} not supported.")
 
-            prompt = (
-                f"{system_prompt} Now, here's the user's question:"
-                f'\n"{question}"'
-                f'\n{task_prompt}"'
-            )
-            return prompt
+        prompt = (
+            f"{system_prompt} Now, here's the user's question:"
+            f'\n"{question}"'
+            f'\n{task_prompt}"'
+        )
+        return prompt
     
     def get_clean_answer(self, item, prompt, tokenize=True):
         if self.dataset_name in [SupportedDatasets.COMMONSENSE_QA, SupportedDatasets.COMMONSENSE_QA_FILTERED]:
@@ -283,6 +285,8 @@ class SFCDatasetLoader:
             answer = item['clean_answer']
         elif self.dataset_name in [SupportedDatasets.CITIES, SupportedDatasets.COMPANIES, SupportedDatasets.FACTS]:
             answer = str(item['label'])
+        else:
+            raise ValueError(f"Dataset {self.dataset_name.value} not supported.")
 
         try:
             # Find answer pos as the first token before padding in the prompt
@@ -304,6 +308,8 @@ class SFCDatasetLoader:
             answer = item['patch_answer']
         elif self.dataset_name in [SupportedDatasets.CITIES, SupportedDatasets.COMPANIES, SupportedDatasets.FACTS]:
             answer = str(not item['label'])
+        else:
+            raise ValueError(f"Dataset {self.dataset_name.value} not supported.")
 
         try:
             # Find answer pos as the first token before padding in the prompt

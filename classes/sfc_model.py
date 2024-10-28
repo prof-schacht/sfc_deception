@@ -217,7 +217,8 @@ class SFC_Gemma():
         )
     
     def compute_deceptive_node_scores(self, clean_dataset, corrupted_dataset, batch_size=50, total_batches=None,
-                                      run_without_saes=True, aggregation_type=AttributionAggregation.ALL_TOKENS):
+                                      run_without_saes=True, aggregation_type=AttributionAggregation.ALL_TOKENS,
+                                      metric='logit_diff'):
         if run_without_saes:
             print('Running without SAEs, gradients and activations will be computed analytically.')
 
@@ -236,11 +237,13 @@ class SFC_Gemma():
         for i in tqdm(range(0, prompts_to_process, batch_size)):
             clean_prompts, corrupted_prompts, clean_answers, corrupted_answers, clean_answers_pos, corrupted_answers_pos, \
                 clean_attn_mask, corrupted_attn_mask = sample_dataset(i, i + batch_size, clean_dataset, corrupted_dataset)
-
-            # Take the log-prob of the answer as our metric
-            # metric = lambda logits: self.get_answer_logit(logits, clean_answers, clean_answers_pos).mean()
-            # Or use the standard patching metric (log dif of correct - incorrect answers, so flipping the sign below) 
-            metric = lambda logits: -self.get_logit_diff(logits, clean_answers, corrupted_answers, corrupted_answers_pos).mean()
+            
+            if metric == 'logit_diff':
+                # Or use the standard patching metric (log dif of correct - incorrect answers, so flipping the sign below) 
+                metric = lambda logits: -self.get_logit_diff(logits, clean_answers, corrupted_answers, corrupted_answers_pos).mean()
+            else:
+                # Take the log-prob of the answer as our metric
+                metric = lambda logits: self.get_answer_logit(logits, clean_answers, clean_answers_pos).mean()
 
             metric_corrupted_score, cache_corrupted, grad_corrupted = self.run_with_cache(corrupted_prompts, corrupted_attn_mask, metric,
                                                                                           run_without_saes=run_without_saes)
@@ -393,12 +396,15 @@ class SFC_Gemma():
 
         return node_scores
     
-    def aggregate_node_scores(self, node_scores, aggregation_type=AttributionAggregation.ALL_TOKENS):
+    def aggregate_node_scores(self, node_scores, aggregation_type):
+        # print(f'Aggregating scores with type {aggregation_type}.')
+
         for key, score_tensor in node_scores.items():
             score_tensor_filtered = score_tensor[self.control_seq_len:]
-
-            if aggregation_type == AttributionAggregation.ALL_TOKENS:
+            if aggregation_type.value == AttributionAggregation.ALL_TOKENS.value:
+                # print(f'Aggregating scores for {key} with shape {score_tensor_filtered.shape}.')
                 score_tensor_aggregated = score_tensor_filtered.sum(0)
+                # print(f'Aggregated scores for {key} with shape {score_tensor_aggregated.shape}.')
             else:
                 score_tensor_aggregated = score_tensor_filtered
 
@@ -406,7 +412,7 @@ class SFC_Gemma():
     
     def update_node_scores(self, node_scores: ActivationCache, grad_cache: ActivationCache, cache_clean: ActivationCache, total_batches,
                            cache_patched=None, attr_type=AttributionPatching.NORMAL, run_without_saes=True, batch_reduce='mean'):
-        if attr_type == AttributionPatching.NORMAL:
+        if attr_type.value == AttributionPatching.NORMAL.value:
             assert cache_patched is not None, 'Patched cache must be provided for normal attribution patching.'
             
         if not run_without_saes:
@@ -428,7 +434,7 @@ class SFC_Gemma():
             # Get the activations that are input to the SAE
             clean_acts = cache_clean[key]
             current_grads = clean_grad[key]
-            if attr_type == AttributionPatching.NORMAL:
+            if attr_type.value == AttributionPatching.NORMAL.value:
                 patched_acts = cache_patched[key]
 
             # Step-1: Compute the SAE latents and error terms
@@ -439,7 +445,7 @@ class SFC_Gemma():
             sae_out_clean = sae.decode(sae_latents_act_clean)
             sae_error_clean = clean_acts - sae_out_clean
 
-            if attr_type == AttributionPatching.NORMAL:
+            if attr_type.value == AttributionPatching.NORMAL.value:
                 sae_latents_act_patched = sae.encode(patched_acts)
                 sae_out_patched = sae.decode(sae_latents_act_patched)
                 sae_error_patched = patched_acts - sae_out_patched
@@ -450,7 +456,7 @@ class SFC_Gemma():
                                                 'batch pos n_head d_head -> batch pos (n_head d_head)')
                 sae_error_clean = einops.rearrange(sae_error_clean,
                                                 'batch pos n_head d_head -> batch pos (n_head d_head)')
-                if attr_type == AttributionPatching.NORMAL:
+                if attr_type.value == AttributionPatching.NORMAL.value:
                     sae_error_patched = einops.rearrange(sae_error_patched,
                                                 'batch pos n_head d_head -> batch pos (n_head d_head)')
 
@@ -459,7 +465,7 @@ class SFC_Gemma():
             sae_error_grad = current_grads # shape [batch pos d_act]
 
             # Step-3 (final): Compute the score update
-            if attr_type == AttributionPatching.NORMAL:
+            if attr_type.value == AttributionPatching.NORMAL.value:
                 activation_term_latents = sae_latents_act_patched - sae_latents_act_clean
                 activation_term_error = sae_error_patched - sae_error_clean
             else:
@@ -498,9 +504,9 @@ class SFC_Gemma():
     def update_node_scores_saes_run(self, node_scores: ActivationCache, clean_grad, cache_clean, total_batches, 
                            cache_patched=None, batch_reduce='mean', attr_type=AttributionPatching.NORMAL):
         for key in node_scores.keys():
-            if attr_type == AttributionPatching.NORMAL:
+            if attr_type.value == AttributionPatching.NORMAL.value:
                 activation_term = cache_patched[key] - cache_clean[key]
-            elif attr_type == AttributionPatching.ZERO_ABLATION:
+            elif attr_type.value == AttributionPatching.ZERO_ABLATION.value:
                 # In the zero ablation variant, we set patched activations to zero
                 activation_term = -cache_clean[key]
 
