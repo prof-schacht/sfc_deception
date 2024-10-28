@@ -306,7 +306,7 @@ def create_activation_visualization_plotly(data, K=10, group_padding=0.5, layer_
                     'group_label': group_label,
                     'is_error': group_nodes_in_percentile[0]['is_error'],
                     'nodes': group_nodes_in_percentile,
-                    'avg_score': np.mean([node['score'] for node in group_nodes_in_percentile])
+                    'total_score': np.sum([node['score'] for node in group_nodes_in_percentile])
                 }
                 groups.append(group_info)
         return groups
@@ -346,38 +346,38 @@ def create_activation_visualization_plotly(data, K=10, group_padding=0.5, layer_
                     group['y'] = y
 
     # Extract average scores for color mapping
-    avg_scores = [group['avg_score'] for group in group_nodes]
-    min_avg_score = min(avg_scores)
-    max_avg_score = max(avg_scores)
-    score_range = max_avg_score - min_avg_score if max_avg_score != min_avg_score else 1
+    total_scores = [group['total_score'] for group in group_nodes]
+    min_total_score = min(total_scores)
+    max_total_score = max(total_scores)
+    score_range = max_total_score - min_total_score if max_total_score != min_total_score else 1
 
     # Prepare data for Plotly
     normal_x = []
     normal_y = []
     normal_text = []
-    normal_avg_scores = []
+    normal_total_scores = []
     error_x = []
     error_y = []
     error_text = []
-    error_avg_scores = []
+    error_total_scores = []
 
     for group in group_nodes:
-        node_names = [node['id'] for node in group['nodes']]
+        node_names = [f"{node['id']}: {node['score']:.3f}" for node in group['nodes']]
         hover_text = (
             f"Group: {group['group_label']}<br>"
-            f"Avg Score: {group['avg_score']:.3f}<br>"
+            f"Total Score: {group['total_score']:.3f}<br>"
             f"Nodes:<br>" + "<br>".join(node_names)
         )
         if group['is_error']:
             error_x.append(group['x'])
             error_y.append(group['y'])
             error_text.append(hover_text)
-            error_avg_scores.append(group['avg_score'])
+            error_total_scores.append(group['total_score'])
         else:
             normal_x.append(group['x'])
             normal_y.append(group['y'])
             normal_text.append(hover_text)
-            normal_avg_scores.append(group['avg_score'])
+            normal_total_scores.append(group['total_score'])
 
     # Calculate the minimum x-value of all nodes
     all_x_values = [group['x'] for group in group_nodes]
@@ -395,10 +395,10 @@ def create_activation_visualization_plotly(data, K=10, group_padding=0.5, layer_
         marker=dict(
             symbol='square',
             size=20,
-            color=normal_avg_scores,  # Assign avg_score for color mapping
+            color=normal_total_scores,  # Assign total_score for color mapping
             colorscale='Blues',
-            cmin=min_avg_score,
-            cmax=max_avg_score,
+            cmin=min_total_score,
+            cmax=max_total_score,
             showscale=False,  # Remove the colorbar
             line=dict(width=1, color='Black')
         ),
@@ -415,10 +415,10 @@ def create_activation_visualization_plotly(data, K=10, group_padding=0.5, layer_
         marker=dict(
             symbol='triangle-up',
             size=20,
-            color=error_avg_scores,  # Assign avg_score for color mapping
+            color=error_total_scores,  # Assign total_score for color mapping
             colorscale='Reds',
-            cmin=min_avg_score,
-            cmax=max_avg_score,
+            cmin=min_total_score,
+            cmax=max_total_score,
             showscale=False,  # Remove the colorbar
             line=dict(width=1, color='Black')
         ),
@@ -500,7 +500,8 @@ def create_activation_visualization_plotly(data, K=10, group_padding=0.5, layer_
     return fig
 
 # %%
-fig = create_activation_visualization_plotly(truthful_nodes_scores, K=25, group_padding=1, 
+PERCENTILE = 25
+fig = create_activation_visualization_plotly(truthful_nodes_scores, K=PERCENTILE, group_padding=1, 
                                              layer_padding=1)
 
 # Display the figure
@@ -510,7 +511,7 @@ fig.show()
 # Save the figure as an HTML file
 import plotly.io as pio
 
-output_file = f'truthful_nodes_{NODES_PREFIX}_{THRESHOLD}.html'
+output_file = f'truthful_nodes_{NODES_PREFIX}_threshold_{THRESHOLD}_percentile_{PERCENTILE}.html'
 pio.write_html(fig, file=output_file, auto_open=False)  # `auto_open=True` will open the HTML file in a browser
 
 print(f"The interactive figure has been saved as {output_file}.")
@@ -536,14 +537,14 @@ deceptive_nodes_scores
 summarize_contributing_components(deceptive_nodes_scores, show_layers=True)
 
 # %%
-fig = create_activation_visualization_plotly(deceptive_nodes_scores, K=25, group_padding=0, 
+fig = create_activation_visualization_plotly(deceptive_nodes_scores, K=PERCENTILE, group_padding=0, 
                                              layer_padding=1)
 
 # Display the figure
 fig.show()
 
 # %%
-output_file = f'deceptive_nodes_{NODES_PREFIX}_{THRESHOLD}.html'
+output_file = f'deceptive_{NODES_PREFIX}_threshold_{THRESHOLD}_percentile_{PERCENTILE}.html'
 pio.write_html(fig, file=output_file, auto_open=False)  # `auto_open=True` will open the HTML file in a browser
 
 print(f"The interactive figure has been saved as {output_file}.")
