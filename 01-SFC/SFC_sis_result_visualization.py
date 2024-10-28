@@ -112,62 +112,6 @@ def format_component_name(component, feat_idx=None):
 
     return f"{layer}__{component_type}__{category}"
 
-
-def get_contributing_components_by_token(cache, threshold):
-    """
-    Identifies components in the cache whose contribution scores are greater than a given threshold.
-    Also includes their numerical contribution scores and sorts the components by scores.
-
-    Args:
-        cache (dict): Dictionary with keys representing component names and values being tensors of contribution scores.
-        threshold (float): The threshold value above which components are considered significant.
-
-    Returns:
-        tuple: A tuple containing:
-            - dict: Dictionary where keys are token positions (integers) and values are lists of tuples.
-                    Each tuple contains (component_name, contribution_score) sorted by contribution scores in descending order.
-            - int: Total count of contributing components across all tokens.
-    """
-    contributing_components = {}
-    total_count = 0
-
-    for component, tensor in cache.items():
-        if 'hook_sae_error' in component:
-            high_contrib_tokens = torch.where(tensor > threshold)[0]
-
-            for token_idx in high_contrib_tokens:
-                token_idx = token_idx.item()
-                if token_idx not in contributing_components:
-                    contributing_components[token_idx] = []
-
-                formatted_name = format_component_name(component)
-                contributing_components[token_idx].append((formatted_name, tensor[token_idx].item()))
-                total_count += 1
-
-        elif 'hook_sae_acts_post' in component:
-            high_contrib_tokens, high_contrib_features = torch.where(tensor > threshold)
-
-            for token_idx, feat_idx in zip(high_contrib_tokens, high_contrib_features):
-                token_idx = token_idx.item()
-                feat_idx = feat_idx.item()
-                component_name = format_component_name(component, feat_idx)
-
-                if token_idx not in contributing_components:
-                    contributing_components[token_idx] = []
-
-                contributing_components[token_idx].append((component_name, tensor[token_idx, feat_idx].item()))
-                total_count += 1
-
-    for token_idx in contributing_components:
-        contributing_components[token_idx] = sorted(
-            contributing_components[token_idx], key=lambda x: x[1], reverse=True
-        )
-
-    sorted_contributing_components = dict(sorted(contributing_components.items()))
-
-    return sorted_contributing_components, total_count
-
-
 def get_contributing_components(cache, threshold):
     """
     Identifies components in the cache whose contribution scores are greater than a given threshold.
@@ -205,115 +149,6 @@ def get_contributing_components(cache, threshold):
     return sorted_contributing_components, total_count
 
 # %%
-def summarize_contributing_components_by_token(contributing_components, show_layers=False):
-    """
-    Generates hierarchical summary statistics for the contributing components of each token, with optional layer-level details.
-
-    Args:
-        contributing_components (dict): Dictionary where keys are token positions (integers) and values are lists of tuples.
-                                         Each tuple contains (component_name, contribution_score).
-        show_layers (bool): If True, includes layer statistics in the output.
-
-    Returns:
-        dict: Hierarchical overview dictionary with summary statistics for each token.
-    """
-    overview = {}
-
-    for token, components in contributing_components.items():
-        # Initialize counters for the current token
-        total_count = len(components)
-        resid_total = 0
-        mlp_total = 0
-        attn_total = 0
-        
-        resid_latents = 0
-        resid_errors = 0
-        mlp_latents = 0
-        mlp_errors = 0
-        attn_latents = 0
-        attn_errors = 0
-
-        # Initialize layer-specific counters if layer statistics are enabled
-        layer_stats = {'resid_post': {}, 'mlp_out': {}, 'attn_z': {}} if show_layers else None
-
-        # Count components and categorize
-        for component_name, _ in components:
-            # Extract layer and component type from the formatted name
-            layer, component_type, category = component_name.split('__')
-            layer = int(layer)  # Convert layer to integer for numeric sorting
-            is_error = category == 'error'
-
-            # Update the counters based on component type and category
-            if component_type == 'resid_post':
-                resid_total += 1
-                if is_error:
-                    resid_errors += 1
-                else:
-                    resid_latents += 1
-                
-                # Track layer-specific stats for resid_post components
-                if show_layers:
-                    if layer not in layer_stats['resid_post']:
-                        layer_stats['resid_post'][layer] = {'total': 0, 'Latents': 0, 'Errors': 0}
-                    layer_stats['resid_post'][layer]['total'] += 1
-                    layer_stats['resid_post'][layer]['Errors' if is_error else 'Latents'] += 1
-
-            elif component_type == 'mlp_out':
-                mlp_total += 1
-                if is_error:
-                    mlp_errors += 1
-                else:
-                    mlp_latents += 1
-                
-                # Track layer-specific stats for mlp_out components
-                if show_layers:
-                    if layer not in layer_stats['mlp_out']:
-                        layer_stats['mlp_out'][layer] = {'total': 0, 'Latents': 0, 'Errors': 0}
-                    layer_stats['mlp_out'][layer]['total'] += 1
-                    layer_stats['mlp_out'][layer]['Errors' if is_error else 'Latents'] += 1
-
-            elif component_type == 'attn_z':
-                attn_total += 1
-                if is_error:
-                    attn_errors += 1
-                else:
-                    attn_latents += 1
-                
-                # Track layer-specific stats for attn_z components
-                if show_layers:
-                    if layer not in layer_stats['attn_z']:
-                        layer_stats['attn_z'][layer] = {'total': 0, 'Latents': 0, 'Errors': 0}
-                    layer_stats['attn_z'][layer]['total'] += 1
-                    layer_stats['attn_z'][layer]['Errors' if is_error else 'Latents'] += 1
-
-        # Compile the statistics into the hierarchical overview dictionary
-        overview[token] = {
-            'total': total_count,
-            'resid_post': {
-                'total': resid_total,
-                'Latents': resid_latents,
-                'Errors': resid_errors,
-            },
-            'mlp_out': {
-                'total': mlp_total,
-                'Latents': mlp_latents,
-                'Errors': mlp_errors,
-            },
-            'attn_z': {
-                'total': attn_total,
-                'Latents': attn_latents,
-                'Errors': attn_errors,
-            }
-        }
-
-        # Include layer-specific statistics if enabled
-        if show_layers:
-            overview[token]['resid_post']['layers'] = layer_stats['resid_post']
-            overview[token]['mlp_out']['layers'] = layer_stats['mlp_out']
-            overview[token]['attn_z']['layers'] = layer_stats['attn_z']
-
-    return overview
-
 
 def summarize_contributing_components(contributing_components, show_layers=False):
     """
@@ -360,13 +195,13 @@ def summarize_contributing_components(contributing_components, show_layers=False
             del overview[component_type]['layers']
 
     return overview
-
 # %% [markdown]
 # ## Aggregation case
 
 # %%
 aggregation_type = AttributionAggregation.ALL_TOKENS
-NODES_PREFIX = 'resid_saes_128k'
+THRESHOLD = 0.01
+NODES_PREFIX = ''# 'resid_saes_128k'
 
 def get_nodes_fname(truthful_nodes=True, nodes_prefix=NODES_PREFIX):
     nodes_type = 'truthful' if truthful_nodes else 'deceptive'
@@ -389,7 +224,7 @@ truthful_nodes_scores = load_dict(truthful_nodes_fname)
 truthful_nodes_scores['blocks.0.attn.hook_z.hook_sae_error'].shape
 
 # %%
-truthful_nodes_scores, total_components = get_contributing_components(truthful_nodes_scores, 0.1)
+truthful_nodes_scores, total_components = get_contributing_components(truthful_nodes_scores, THRESHOLD)
 print(f"Total contributing components: {total_components}")
 
 truthful_nodes_scores
@@ -398,131 +233,321 @@ truthful_nodes_scores
 node_scores_summary = summarize_contributing_components(truthful_nodes_scores, show_layers=True)
 node_scores_summary
 
-# %% [markdown]
-# ######################################################################################################
-# #### Analysis
+# %%
+# ################ Version 3 ################
+import numpy as np
 import plotly.graph_objects as go
-import pandas as pd
 
-# Your data
-data =truthful_nodes_scores# Truncated for example
+def create_activation_visualization_plotly(data, K=10, group_padding=0.5, layer_padding=1.5):
+    """
+    Creates an activation visualization using Plotly.
 
-# Create DataFrame
-df = pd.DataFrame(data, columns=['node', 'score'])
+    Parameters:
+    - data: List of tuples, where each tuple contains (node_str, score).
+    - K: Percentile step size (e.g., K=10 creates groups for 0-10%, 10-20%, ..., 90-100%).
+    - group_padding: Additional horizontal spacing between groups within the same (layer, hook_point).
+    - layer_padding: Additional vertical spacing between layers.
 
-# Parse node information
-df['layer'] = df['node'].apply(lambda x: int(x.split('__')[0]))
-df['hook_point'] = df['node'].apply(lambda x: x.split('__')[1])
-df['is_error'] = df['node'].apply(lambda x: 'error' in x)
-df['node_number'] = df['node'].apply(lambda x: x.split('__')[-1])
+    Returns:
+    - fig: Plotly Figure object.
+    """
+    # Define hook point columns
+    hook_point_columns = {'attn_z': -12, 'mlp_out': 0, 'resid_post': 12}
+    base_layer_spacing = 2.0
+    layer_spacing = base_layer_spacing + layer_padding  # Base vertical spacing with added padding
+    node_spacing = 1.0  # Minimal horizontal spacing between nodes to prevent overlap
 
-# Create figure
-fig = go.Figure()
+    # Parse data
+    layer_hook_nodes = {}
+    all_nodes = []
 
-# Updated layout parameters
-x_spacing = 120  # Reduced from 200
-y_spacing = 50   # Reduced from 80
-node_width = 80  # Reduced from 150
-node_height = 25 # Reduced from 40
+    for node_str, score in data:
+        parts = node_str.split('__')
+        layer = int(parts[0])
+        hook_point = parts[1]
+        node_id = parts[-1]
+        is_error = 'error' in node_str
+        node_info = {
+            'id': node_str,
+            'layer': layer,
+            'hook_point': hook_point,
+            'node_id': node_id,
+            'score': score,
+            'is_error': is_error
+        }
+        all_nodes.append(node_info)
 
-# Process each layer
-for layer in range(df['layer'].min(), df['layer'].max() + 1):
-    layer_data = df[df['layer'] == layer]
-    if len(layer_data) == 0:
-        continue
-        
-    # Calculate x positions for this layer
-    num_nodes = len(layer_data)
-    start_x = -(num_nodes * (x_spacing)) / 2
-    
-    for idx, (_, row) in enumerate(layer_data.iterrows()):
-        x_pos = start_x + idx * x_spacing
-        y_pos = layer * y_spacing
-        
-        # Calculate color based on score
-        blue_intensity = int(255 * (1 - row['score']))
-        color = f'rgb(0, 0, {blue_intensity})'
-        
-        if row['is_error']:
-            # Triangle for errors - smaller size
-            fig.add_trace(go.Scatter(
-                x=[x_pos, x_pos + node_width/2, x_pos + node_width, x_pos],
-                y=[y_pos, y_pos + node_height, y_pos, y_pos],
-                fill="toself",
-                fillcolor=color,
-                line=dict(color='black', width=0.5),  # Thinner border
-                mode='lines+text',
-                text=f"L{layer}<br>{row['hook_point']}<br>{row['score']:.2f}",  # Simplified text
-                showlegend=False,
-                hoverinfo='text',
-                hoverlabel=dict(bgcolor='white')  # White background for hover text
-            ))
+        if layer not in layer_hook_nodes:
+            layer_hook_nodes[layer] = {'attn_z': [], 'mlp_out': [], 'resid_post': []}
+        layer_hook_nodes[layer][hook_point].append(node_info)
+
+    # Function to group nodes by percentile ranges
+    def group_nodes_by_percentile(nodes, K):
+        # K is the percentile step size
+        sorted_nodes = sorted(nodes, key=lambda x: x['score'])
+        n = len(sorted_nodes)
+        if n == 0:
+            return []
+        N = int(100 / K)
+        percentiles = [i * K for i in range(N + 1)]  # e.g., for K=10, percentiles = [0,10,20,...,100]
+        groups = []
+        for i in range(len(percentiles) - 1):
+            lower_p = percentiles[i]
+            upper_p = percentiles[i + 1]
+            # Calculate the indices corresponding to these percentiles
+            start_idx = int(np.floor(lower_p * n / 100.0))
+            end_idx = int(np.floor(upper_p * n / 100.0)) if upper_p < 100 else n
+            group_nodes_in_percentile = sorted_nodes[start_idx:end_idx]
+            if group_nodes_in_percentile:
+                group_label = f"{lower_p}-{upper_p}%"
+                group_info = {
+                    'layer': group_nodes_in_percentile[0]['layer'],
+                    'hook_point': group_nodes_in_percentile[0]['hook_point'],
+                    'group_label': group_label,
+                    'is_error': group_nodes_in_percentile[0]['is_error'],
+                    'nodes': group_nodes_in_percentile,
+                    'avg_score': np.mean([node['score'] for node in group_nodes_in_percentile])
+                }
+                groups.append(group_info)
+        return groups
+
+    # Group nodes
+    group_nodes = []
+    for layer in layer_hook_nodes:
+        for hook_point in layer_hook_nodes[layer]:
+            nodes = layer_hook_nodes[layer][hook_point]
+            if nodes:
+                # Separate error and normal nodes
+                error_nodes = [node for node in nodes if node['is_error']]
+                normal_nodes = [node for node in nodes if not node['is_error']]
+                # Group error nodes
+                if error_nodes:
+                    groups = group_nodes_by_percentile(error_nodes, K)
+                    group_nodes.extend(groups)
+                # Group normal nodes
+                if normal_nodes:
+                    groups = group_nodes_by_percentile(normal_nodes, K)
+                    group_nodes.extend(groups)
+
+    # Calculate positions with added padding
+    positions = {}
+    for layer in sorted(set(group['layer'] for group in group_nodes)):
+        for hook_point in hook_point_columns:
+            groups = [group for group in group_nodes if group['layer'] == layer and group['hook_point'] == hook_point]
+            if groups:
+                base_x = hook_point_columns[hook_point]
+                # Total horizontal spacing: (number of groups -1) * (node_spacing + group_padding)
+                total_width = (len(groups) - 1) * (node_spacing + group_padding)
+                start_x = base_x - total_width / 2 if len(groups) > 1 else base_x
+                for idx, group in enumerate(groups):
+                    x = start_x + idx * (node_spacing + group_padding) if len(groups) > 1 else base_x
+                    y = layer * layer_spacing
+                    group['x'] = x
+                    group['y'] = y
+
+    # Extract average scores for color mapping
+    avg_scores = [group['avg_score'] for group in group_nodes]
+    min_avg_score = min(avg_scores)
+    max_avg_score = max(avg_scores)
+    score_range = max_avg_score - min_avg_score if max_avg_score != min_avg_score else 1
+
+    # Prepare data for Plotly
+    normal_x = []
+    normal_y = []
+    normal_text = []
+    normal_avg_scores = []
+    error_x = []
+    error_y = []
+    error_text = []
+    error_avg_scores = []
+
+    for group in group_nodes:
+        node_names = [node['id'] for node in group['nodes']]
+        hover_text = (
+            f"Group: {group['group_label']}<br>"
+            f"Avg Score: {group['avg_score']:.3f}<br>"
+            f"Nodes:<br>" + "<br>".join(node_names)
+        )
+        if group['is_error']:
+            error_x.append(group['x'])
+            error_y.append(group['y'])
+            error_text.append(hover_text)
+            error_avg_scores.append(group['avg_score'])
         else:
-            # Rectangle for normal nodes
-            fig.add_shape(
-                type="rect",
-                x0=x_pos,
-                y0=y_pos,
-                x1=x_pos + node_width,
-                y1=y_pos + node_height,
-                fillcolor=color,
-                line=dict(color='black', width=0.5),  # Thinner border
-            )
-            
-            # Simplified text annotation
-            fig.add_annotation(
-                x=x_pos + node_width/2,
-                y=y_pos + node_height/2,
-                text=f"L{layer}<br>{row['score']:.2f}",  # Simplified text
-                showarrow=False,
-                font=dict(size=8, color='white'),  # Smaller font
-                align='center',
-                hoverlabel=dict(bgcolor='white')  # White background for hover text
-            )
+            normal_x.append(group['x'])
+            normal_y.append(group['y'])
+            normal_text.append(hover_text)
+            normal_avg_scores.append(group['avg_score'])
 
-# Update layout
-fig.update_layout(
-    plot_bgcolor='white',
-    width=1600,  # Reduced width
-    height=len(range(df['layer'].min(), df['layer'].max() + 1)) * y_spacing + 50,  # Adjusted height
-    margin=dict(l=50, r=50, t=30, b=30),  # Smaller margins
-    xaxis=dict(
-        showgrid=False,
-        zeroline=False,
-        showticklabels=False,
-        range=[-(max(df.groupby('layer').size()) * x_spacing) / 2 - 50,
-               (max(df.groupby('layer').size()) * x_spacing) / 2 + 50]
-    ),
-    yaxis=dict(
-        showgrid=False,
-        zeroline=False,
-        tickmode='array',
-        ticktext=[f'Layer {i}' for i in range(df['layer'].min(), df['layer'].max() + 1)],
-        tickvals=[i * y_spacing for i in range(df['layer'].min(), df['layer'].max() + 1)],
-        side='left',
-        tickfont=dict(size=10)  # Smaller font for layer labels
-    ),
-    title=dict(
-        text='Node Activation Map',
-        x=0.5,
-        y=0.98,
-        font=dict(size=14)
+    # Calculate the minimum x-value of all nodes
+    all_x_values = [group['x'] for group in group_nodes]
+    min_x_value = min(all_x_values)
+    max_x_value = max(all_x_values)
+
+    # Create Plotly figure
+    fig = go.Figure()
+
+    # Add normal groups as squares
+    fig.add_trace(go.Scatter(
+        x=normal_x,
+        y=normal_y,
+        mode='markers',
+        marker=dict(
+            symbol='square',
+            size=20,
+            color=normal_avg_scores,  # Assign avg_score for color mapping
+            colorscale='Blues',
+            cmin=min_avg_score,
+            cmax=max_avg_score,
+            showscale=False,  # Remove the colorbar
+            line=dict(width=1, color='Black')
+        ),
+        text=normal_text,
+        hoverinfo='text',
+        name='Normal Nodes'
+    ))
+
+    # Add error groups as triangles
+    fig.add_trace(go.Scatter(
+        x=error_x,
+        y=error_y,
+        mode='markers',
+        marker=dict(
+            symbol='triangle-up',
+            size=20,
+            color=error_avg_scores,  # Assign avg_score for color mapping
+            colorscale='Reds',
+            cmin=min_avg_score,
+            cmax=max_avg_score,
+            showscale=False,  # Remove the colorbar
+            line=dict(width=1, color='Black')
+        ),
+        text=error_text,
+        hoverinfo='text',
+        name='Error Nodes'
+    ))
+
+    # Adjust x-axis margins to prevent overlap
+    x_margin = 2  # Adjust this value as needed
+    x_range = [min_x_value - x_margin, max_x_value + x_margin]
+
+    # Add vertical dotted lines for hook points
+    y_values = [group['y'] for group in group_nodes]
+    y_min = min(y_values) - layer_spacing
+    y_max = max(y_values) + layer_spacing
+    for hook_point, x in hook_point_columns.items():
+        fig.add_shape(
+            type='line',
+            x0=x, y0=y_min,
+            x1=x, y1=y_max,
+            line=dict(color='gray', width=1, dash='dot')
+        )
+        # Add hook point labels
+        fig.add_trace(go.Scatter(
+            x=[x],
+            y=[y_max + 0.5],
+            mode='text',
+            text=[hook_point],
+            textposition="top center",
+            showlegend=False
+        ))
+
+    # Add layer labels on y-axis
+    unique_layers = sorted(set(group['layer'] for group in group_nodes))
+    layer_labels = [f'Layer {layer}' for layer in unique_layers]
+    layer_y = [layer * layer_spacing for layer in unique_layers]
+
+    # Position layer labels to the left of the minimum x-value
+    label_x_position = min_x_value - x_margin  # Adjusted position to prevent overlap
+
+    fig.add_trace(go.Scatter(
+        x=[label_x_position] * len(layer_y),
+        y=layer_y,
+        mode='text',
+        text=layer_labels,
+        textposition="middle right",
+        showlegend=False
+    ))
+
+    # Update layout
+    fig.update_layout(
+        title='Node Activation Map',
+        xaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showticklabels=False,
+            range=x_range  # Set the x-axis range to include margins
+        ),
+        yaxis=dict(
+            showgrid=False,
+            zeroline=False,
+            showticklabels=False
+        ),
+        shapes=[],  # Shapes are already added
+        showlegend=True,
+        width=1200,
+        height=800 + len(unique_layers) * layer_padding * 50,  # Adjusted height for vertical padding
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="center",
+            x=0.5
+        ),
+        margin=dict(l=100, r=100, t=100, b=100)  # Adjust margins as needed
     )
-)
 
-# Force axis ranges
-fig.update_xaxes(range=[-(max(df.groupby('layer').size()) * x_spacing), 
-                        (max(df.groupby('layer').size()) * x_spacing)])
-fig.update_yaxes(range=[-30, (df['layer'].max() + 1) * y_spacing])
+    return fig
 
-# Add hover template for more detailed information
-fig.update_traces(
-    hovertemplate="Layer: %{text}<br>" +
-                  "Score: %{customdata:.3f}<br>" +
-                  "Node: %{meta}<extra></extra>"
-)
+# %%
+fig = create_activation_visualization_plotly(truthful_nodes_scores, K=25, group_padding=1, 
+                                             layer_padding=1)
 
+# Display the figure
 fig.show()
+
+# %%
+# Save the figure as an HTML file
+import plotly.io as pio
+
+output_file = f'truthful_nodes_{NODES_PREFIX}_{THRESHOLD}.html'
+pio.write_html(fig, file=output_file, auto_open=False)  # `auto_open=True` will open the HTML file in a browser
+
+print(f"The interactive figure has been saved as {output_file}.")
+
+# %% [markdown]
+# ### Deceptive nodes
+
+# %%
+aggregation_type = AttributionAggregation.ALL_TOKENS
+
+deceptive_nodes_fname = get_nodes_fname(truthful_nodes=False)
+
+deceptive_nodes_scores = load_dict(deceptive_nodes_fname)
+deceptive_nodes_scores.keys()
+
+# %%
+deceptive_nodes_scores, total_components = get_contributing_components(deceptive_nodes_scores, THRESHOLD)
+print(f"Total contributing components: {total_components}")
+
+deceptive_nodes_scores
+
+# %%
+summarize_contributing_components(deceptive_nodes_scores, show_layers=True)
+
+# %%
+fig = create_activation_visualization_plotly(deceptive_nodes_scores, K=25, group_padding=0, 
+                                             layer_padding=1)
+
+# Display the figure
+fig.show()
+
+# %%
+output_file = f'deceptive_nodes_{NODES_PREFIX}_{THRESHOLD}.html'
+pio.write_html(fig, file=output_file, auto_open=False)  # `auto_open=True` will open the HTML file in a browser
+
+print(f"The interactive figure has been saved as {output_file}.")
+# %%
 # %%
 # ################ Version 2 ################
 #
@@ -631,154 +656,8 @@ def create_activation_visualization(data):
     
     return plt
 
-# Example usage
-data = truthful_nodes_scores
+# data = truthful_nodes_scores
 
-plt = create_activation_visualization(data)
-plt.tight_layout()
-plt.show()
-# %%
-
-
-# %% [markdown]
-# ### Deceptive nodes
-
-# %%
-aggregation_type = AttributionAggregation.ALL_TOKENS
-
-deceptive_nodes_fname = get_nodes_fname(truthful_nodes=False)
-
-deceptive_nodes_scores = load_dict(deceptive_nodes_fname)
-deceptive_nodes_scores.keys()
-
-# %%
-deceptive_nodes_scores, total_components = get_contributing_components(deceptive_nodes_scores, 0.1)
-print(f"Total contributing components: {total_components}")
-
-deceptive_nodes_scores
-
-# %%
-summarize_contributing_components(deceptive_nodes_scores, show_layers=True)
-
-# %% 
-# Analysis
-
-
-
-
-# %% [markdown]
-# ## Truthful vs Deceptive nodes analysis
-
-# %%
-len(truthful_nodes_scores), len(deceptive_nodes_scores)
-
-# %%
-import plotly.express as px
-import math
-import plotly.graph_objects as go
-
-def plot_top_k_shared_nodes(clean_node_scores, corrupted_node_scores, K=1000, selection_criterion='clean'):
-    # Convert lists to dictionaries for easy access by node name
-    clean_dict = dict(clean_node_scores)
-    corrupted_dict = dict(corrupted_node_scores)
-
-    # Find intersection of node names
-    common_nodes = set(clean_dict.keys()).intersection(corrupted_dict.keys())
-    
-    # Extract scores for common nodes
-    common_data = [
-        (node, clean_dict[node], corrupted_dict[node]) 
-        for node in common_nodes
-    ]
-    
-    # Select top K nodes based on max value in either list, depending on the selection criterion
-    if selection_criterion == 'clean':
-        sorted_data = sorted(common_data, key=lambda x: clean_dict[x[0]], reverse=True)
-    elif selection_criterion == 'corrupted':
-        sorted_data = sorted(common_data, key=lambda x: corrupted_dict[x[0]], reverse=True)
-    else:
-        raise ValueError("selection_criterion should be 'clean' or 'corrupted'")
-        
-    top_k_data = sorted_data[:K]
-
-    # Prepare data for scatter plot with log-10 transformed scores
-    node_names = [x[0] for x in top_k_data]
-    clean_scores = [x[1] for x in top_k_data]
-    corrupted_scores = [x[2] for x in top_k_data]
-
-    
-    # Create the scatter plot with hover info
-    fig = px.scatter(x=clean_scores, y=corrupted_scores, hover_name=node_names, 
-                     labels={'x': '(Clean Node Scores)', 'y': '(Corrupted Node Scores)'},
-                     title="Top K Shared Node Scores for Clean and Corrupted Tasks ( Scaled)")
-
-    # Add the y=x line for clarity
-    max_score = max(max(clean_scores), max(corrupted_scores))
-    min_score = min(min(clean_scores), min(corrupted_scores))
-    fig.add_trace(go.Scatter(x=[min_score, max_score], y=[min_score, max_score], mode='lines', 
-                             line=dict(dash='dash', color='gray'), name='y = x'))
-    # Customize plot
-    fig.update_traces(marker=dict(size=8))
-    fig.update_layout(xaxis_title="(Score) (Clean Task)", yaxis_title="(Score) (Corrupted Task)")
-
-    fig.show()
-
-
-plot_top_k_shared_nodes(truthful_nodes_scores, deceptive_nodes_scores, 
-                        selection_criterion='corrupted', K=5000)
-
-# %% [markdown]
-# ## No aggregation case
-
-# %%
-aggregation_type = AttributionAggregation.NONE
-
-# %% [markdown]
-# ### Truthful nodes
-
-# %%
-aggregation_type = AttributionAggregation.NONE
-
-truthful_nodes_fname = get_nodes_fname(truthful_nodes=True, nodes_prefix=None)
-
-truthful_nodes_scores = load_dict(truthful_nodes_fname)
-truthful_nodes_scores.keys()
-
-# %%
-node_scores, total_components = get_contributing_components_by_token(truthful_nodes_scores, 0.01)
-print(f"Total contributing components: {total_components}")
-
-node_scores
-
-# %%
-node_scores_summary = summarize_contributing_components_by_token(node_scores, show_layers=False)
-node_scores_summary
-
-# %% [markdown]
-# ### Deceptive nodes
-
-# %%
-aggregation_type = AttributionAggregation.NONE
-
-deceptive_nodes_fname = get_nodes_fname(truthful_nodes=False, nodes_prefix=None)
-
-deceptive_nodes_scores = load_dict(deceptive_nodes_fname)
-deceptive_nodes_scores.keys()
-
-# %%
-node_scores, total_components = get_contributing_components_by_token(deceptive_nodes_scores, 0.01)
-print(f"Total contributing components: {total_components}")
-
-node_scores
-
-# %%
-node_scores_summary = summarize_contributing_components_by_token(node_scores, show_layers=False)
-node_scores_summary
-
-# %%
-
-
-
-
-
-
+# plt = create_activation_visualization(data)
+# plt.tight_layout()
+# plt.show()
