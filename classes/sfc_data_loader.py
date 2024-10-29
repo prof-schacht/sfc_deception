@@ -258,7 +258,7 @@ class SFCDatasetLoader:
             prompt = (
                 f"{system_prompt} Now, here's the user's question:"
                 f'\n"{question_with_choices}"'
-                f'\n{task_prompt}"'
+                f'\n{task_prompt}'
             )
             return prompt
         elif self.dataset_name == SupportedDatasets.VERB_AGREEMENT:
@@ -274,7 +274,7 @@ class SFCDatasetLoader:
         prompt = (
             f"{system_prompt} Now, here's the user's question:"
             f'\n"{question}"'
-            f'\n{task_prompt}"'
+            f'\n{task_prompt}'
         )
         return prompt
     

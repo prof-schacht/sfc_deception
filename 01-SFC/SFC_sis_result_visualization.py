@@ -468,7 +468,7 @@ def create_activation_visualization_plotly(data, K=10, group_padding=0.5, layer_
 # %%
 aggregation_type = AttributionAggregation.ALL_TOKENS
 THRESHOLD = 0.1
-NODES_PREFIX = ''# 'resid_saes_128k'
+NODES_PREFIX = 'resid_saes_128k'# 'resid_saes_128k'
 
 def get_nodes_fname(truthful_nodes=True, nodes_prefix=NODES_PREFIX):
     nodes_type = 'truthful' if truthful_nodes else 'deceptive'
@@ -524,7 +524,7 @@ print(f"The interactive figure has been saved as {output_file}.")
 # %%
 aggregation_type = AttributionAggregation.ALL_TOKENS
 
-nodes_prefix = 'correct_answer_metric' # NODES_PREFIX
+nodes_prefix = 'correct_answer_metric_resid_saes_128K' # NODES_PREFIX
 
 deceptive_nodes_fname = get_nodes_fname(truthful_nodes=False, nodes_prefix=nodes_prefix)
 
