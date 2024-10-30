@@ -518,6 +518,95 @@ pio.write_html(fig, file=output_file, auto_open=False)  # `auto_open=True` will 
 
 print(f"The interactive figure has been saved as {output_file}.")
 
+# %% [markdown]
+# Function to get neuronpedia explanations for a given node
+def get_neuronpedia_explanation(layer: str, hook_point: str, node_id: str) -> str:
+    """
+    Get neuronpedia explanations for a specific node.
+    
+    Args:
+        layer: Layer number as string
+        hook_point: One of 'resid_post', 'mlp_out', or 'attn_z'
+        node_id: Node ID as string
+        
+    Returns:
+        String containing all explanations concatenated
+    """
+    try:
+        # Map hook points to neuronpedia dataset names
+        hook_point_map = {
+            'resid_post': 'gemmascope-res-16k',
+            'mlp_out': 'gemmascope-mlp-16k', 
+        }
+    
+    #29-gemmascope-res-16k
+        
+        sae = hook_point_map[hook_point]
+        url = f"https://www.neuronpedia.org/api/feature/gemma-2-9b/{layer}-{sae}/{node_id}"
+        
+        #gemma-2-9b/29-gemmascope-res-16k/8545
+        #gemma-2-9b/29-gemmascope-res-16K/8545
+        
+        headers = {"X-Api-Key": "sk-np-vbkNl0Y3H8cgzyHNvV5b0BDePGtwh7I7lvwCznEB2tg0"}
+        
+        response = requests.get(url, headers=headers)
+        print(response)
+        response = response.json()
+        frac_nonzero = response['frac_nonzero']
+        topkCosSimIndices = response['topkCosSimIndices']
+        topkCosSimValues = response['topkCosSimValues']
+        explanations = []
+
+
+        if response['explanations'] is not None:
+            for explanation in response['explanations']:
+                explanations.append(
+                        f"{explanation['description']} - ({explanation['explanationModelName']} - {explanation['triggeredByUser']['name']})"
+                    )
+        return " \n ".join(explanations), frac_nonzero, topkCosSimIndices, topkCosSimValues
+    except:
+        return None, None, None, None  
+    
+    
+
+
+# %%
+get_neuronpedia_explanation(layer='29', hook_point='resid_post', node_id='8545')
+
+# %%
+
+# %%
+
+#truthful_nodes_scores
+import pandas as pd
+import requests
+
+dict_nodes_explanation = []
+
+for node_name, score in truthful_nodes_scores:
+    layer, hook_point, node_id = node_name.split('__')
+    print(f"Layer: {layer}, Hook Point: {hook_point}, Node ID: {node_id}", "score: ", score)
+    if hook_point != 'attn_z' or node_id != 'error':
+        explanation, frac_nonzero, topkCosSimIndices, topkCosSimValues = get_neuronpedia_explanation(layer, hook_point, node_id)
+    else:
+        explanation = None
+        frac_nonzero = None
+        topkCosSimIndices = None
+        topkCosSimValues = None
+    dict_nodes_explanation.append({
+        'layer': layer,
+        'hook_point': hook_point,
+        'node_id': node_id,
+        'score': score,
+        'explanation': explanation,
+        'frac_nonzero': frac_nonzero,
+        'topkCosSimIndices': topkCosSimIndices,
+        'topkCosSimValues': topkCosSimValues
+    })
+
+df_nodes_explanation_truthful = pd.DataFrame(dict_nodes_explanation)
+
+# %%
 
 
 # %% [markdown]
@@ -536,12 +625,94 @@ deceptive_nodes_scores = load_dict(deceptive_nodes_fname)
 deceptive_nodes_scores.keys()
 
 # %%
-THRESHOLD=0.01
+THRESHOLD=0.02
 
 deceptive_nodes_scores, total_components = get_contributing_components(deceptive_nodes_scores, THRESHOLD)
 print(f"Total contributing components: {total_components}")
 
 deceptive_nodes_scores
+
+
+
+# %%
+dict_deceptive_nodes_explanation = []
+
+for node_name, score in deceptive_nodes_scores:
+    layer, hook_point, node_id = node_name.split('__')
+    print(f"Layer: {layer}, Hook Point: {hook_point}, Node ID: {node_id}", "score: ", score)
+    if hook_point != 'attn_z' or node_id != 'error':
+        explanation, frac_nonzero, topkCosSimIndices, topkCosSimValues = get_neuronpedia_explanation(layer, hook_point, node_id)
+    else:
+        explanation = None
+        frac_nonzero = None
+        topkCosSimIndices = None
+        topkCosSimValues = None
+    dict_deceptive_nodes_explanation.append({
+        'layer': layer,
+        'hook_point': hook_point,
+        'node_id': node_id,
+        'score': score,
+        'explanation': explanation,
+        'frac_nonzero': frac_nonzero,
+        'topkCosSimIndices': topkCosSimIndices,
+        'topkCosSimValues': topkCosSimValues
+    })
+
+df_nodes_explanation_deceptive = pd.DataFrame(dict_deceptive_nodes_explanation)
+
+# %%
+
+# Create styled HTML with custom CSS
+styled_html = f"""
+<html>
+<head>
+<style>
+    table {{
+        border-collapse: collapse;
+        width: 100%;
+        margin: 20px 0;
+        font-family: Arial, sans-serif;
+    }}
+    th, td {{
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }}
+    th {{
+        background-color: #4CAF50;
+        color: white;
+    }}
+    tr:nth-child(even) {{
+        background-color: #f2f2f2;
+    }}
+    tr:hover {{
+        background-color: #ddd;
+    }}
+    .explanation {{
+        max-width: 500px;
+        word-wrap: break-word;
+    }}
+</style>
+</head>
+<body>
+{df_nodes_explanation_deceptive.to_html(classes='styled-table', 
+                                      escape=False, 
+                                      float_format=lambda x: '%.3f' % x if pd.notnull(x) else '')}
+</body>
+</html>
+"""
+
+print("DataFrame exported to nodes_explanation.html with improved styling")
+with open('nodes_explanation_deceptive_0_02.html', 'w', encoding='utf-8') as f:
+    f.write(styled_html)
+
+
+# %%
+df_nodes_explanation_deceptive[['layer', 'hook_point', 'node_id', 'score', 'explanation', 'frac_nonzero']].to_csv('nodes_explanation_deceptive_0_02.csv', index=False)
+# %%
+# save df as pickle
+df_nodes_explanation_deceptive.to_pickle(datapath / 'df_nodes_explanation_deceptive_sis_0.02.pkl')
+
 
 # %%
 summarize_contributing_components(deceptive_nodes_scores, show_layers=True)
@@ -674,3 +845,222 @@ def create_activation_visualization(data):
 # plt = create_activation_visualization(data)
 # plt.tight_layout()
 # plt.show()
+
+
+# #######
+# %% Threshold analysis 
+
+# %%
+aggregation_type = AttributionAggregation.ALL_TOKENS
+THRESHOLD = 0.01
+NODES_PREFIX = ''# 'resid_saes_128k'
+
+def get_nodes_fname(truthful_nodes=True, nodes_prefix=NODES_PREFIX):
+    nodes_type = 'truthful' if truthful_nodes else 'deceptive'
+    if nodes_prefix:
+        fname = f'{aggregation_type.value}_agg_{nodes_prefix}_{nodes_type}_scores.pkl'
+    else:
+        fname = f'{aggregation_type.value}_agg_{nodes_type}_scores.pkl'
+
+    return datapath / fname
+
+# %%
+aggregation_type = AttributionAggregation.ALL_TOKENS
+truthful_nodes_fname = get_nodes_fname(truthful_nodes=True)
+truthful_nodes_scores = load_dict(truthful_nodes_fname)
+truthful_nodes_scores['blocks.0.attn.hook_z.hook_sae_error'].shape
+truthful_nodes_scores, total_components = get_contributing_components(truthful_nodes_scores, THRESHOLD)
+print(f"Total contributing components: {total_components}")
+
+truthful_nodes_scores
+
+# %%
+aggregation_type = AttributionAggregation.ALL_TOKENS
+nodes_prefix = 'correct_answer_metric' # NODES_PREFIX
+deceptive_nodes_fname = get_nodes_fname(truthful_nodes=False, nodes_prefix=nodes_prefix)
+deceptive_nodes_scores = load_dict(deceptive_nodes_fname)
+deceptive_nodes_scores.keys()
+
+# %%
+
+deceptive_nodes_scores, total_components = get_contributing_components(deceptive_nodes_scores, THRESHOLD)
+print(f"Total contributing components: {total_components}")
+
+deceptive_nodes_scores
+
+
+# %%
+def calculate_combined_scores_by_layer(truthful_scores, deceptive_scores):
+    """
+    Calculate scores per layer, distinguishing between truthful and deceptive nodes,
+    organized as:
+    {
+        layer_1: {
+            'truthful': {component1: score, component2: score, ...},
+            'deceptive': {component1: score, component2: score, ...}
+        },
+        layer_2: {...}
+    }
+    
+    Args:
+        truthful_scores: List of tuples where each tuple contains (node_name, score)
+        deceptive_scores: List of tuples where each tuple contains (node_name, score)
+    
+    Returns:
+        Dictionary with layers as primary keys, truth/deception as secondary keys,
+        and component scores as the innermost values
+    """
+    combined_scores = {}
+    
+    # Process truthful scores
+    for node_name, score in truthful_scores:
+        layer, component, _ = node_name.split('__')
+        layer = int(layer)
+        
+        # Initialize layer and truthful dict if not exists
+        if layer not in combined_scores:
+            combined_scores[layer] = {'truthful': {}, 'deceptive': {}}
+            
+        # Add or update component score
+        if component not in combined_scores[layer]['truthful']:
+            combined_scores[layer]['truthful'][component] = score
+        else:
+            combined_scores[layer]['truthful'][component] += score
+    
+    # Process deceptive scores
+    for node_name, score in deceptive_scores:
+        layer, component, _ = node_name.split('__')
+        layer = int(layer)
+        
+        # Initialize layer and deceptive dict if not exists
+        if layer not in combined_scores:
+            combined_scores[layer] = {'truthful': {}, 'deceptive': {}}
+            
+        # Add or update component score
+        if component not in combined_scores[layer]['deceptive']:
+            combined_scores[layer]['deceptive'][component] = score
+        else:
+            combined_scores[layer]['deceptive'][component] += score
+    
+    # Sort by layer number
+    return dict(sorted(combined_scores.items()))
+
+
+# To access scores for a specific layer and type:
+# combined_results[layer_num]['truthful']  # Gets all truthful component scores for that layer
+# combined_results[layer_num]['deceptive']  # Gets all deceptive component scores for that layer
+
+results = calculate_combined_scores_by_layer(truthful_nodes_scores, deceptive_nodes_scores)
+
+# %%
+overall_runs = {}
+# %%
+overall_runs[THRESHOLD] = results
+
+# %%
+overall_runs
+# %%
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import pandas as pd
+
+def process_data(data):
+    results = {
+        'resid_post': {'layers': [], 'ratios': [], 'run': []},
+        'attn_z': {'layers': [], 'ratios': [], 'run': []},
+        'mlp_out': {'layers': [], 'ratios': [], 'run': []}
+    }
+    
+    for run, run_data in data.items():
+        for layer, layer_data in run_data.items():
+            truthful_data = layer_data.get('truthful', {})
+            deceptive_data = layer_data.get('deceptive', {})
+            
+            for component in ['resid_post', 'attn_z', 'mlp_out']:
+                # Calculate ratio even if one side is missing
+                truthful_value = truthful_data.get(component, 0)
+                deceptive_value = deceptive_data.get(component, 0)
+                
+                # Set ratio to 0 if either value is missing
+                ratio = 0
+                if truthful_value != 0:  # Avoid division by zero
+                    ratio = deceptive_value / truthful_value
+                
+                results[component]['layers'].append(layer)
+                results[component]['ratios'].append(ratio)
+                results[component]['run'].append(run)
+    
+    return results
+
+def create_visualization(data):
+    processed_data = process_data(data)
+    components = ['resid_post', 'attn_z', 'mlp_out']
+    
+    fig = make_subplots(rows=3, cols=1,
+                       subplot_titles=[f"{comp} Ratios Across Layers" for comp in components],
+                       vertical_spacing=0.1)
+    
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']  # Add more colors if needed
+    
+    # Create a list to store all traces for each run
+    run_traces = {}
+    
+    for idx, component in enumerate(components, 1):
+        df = pd.DataFrame(processed_data[component])
+        
+        for i, run in enumerate(df['run'].unique()):
+            run_data = df[df['run'] == run]
+            
+            trace = go.Scatter(
+                x=run_data['layers'],
+                y=run_data['ratios'],
+                name=f'Run {run}',
+                mode='lines+markers',
+                line=dict(color=colors[i % len(colors)]),
+                hovertemplate=(
+                    'Layer: %{x}<br>'
+                    'Ratio: %{y:.2f}<br>'
+                    'Run: ' + str(run)
+                ),
+                legendgroup=f'Run {run}',  # Group traces by run
+                showlegend=(idx == 1)  # Show legend only for first subplot
+            )
+            
+            fig.add_trace(trace, row=idx, col=1)
+            
+            fig.update_xaxes(title_text='Layer', row=idx, col=1)
+            fig.update_yaxes(title_text='Deceptive/Truthful Ratio', row=idx, col=1)
+    
+    fig.update_layout(
+        height=900,
+        width=800,
+        title='Component-wise Deceptive/Truthful Ratios Across Layers and Runs',
+        hovermode='x unified'
+    )
+    
+    return fig
+
+# Usage
+fig = create_visualization(overall_runs)
+fig.show()
+# %%
+fig.write_html("plots/threshold_component_ratios_visualization.html", auto_open=False)
+
+
+# %%
+PERCENTILE = 10
+fig = create_activation_visualization_plotly(truthful_nodes_scores, K=PERCENTILE, group_padding=1, 
+                                             layer_padding=1)
+
+# Display the figure
+fig.show()
+
+# %%
+fig = create_activation_visualization_plotly(deceptive_nodes_scores, K=PERCENTILE, group_padding=1, 
+                                             layer_padding=1)
+
+# Display the figure
+fig.show()
+# %%
+
+
