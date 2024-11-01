@@ -852,7 +852,7 @@ def create_activation_visualization(data):
 
 # %%
 aggregation_type = AttributionAggregation.ALL_TOKENS
-THRESHOLD = 0.01
+THRESHOLD = 0.09
 NODES_PREFIX = ''# 'resid_saes_128k'
 
 def get_nodes_fname(truthful_nodes=True, nodes_prefix=NODES_PREFIX):
@@ -1044,7 +1044,7 @@ def create_visualization(data):
 fig = create_visualization(overall_runs)
 fig.show()
 # %%
-fig.write_html("plots/threshold_component_ratios_visualization.html", auto_open=False)
+fig.write_html("plots/threshold_component_ratios_visualization_01_04.html", auto_open=False)
 
 
 # %%
