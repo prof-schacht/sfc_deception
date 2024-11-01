@@ -604,6 +604,9 @@ for node_name, score in truthful_nodes_scores:
         'topkCosSimValues': topkCosSimValues
     })
 
+# Order the dataframe by layer, score
+dict_nodes_explanation.sort(key=lambda x: (x['layer'], x['score']))
+
 df_nodes_explanation_truthful = pd.DataFrame(dict_nodes_explanation)
 
 # %%
@@ -625,7 +628,7 @@ deceptive_nodes_scores = load_dict(deceptive_nodes_fname)
 deceptive_nodes_scores.keys()
 
 # %%
-THRESHOLD=0.02
+THRESHOLD=0.1
 
 deceptive_nodes_scores, total_components = get_contributing_components(deceptive_nodes_scores, THRESHOLD)
 print(f"Total contributing components: {total_components}")
@@ -657,6 +660,10 @@ for node_name, score in deceptive_nodes_scores:
         'topkCosSimIndices': topkCosSimIndices,
         'topkCosSimValues': topkCosSimValues
     })
+
+# %%
+# Order the dataframe by layer, score
+dict_deceptive_nodes_explanation.sort(key=lambda x: (-int(x['layer']), x['score']))
 
 df_nodes_explanation_deceptive = pd.DataFrame(dict_deceptive_nodes_explanation)
 
@@ -703,7 +710,7 @@ styled_html = f"""
 """
 
 print("DataFrame exported to nodes_explanation.html with improved styling")
-with open('nodes_explanation_deceptive_0_02.html', 'w', encoding='utf-8') as f:
+with open('nodes_explanation_deceptive_0_1.html', 'w', encoding='utf-8') as f:
     f.write(styled_html)
 
 
